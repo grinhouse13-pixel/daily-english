@@ -629,7 +629,8 @@ function removeLanguage(lang){
 
 function openLesson(id){
  if(id==='introductions'){openPage('lesson');return;}
- if(id==='shopping'){openPage('lesson-shopping');return;}\n if(id==='work'){openPage('lesson-work');return;}
+ if(id==='shopping'){openPage('lesson-shopping');return;}
+ if(id==='work'){openPage('lesson-work');return;}
 }
 function checkLessonAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
@@ -670,7 +671,8 @@ function completeLesson(id){
  const completed=JSON.parse(localStorage.getItem('dl-completed-lessons-en')||'[]');
  if(!completed.includes(id)){completed.push(id);localStorage.setItem('dl-completed-lessons-en',JSON.stringify(completed));}
  logActivity('cards','en');
- document.getElementById('lesson-complete-note').textContent='Урок отмечен как пройденный. Отличная работа! Возвращайся к выражениям для повторения.';
+ const note=document.getElementById(id+'-complete-note')||document.getElementById('lesson-complete-note');
+ if(note) note.textContent='Урок отмечен как пройденный. Отличная работа! Возвращайся к выражениям для повторения.';
 }
 function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();if(id==='languages')renderLanguages();updateProgress();window.scrollTo(0,0)}
 function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
