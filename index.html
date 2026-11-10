@@ -111,6 +111,26 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 .language-stat-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}
 .language-stat-head span:last-child{color:#55d1f0}.language-stat-row .bar{margin-top:9px}
 </style>
+
+<style>
+/* Practical ESL learning module */
+.lesson-card{background:linear-gradient(145deg,#152b43,#101d30);border:1px solid rgba(83,194,230,.2);border-radius:18px;padding:16px;margin:10px 0}
+.lesson-card h3{margin:0 0 7px;font-size:16px}.lesson-card p{margin:0;color:#a9bbce;font-size:13px;line-height:1.5}
+.lesson-meta{font-size:11px;color:#55d1f0;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
+.lesson-action{margin-top:12px;width:100%;padding:12px;border-radius:12px;background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521;font-weight:800}
+.lesson-step{background:#0d1b2c;border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0}
+.lesson-step h4{margin:0 0 9px;font-size:14px;color:#65d8f1}
+.dialogue-line{padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}
+.dialogue-line:last-child{border:0}.dialogue-line b{color:#fff}
+.chunk{padding:11px 12px;border-radius:12px;background:rgba(41,199,238,.08);margin:8px 0}
+.chunk strong{display:block;color:#fff;font-size:14px}.chunk small{display:block;color:#a9bbce;margin-top:4px}
+.lesson-choice{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:#14263a;color:#f2f7fb;margin:7px 0}
+.lesson-choice.correct{border-color:#36c99b;background:rgba(54,201,155,.14)}
+.lesson-choice.wrong{border-color:#ff756c;background:rgba(255,117,108,.13)}
+.lesson-input{width:100%;min-height:88px;background:#0d1b2c;color:#f2f7fb;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;resize:vertical}
+.lesson-note{font-size:12px;color:#9aacc0;line-height:1.5}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -128,6 +148,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <button class="tile" onclick="openPage('topics')"><span class="emoji">🧭</span><strong>Темы</strong><small>Слова по ситуациям</small></button>
   <button class="tile" onclick="openPage('progress')"><span class="emoji">📈</span><strong>Мой прогресс</strong><small>Твой результат</small></button>
   <button class="tile" onclick="openPage('languages')"><span class="emoji">🌍</span><strong>Мои языки</strong><small>Добавляй новые языки</small></button>
+  <button class="tile" onclick="openPage('learning')"><span class="emoji">🎓</span><strong>Обучение</strong><small>Практический English A1–B1</small></button>
  </div>
  <div class="section-head"><h3>Повторение на сегодня</h3><button class="small-link" onclick="startDueReview()">Начать →</button></div>
  <div class="progress-card"><div class="progress-top"><span>Карточек пора повторить</span><span id="due-count">20</span></div><p class="sub" style="margin-top:8px">Возвращайся к выражениям до того, как забудешь их.</p></div>
@@ -179,6 +200,80 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  <div class="section-head"><h3>Твои результаты</h3></div>
  <div class="grid"><div class="tile"><span class="emoji">📚</span><strong id="known-stat">0</strong><small>Выучено выражений</small></div><div class="tile"><span class="emoji">🎯</span><strong id="quiz-stat">—</strong><small>Точность тестов</small></div></div>
  <button class="outline" style="width:100%;margin-top:16px" onclick="resetProgress()">Сбросить прогресс английского</button>
+</section>
+
+<section id="learning" class="page">
+ <button class="back" onclick="openPage('home')">← Главная</button>
+ <div class="eyebrow">PRACTICAL ESL · AMERICAN ENGLISH</div>
+ <h1>Обучение для жизни в США</h1>
+ <p class="sub">Понимай живую речь, общайся в повседневных ситуациях и учись самостоятельно выражать свои мысли.</p>
+ <div class="hero">
+  <div class="eyebrow">ТВОЙ ПРАКТИЧЕСКИЙ КУРС</div>
+  <h2>English for Everyday Life</h2>
+  <p>Диалоги, полезные выражения, понимание на слух и разговорная практика.</p>
+  <button class="primary" onclick="openLesson('introductions')">Начать первый урок →</button>
+ </div>
+ <div class="section-head"><h3>Программа обучения</h3><span class="muted" style="font-size:12px">A1 → B1</span></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 01 · A1–A2</div><h3>👋 Introductions & Small Talk</h3><p>Знакомство, приветствия, рассказ о себе и простой разговор.</p><button class="lesson-action" onclick="openLesson('introductions')">Открыть урок →</button></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+</section>
+
+<section id="lesson" class="page">
+ <button class="back" onclick="openPage('learning')">← К программе</button>
+ <div class="eyebrow">LESSON 01 · A1–A2 · AMERICAN ENGLISH</div>
+ <h1>Introductions & Small Talk</h1>
+ <p class="sub">Цель: представиться, задать простые вопросы и поддержать короткий разговор.</p>
+ <div class="lesson-step">
+  <h4>1. Понятный диалог · Listen & understand</h4>
+  <p class="lesson-note">Сначала прочитай диалог целиком и попробуй понять ситуацию. Затем прослушай реплики.</p>
+  <div class="dialogue-line"><b>Alex:</b> Hey, how's it going?</div>
+  <div class="dialogue-line"><b>Sam:</b> Pretty good, thanks. How about you?</div>
+  <div class="dialogue-line"><b>Alex:</b> I'm doing well. I'm Alex, by the way.</div>
+  <div class="dialogue-line"><b>Sam:</b> Nice to meet you, Alex. I'm Sam.</div>
+  <div class="dialogue-line"><b>Alex:</b> Nice to meet you too. Are you from around here?</div>
+  <div class="dialogue-line"><b>Sam:</b> Not really. I just moved here.</div>
+  <button class="lesson-action" onclick="speakText(\"Hey, how's it going? Pretty good, thanks. How about you? I'm doing well. I'm Alex, by the way. Nice to meet you, Alex. I'm Sam. Nice to meet you too. Are you from around here? Not really. I just moved here.\")">🔊 Прослушать диалог</button>
+ </div>
+ <div class="lesson-step">
+  <h4>2. Пойми смысл · Comprehension</h4>
+  <p class="lesson-note">Ответь на вопросы по диалогу. Не старайся переводить каждое слово — улови общий смысл.</p>
+  <p style="margin:12px 0 7px;font-size:14px">Where did Sam just move?</p>
+  <button class="lesson-choice" onclick="checkLessonAnswer(this,false)">He moved to another country.</button>
+  <button class="lesson-choice" onclick="checkLessonAnswer(this,true)">He moved here.</button>
+  <button class="lesson-choice" onclick="checkLessonAnswer(this,false)">He moved to Alex's house.</button>
+  <p id="lesson-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>3. Полезные разговорные блоки · Chunks</h4>
+  <div class="chunk"><strong>How's it going?</strong><small>Как дела? Неформальное приветствие.</small><button class="speak-example" onclick="speakText(\"How's it going?\")">▶ Слушать</button></div>
+  <div class="chunk"><strong>How about you?</strong><small>А ты? / А у тебя?</small><button class="speak-example" onclick="speakText('How about you?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Nice to meet you.</strong><small>Приятно познакомиться.</small><button class="speak-example" onclick="speakText('Nice to meet you.')">▶ Слушать</button></div>
+  <div class="chunk"><strong>I'm ... by the way.</strong><small>Я ..., кстати. Удобно представиться в разговоре.</small><button class="speak-example" onclick="speakText(\"I'm Alex, by the way.\")">▶ Слушать</button></div>
+  <div class="chunk"><strong>Are you from around here?</strong><small>Ты местный? / Ты отсюда?</small><button class="speak-example" onclick="speakText('Are you from around here?')">▶ Слушать</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>4. Вспомни без подсказки · Active recall</h4>
+  <p class="lesson-note">Как по-английски сказать «Приятно познакомиться»?</p>
+  <button class="lesson-choice" onclick="revealLessonRecall()">Показать ответ</button>
+  <p id="lesson-recall" class="lesson-note"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>5. Скажи о себе · Speaking</h4>
+  <p class="lesson-note">Ответь вслух на вопрос: <b style="color:#fff">“Tell me a little about yourself.”</b></p>
+  <button class="speak-example" onclick="speakText('Tell me a little about yourself.')">▶ Прослушать вопрос</button>
+  <textarea id="lesson-speaking" class="lesson-input" placeholder="Напиши свой ответ на английском..."></textarea>
+  <p class="lesson-note">Сначала попробуй произнести ответ вслух. Затем можешь записать его здесь для самостоятельной практики. Текст пока не отправляется на автоматическую проверку.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>6. Заверши урок</h4>
+  <p class="lesson-note">Перед завершением попробуй без подсказки произнести три выражения из урока и коротко представиться.</p>
+  <button class="lesson-action" onclick="completeLesson('introductions')">Отметить урок пройденным ✓</button>
+  <p id="lesson-complete-note" class="lesson-note" style="margin-top:10px"></p>
+ </div>
 </section>
 
 <section id="languages" class="page">
@@ -400,6 +495,25 @@ function removeLanguage(lang){
  renderLanguages();
 }
 
+function openLesson(id){
+ if(id!=='introductions')return;
+ openPage('lesson');
+}
+function checkLessonAnswer(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ const feedback=document.getElementById('lesson-feedback');
+ feedback.textContent=isCorrect?'Верно! Sam говорит: “I just moved here.”':'Не совсем. Посмотри на последнюю реплику Sam: “I just moved here.”';
+}
+function revealLessonRecall(){
+ document.getElementById('lesson-recall').textContent='Nice to meet you.';
+}
+function completeLesson(id){
+ const completed=JSON.parse(localStorage.getItem('dl-completed-lessons-en')||'[]');
+ if(!completed.includes(id)){completed.push(id);localStorage.setItem('dl-completed-lessons-en',JSON.stringify(completed));}
+ logActivity('cards','en');
+ document.getElementById('lesson-complete-note').textContent='Урок отмечен как пройденный. Отличная работа! Возвращайся к выражениям для повторения.';
+}
 function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();if(id==='languages')renderLanguages();updateProgress();window.scrollTo(0,0)}
 function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
  
