@@ -100,6 +100,17 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 #srs-hint{margin:12px 0 4px;color:#9db3c8}
 </style>
 
+
+<style>
+.weekly-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:124px;padding-top:8px}
+.week-day{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;min-width:0}
+.week-bar-wrap{height:88px;width:100%;display:flex;align-items:flex-end;justify-content:center;background:rgba(255,255,255,.035);border-radius:9px;overflow:hidden}
+.week-bar{width:70%;min-height:3px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#62d7f1,#8a69ed)}
+.week-day small{font-size:10px;color:#9aacc0}.week-day b{font-size:10px;color:#dce8f4;font-weight:650}
+.language-stat-row{background:linear-gradient(145deg,#15283e,#101d2e);border:1px solid var(--line);border-radius:15px;padding:13px;margin:8px 0}
+.language-stat-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}
+.language-stat-head span:last-child{color:#55d1f0}.language-stat-row .bar{margin-top:9px}
+</style>
 </head>
 <body>
 <div class="app">
@@ -155,9 +166,19 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 <section id="progress" class="page">
  <button class="back" onclick="openPage('home')">← Главная</button>
  <div class="eyebrow">YOUR JOURNEY</div><h1>Твой прогресс</h1><p class="sub">Каждое повторение приближает тебя к цели.</p>
- <div class="progress-card" style="margin-top:20px"><div class="progress-top"><span>Изучено выражений</span><strong id="known-count">0 / 20</strong></div><div class="bar"><i id="progress-bar"></i></div><p class="sub" style="margin-top:12px" id="progress-caption">Начни с первой карточки.</p></div>
- <div class="grid" style="margin-top:12px"><div class="tile"><span class="emoji">📚</span><strong id="known-stat">0</strong><small>Выучено</small></div><div class="tile"><span class="emoji">🎯</span><strong id="quiz-stat">0%</strong><small>Точность тестов</small></div></div>
- <button class="outline" style="width:100%;margin-top:16px" onclick="resetProgress()">Сбросить прогресс</button>
+ <div class="course-stats" style="margin-top:18px">
+  <div class="course-stat"><strong id="stats-known">0</strong><small>Выучено</small></div>
+  <div class="course-stat"><strong id="stats-streak">0</strong><small>Дней подряд</small></div>
+  <div class="course-stat"><strong id="stats-accuracy">—</strong><small>Точность тестов</small></div>
+ </div>
+ <div class="progress-card" style="margin-top:14px"><div class="progress-top"><span>Прогресс английского</span><strong id="known-count">0 / 0</strong></div><div class="bar"><i id="progress-bar"></i></div><p class="sub" style="margin-top:12px" id="progress-caption">Начни с первой карточки.</p></div>
+ <div class="section-head"><h3>Активность за 7 дней</h3><span class="muted" style="font-size:12px">занятия</span></div>
+ <div class="progress-card"><div id="weekly-chart" class="weekly-chart"></div><p class="sub" id="weekly-summary" style="margin-top:12px">Активность начнёт отображаться после занятий.</p></div>
+ <div class="section-head"><h3>Прогресс по языкам</h3></div>
+ <div id="language-stats-list"></div>
+ <div class="section-head"><h3>Твои результаты</h3></div>
+ <div class="grid"><div class="tile"><span class="emoji">📚</span><strong id="known-stat">0</strong><small>Выучено выражений</small></div><div class="tile"><span class="emoji">🎯</span><strong id="quiz-stat">—</strong><small>Точность тестов</small></div></div>
+ <button class="outline" style="width:100%;margin-top:16px" onclick="resetProgress()">Сбросить прогресс английского</button>
 </section>
 
 <section id="languages" class="page">
@@ -217,7 +238,8 @@ const words=[
 ["I have no idea.","Понятия не имею.","I have no idea where it is.","Повседневное общение"],
 ["That makes sense.","В этом есть смысл / Логично.","Oh, that makes sense.","Повседневное общение"],
 ["I'm looking for a job.","Я ищу работу.","I'm looking for a job right now.","Работа"],
-["I just got off work.","Я только что закончил работу.","I'm tired. I just got off work.","Работа"],["I'm running late.","Я опаздываю.","Sorry, I'm running a little late.","Работа"],
+["I just got off work.","Я только что закончил работу.","I'm tired. I just got off work.","Работа"],
+["I'm running late.","Я опаздываю.","Sorry, I'm running a little late.","Работа"],
 ["Can you give me a hand?","Можешь мне помочь?","Can you give me a hand with this?","Работа"],
 ["I'm done for today.","На сегодня я закончил.","I'm done for today. See you tomorrow.","Работа"],
 ["I'd love to.","Я бы с удовольствием.","Would you like to get coffee? — I'd love to.","Знакомства"],
@@ -380,7 +402,7 @@ function removeLanguage(lang){
 
 function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();if(id==='languages')renderLanguages();updateProgress();window.scrollTo(0,0)}
 function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
-
+ 
 async function speakText(text) {
   try {
     const response = await fetch(
@@ -415,22 +437,65 @@ async function speakText(text) {
 
 function speakCurrent(){speakText(words[index][0]);}
 function speakExample(){speakText(words[index][2]);}
-function rateCard(level){let now=Date.now(),old=srs[index]||{interval:0};let days=level==='hard'?1:level==='good'?(old.interval?Math.max(2,Math.round(old.interval*2)):2):(old.interval?Math.max(4,Math.round(old.interval*2.5)):4);srs[index]={interval:days,due:now+days*86400000,last:now,level};localStorage.setItem('de-srs',JSON.stringify(srs));if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known));}document.getElementById('srs-hint').textContent='Готово! Следующее повторение через '+days+' дн.';updateProgress();setTimeout(nextCard,450);}
+function localDayKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');}
+function logActivity(type,lang='en'){
+ const key='dl-activity-'+lang;
+ const data=JSON.parse(localStorage.getItem(key)||'{}');
+ const day=localDayKey();
+ if(!data[day])data[day]={cards:0,tests:0};
+ data[day][type]=(data[day][type]||0)+1;
+ localStorage.setItem(key,JSON.stringify(data));
+ updateStreak();
+}
+function updateStreak(){
+ const data=JSON.parse(localStorage.getItem('dl-activity-en')||'{}');
+ if(Object.keys(data).length===0)return Number(localStorage.getItem('de-streak')||0);
+ let streak=0,day=new Date();
+ if(!data[localDayKey(day)])day.setDate(day.getDate()-1);
+ while(data[localDayKey(day)]&&(data[localDayKey(day)].cards||0)+(data[localDayKey(day)].tests||0)>0){streak++;day.setDate(day.getDate()-1);}
+ localStorage.setItem('de-streak',String(streak));
+ const el=document.getElementById('streak');if(el)el.textContent=streak;
+ return streak;
+}
+function renderStatistics(){
+ const knownCount=document.getElementById('stats-known');if(!knownCount)return;
+ const quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');
+ const accuracy=quizData.quizTotal?Math.round(quizData.quizCorrect/quizData.quizTotal*100)+'%':'—';
+ const streak=updateStreak();
+ knownCount.textContent=known.length;
+ document.getElementById('stats-streak').textContent=streak;
+ document.getElementById('stats-accuracy').textContent=accuracy;
+ const total=words.length,percent=total?Math.round(known.length/total*100):0;
+ document.getElementById('known-count').textContent=known.length+' / '+total;
+ document.getElementById('progress-bar').style.width=percent+'%';
+ document.getElementById('progress-caption').textContent=percent+'% набора изучено. '+(percent===100?'Отличная работа!':'Продолжай в своём темпе.');
+ const activity=JSON.parse(localStorage.getItem('dl-activity-en')||'{}');
+ const chart=document.getElementById('weekly-chart');chart.innerHTML='';
+ const days=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];let values=[];
+ for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=localDayKey(d);const v=activity[key]||{cards:0,tests:0};values.push({label:days[d.getDay()],count:(v.cards||0)+(v.tests||0)});}
+ const max=Math.max(1,...values.map(v=>v.count));
+ values.forEach(v=>{const item=document.createElement('div');item.className='week-day';const num=document.createElement('b');num.textContent=v.count||'';const wrap=document.createElement('div');wrap.className='week-bar-wrap';const bar=document.createElement('i');bar.className='week-bar';bar.style.height=(v.count?Math.max(7,v.count/max*100):3)+'%';wrap.append(bar);const label=document.createElement('small');label.textContent=v.label;item.append(num,wrap,label);chart.append(item);});
+ const sum=values.reduce((a,v)=>a+v.count,0);document.getElementById('weekly-summary').textContent=sum?`За последние 7 дней: ${sum} учебных действий.`:'Активность начнёт отображаться после занятий.';
+ const list=document.getElementById('language-stats-list');list.innerHTML='';
+ (myLanguages||['en']).forEach(lang=>{const row=document.createElement('div');row.className='language-stat-row';const head=document.createElement('div');head.className='language-stat-head';const name=document.createElement('span');name.textContent=languageOptions[lang]||lang;const p=getLanguageProgress(lang);const pct=p.total?Math.round(p.known/p.total*100):0;const val=document.createElement('span');val.textContent=p.total?`${p.known}/${p.total} · ${pct}%`:`${p.known} выучено`;head.append(name,val);row.append(head);const track=document.createElement('div');track.className='bar';const fill=document.createElement('i');fill.style.width=p.total?pct+'%':'0%';track.append(fill);row.append(track);list.append(row);});
+}
+function rateCard(level){let now=Date.now(),old=srs[index]||{interval:0};let days=level==='hard'?1:level==='good'?(old.interval?Math.max(2,Math.round(old.interval*2)):2):(old.interval?Math.max(4,Math.round(old.interval*2.5)):4);srs[index]={interval:days,due:now+days*86400000,last:now,level};localStorage.setItem('de-srs',JSON.stringify(srs));logActivity('cards');if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known));}document.getElementById('srs-hint').textContent='Готово! Следующее повторение через '+days+' дн.';updateProgress();setTimeout(nextCard,450);}
 function startDueReview(){reviewQueue=words.map((w,i)=>i).filter(i=>!srs[i]||srs[i].due<=Date.now());if(!reviewQueue.length){alert('На сегодня повторений нет. Отличная работа!');return;}index=reviewQueue[0];openPage('cards');document.getElementById('card-counter').textContent='Повторение 1 / '+reviewQueue.length;}
 function nextCard(){if(reviewQueue.length){reviewQueue.shift();if(reviewQueue.length){index=reviewQueue[0];}else{reviewQueue=[];alert('Повторение завершено! Отличная работа 🎉');openPage('home');return;}renderCard();return;}index=(index+1)%words.length;renderCard()}function prevCard(){index=(index-1+words.length)%words.length;renderCard()}
 function markKnown(){if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known))}nextCard();updateProgress()}
-function updateProgress(){let n=known.length,p=Math.round(n/words.length*100);document.getElementById('home-count').textContent=n+' / '+words.length;document.getElementById('known-count').textContent=n+' / '+words.length;document.getElementById('known-stat').textContent=n;document.getElementById('home-bar').style.width=p+'%';document.getElementById('progress-bar').style.width=p+'%';document.getElementById('progress-caption').textContent=p+'% набора изучено. '+(n===20?'Отличная работа!':'Продолжай в своём темпе.');document.getElementById('streak').textContent=localStorage.getItem('de-streak')||'0';document.getElementById('quiz-stat').textContent=answered?Math.round(score/answered*100)+'%':'—';let due=words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length;let dueEl=document.getElementById('due-count');if(dueEl)dueEl.textContent=due;}
+function updateProgress(){let n=known.length,p=Math.round(n/words.length*100);document.getElementById('home-count').textContent=n+' / '+words.length;document.getElementById('known-count').textContent=n+' / '+words.length;document.getElementById('known-stat').textContent=n;document.getElementById('home-bar').style.width=p+'%';document.getElementById('progress-bar').style.width=p+'%';document.getElementById('progress-caption').textContent=p+'% набора изучено. '+(p===100?'Отличная работа!':'Продолжай в своём темпе.');document.getElementById('streak').textContent=updateStreak();let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');document.getElementById('quiz-stat').textContent=quizData.quizTotal?Math.round(quizData.quizCorrect/quizData.quizTotal*100)+'%':'—';let due=words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length;let dueEl=document.getElementById('due-count');if(dueEl)dueEl.textContent=due;renderStatistics();}
 function renderQuiz(){if(qIndex>=quizItems.length){document.getElementById('quiz-question').textContent='Тест завершён!';document.getElementById('quiz-options').innerHTML='<div class="empty">Твой результат: '+score+' из '+quizItems.length+'. Отличная работа — продолжай практиковаться!</div>';document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';return}
 let q=quizItems[qIndex];document.getElementById('quiz-count').textContent='Вопрос '+(qIndex+1)+' из '+quizItems.length;document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-question').textContent=q.q;document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';document.getElementById('quiz-options').innerHTML=q.a.map((a,i)=>'<button class="quiz-option" onclick="answerQuiz('+i+')">'+a+'</button>').join('')}
-function answerQuiz(i){let q=quizItems[qIndex],opts=document.querySelectorAll('.quiz-option');opts.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===i&&i!==q.c)b.classList.add('wrong')});if(i===q.c)score++;answered++;let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');quizData.quizTotal=(quizData.quizTotal||0)+1;if(i===q.c)quizData.quizCorrect=(quizData.quizCorrect||0)+1;saveLanguageProgress('en',quizData);document.getElementById('quiz-feedback').textContent=i===q.c?'Верно! Отлично 🎉':'Правильный ответ: '+q.a[q.c];document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-next').style.display='block';updateProgress();}
+function answerQuiz(i){let q=quizItems[qIndex],opts=document.querySelectorAll('.quiz-option');opts.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===i&&i!==q.c)b.classList.add('wrong')});if(i===q.c)score++;answered++;logActivity('tests');let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');quizData.quizTotal=(quizData.quizTotal||0)+1;if(i===q.c)quizData.quizCorrect=(quizData.quizCorrect||0)+1;saveLanguageProgress('en',quizData);document.getElementById('quiz-feedback').textContent=i===q.c?'Верно! Отлично 🎉':'Правильный ответ: '+q.a[q.c];document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-next').style.display='block';updateProgress();}
 function nextQuestion(){qIndex++;renderQuiz()}
 function filterTopic(t){selectedTopic=t;let ids=words.map((w,i)=>w[3]===t?i:null).filter(x=>x!==null);if(ids.length){index=ids[0];openPage('cards');document.getElementById('topic-note').textContent='Открыты карточки по теме: '+t+'.';}}
 function resetProgress(){if(confirm('Точно сбросить изученные карточки и результаты на этом устройстве?')){known=[];score=0;answered=0;localStorage.removeItem('de-known');updateProgress();}}
-renderCard();renderQuiz();updateProgress();renderLanguages();
+renderCard();renderQuiz();renderLanguages();updateProgress();
 try{const tg=window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
 if('speechSynthesis' in window){window.speechSynthesis.getVoices();}
+window.addEventListener('load',()=>{renderCard();updateProgress();});
 </script>
-<script src="daily_english_material.js"></script>
+ <script src="daily_english_material.js"></script>
 <script src="daily_english_rich_pack.js"></script>
 </body>
 </html>
