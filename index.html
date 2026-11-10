@@ -217,7 +217,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  <div class="lesson-card"><div class="lesson-meta">Урок 01 · A1–A2</div><h3>👋 Introductions & Small Talk</h3><p>Знакомство, приветствия, рассказ о себе и простой разговор.</p><button class="lesson-action" onclick="openLesson('introductions')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><button class="lesson-action" onclick="openLesson('shopping')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><button class="lesson-action" onclick="openLesson('work')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><button class="lesson-action" onclick="openLesson('housing')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
 </section>
@@ -279,6 +279,69 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <h4>Урок завершён?</h4>
   <button class="primary" onclick="completeLesson('work')">Отметить урок пройденным</button>
   <p id="work-complete-note" class="lesson-note"></p>
+ </div>
+</section>
+
+
+<section id="lesson-housing" class="page">
+ <button class="back" onclick="openPage('learning')">← К программе</button>
+ <div class="eyebrow">LESSON 04 · A2 · AMERICAN ENGLISH</div>
+ <h1>Housing</h1>
+ <p class="sub">Цель: спросить об аренде, узнать условия жилья и сообщить о бытовой проблеме.</p>
+ <div class="lesson-step">
+  <h4>1. Понятный диалог · Listen & understand</h4>
+  <p class="lesson-note">Jamie звонит по объявлению об аренде квартиры. Прочитай разговор, затем прослушай его целиком.</p>
+  <div class="dialogue-line"><b>Tenant:</b> Hi, I'm calling about the apartment for rent.</div>
+  <div class="dialogue-line"><b>Landlord:</b> Sure. Are you looking to move in soon?</div>
+  <div class="dialogue-line"><b>Tenant:</b> Yes. How much is the rent?</div>
+  <div class="dialogue-line"><b>Landlord:</b> It's $1,200 a month. Utilities are not included.</div>
+  <div class="dialogue-line"><b>Tenant:</b> I see. Is there a security deposit?</div>
+  <div class="dialogue-line"><b>Landlord:</b> Yes, the deposit is one month's rent.</div>
+  <div class="dialogue-line"><b>Tenant:</b> Okay. Can I see the apartment this Saturday?</div>
+  <div class="dialogue-line"><b>Landlord:</b> Of course. How about 10 a.m.?</div>
+  <button class="lesson-action" data-text="Hi, I'm calling about the apartment for rent. Sure. Are you looking to move in soon? Yes. How much is the rent? It's twelve hundred dollars a month. Utilities are not included. I see. Is there a security deposit? Yes, the deposit is one month's rent. Okay. Can I see the apartment this Saturday? Of course. How about ten a.m." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
+ </div>
+ <div class="lesson-step">
+  <h4>2. Пойми смысл · Comprehension</h4>
+  <p class="lesson-note">How much is the monthly rent?</p>
+  <button class="lesson-choice" onclick="checkHousingAnswer(this,false)">$900 a month.</button>
+  <button class="lesson-choice" onclick="checkHousingAnswer(this,true)">$1,200 a month.</button>
+  <button class="lesson-choice" onclick="checkHousingAnswer(this,false)">$1,500 a month.</button>
+  <p id="housing-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>3. Полезные разговорные блоки · Chunks</h4>
+  <div class="chunk"><strong>I'm calling about the apartment for rent.</strong><small>Я звоню насчёт квартиры, которая сдаётся.</small><button class="speak-example" data-text="I'm calling about the apartment for rent." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>How much is the rent?</strong><small>Сколько стоит аренда?</small><button class="speak-example" data-text="How much is the rent?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>Are utilities included?</strong><small>Коммунальные услуги включены в стоимость?</small><button class="speak-example" data-text="Are utilities included?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>Is there a security deposit?</strong><small>Есть ли залог за жильё?</small><button class="speak-example" data-text="Is there a security deposit?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>Can I see the apartment?</strong><small>Можно посмотреть квартиру?</small><button class="speak-example" data-text="Can I see the apartment?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>4. Вспомни без подсказки · Active Recall</h4>
+  <p class="lesson-note">Как спросить: «Коммунальные услуги включены?»</p>
+  <button class="lesson-choice" onclick="document.getElementById('housing-recall').textContent='Are utilities included?'">Показать ответ</button>
+  <p id="housing-recall" class="lesson-note"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>5. Скажи о себе · Speaking</h4>
+  <p class="lesson-note">Ответь на вопрос: <b style="color:#fff">“What kind of place are you looking for?”</b></p>
+  <button class="speak-example" data-text="What kind of place are you looking for?" onclick="speakText(this.dataset.text)">▶ Прослушать вопрос</button>
+  <textarea class="lesson-input" id="housing-speaking" placeholder="I'm looking for an apartment..."></textarea>
+  <p class="lesson-note">Напиши 2–3 предложения, а затем попробуй произнести их вслух. Автоматической проверки пока нет.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>6. Реальная ситуация · Real life</h4>
+  <p class="lesson-note">Ты хочешь узнать, включены ли коммунальные услуги в аренду. Что спросишь?</p>
+  <button class="lesson-choice" onclick="checkHousingRole(this,false)">Do you have any experience?</button>
+  <button class="lesson-choice" onclick="checkHousingRole(this,true)">Are utilities included?</button>
+  <button class="lesson-choice" onclick="checkHousingRole(this,false)">When can you start?</button>
+  <p id="housing-role-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>Урок завершён?</h4>
+  <button class="primary" onclick="completeLesson('housing')">Отметить урок пройденным</button>
+  <p id="housing-complete-note" class="lesson-note"></p>
  </div>
 </section>
 
@@ -629,8 +692,8 @@ function removeLanguage(lang){
 
 function openLesson(id){
  if(id==='introductions'){openPage('lesson');return;}
- if(id==='shopping'){openPage('lesson-shopping');return;}
- if(id==='work'){openPage('lesson-work');return;}
+ if(id==='shopping'){openPage('lesson-shopping');return;}\n if(id==='work'){openPage('lesson-work');return;}
+ if(id==='housing'){openPage('lesson-housing');return;}
 }
 function checkLessonAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
@@ -654,6 +717,18 @@ function checkShoppingRole(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
  choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
  document.getElementById('shopping-role-feedback').textContent=isCorrect?'Именно так! “No, I’m good, thanks” — естественный разговорный отказ от пакета.':'Попробуй ещё раз. Если пакет не нужен, можно сказать: “No, I’m good, thanks.”';
+}
+
+
+function checkHousingAnswer(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('housing-feedback').textContent=isCorrect?'Верно! Аренда составляет $1,200 в месяц.':'Не совсем. В диалоге арендодатель говорит: “twelve hundred dollars a month.”';
+}
+function checkHousingRole(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('housing-role-feedback').textContent=isCorrect?'Правильно! Так спрашивают, включены ли коммунальные услуги.':'Попробуй ещё раз: utilities — это коммунальные услуги.';
 }
 
 function checkWorkAnswer(button,isCorrect){
