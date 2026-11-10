@@ -84,6 +84,12 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 .quiz-option:disabled{opacity:1}
 .empty{color:#a9bbce}
 @media(min-width:520px){.app{padding-top:12px}}
+.course-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.course-stat{background:linear-gradient(145deg,#14263b,#101c2d);border:1px solid var(--line);border-radius:16px;padding:13px 9px;text-align:center}
+.course-stat strong{display:block;font-size:21px;color:#55d1f0}
+.course-stat small{display:block;color:#a5b5c8;font-size:11px;margin-top:4px}
+.course-progress-bar{height:7px;background:#25364b;border-radius:20px;overflow:hidden;margin-top:12px}
+.course-progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#25c9ec,#5b9cff);width:0%}
 </style>
 
 
@@ -186,6 +192,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <div class="progress-top"><span>Статус курса</span><strong id="course-status">Готов</strong></div>
   <p class="sub" id="course-detail" style="margin-top:10px">Материалы курса появятся здесь.</p>
  </div>
+ <div id="course-progress-panel"></div>
  <div id="course-actions" style="margin-top:16px"></div>
 </section>
 </div>
@@ -210,8 +217,7 @@ const words=[
 ["I have no idea.","Понятия не имею.","I have no idea where it is.","Повседневное общение"],
 ["That makes sense.","В этом есть смысл / Логично.","Oh, that makes sense.","Повседневное общение"],
 ["I'm looking for a job.","Я ищу работу.","I'm looking for a job right now.","Работа"],
-["I just got off work.","Я только что закончил работу.","I'm tired. I just got off work.","Работа"],
-["I'm running late.","Я опаздываю.","Sorry, I'm running a little late.","Работа"],
+["I just got off work.","Я только что закончил работу.","I'm tired. I just got off work.","Работа"],["I'm running late.","Я опаздываю.","Sorry, I'm running a little late.","Работа"],
 ["Can you give me a hand?","Можешь мне помочь?","Can you give me a hand with this?","Работа"],
 ["I'm done for today.","На сегодня я закончил.","I'm done for today. See you tomorrow.","Работа"],
 ["I'd love to.","Я бы с удовольствием.","Would you like to get coffee? — I'd love to.","Знакомства"],
@@ -265,6 +271,30 @@ function saveLanguageSettings(){
  const native=document.getElementById('native-language').value;
  localStorage.setItem('dl-native',native);
 }
+// Independent progress records for every language. English keeps its existing data keys.
+function getLanguageProgress(lang){
+ if(lang==='en'){
+  const quiz=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');
+  return {known:Array.isArray(known)?known.length:0,total:words.length,due:words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length,quizCorrect:quiz.quizCorrect||0,quizTotal:quiz.quizTotal||0};
+ }
+ const data=JSON.parse(localStorage.getItem('dl-progress-'+lang)||'{"known":[],"srs":{},"quizCorrect":0,"quizTotal":0}');
+ return {known:(data.known||[]).length,total:0,due:0,quizCorrect:data.quizCorrect||0,quizTotal:data.quizTotal||0};
+}
+function saveLanguageProgress(lang,data){
+ if(lang==='en'){
+  localStorage.setItem('dl-progress-en',JSON.stringify({quizCorrect:data.quizCorrect||0,quizTotal:data.quizTotal||0}));
+ }else{
+  localStorage.setItem('dl-progress-'+lang,JSON.stringify(data));
+ }
+}
+function renderCourseProgress(lang){
+ const panel=document.getElementById('course-progress-panel');
+ if(!panel)return;
+ const p=getLanguageProgress(lang);
+ const percent=p.total?Math.round(p.known/p.total*100):0;
+ const quizRate=p.quizTotal?Math.round(p.quizCorrect/p.quizTotal*100):0;
+ panel.innerHTML=`<div class="course-stats"><div class="course-stat"><strong>${p.known}</strong><small>Выучено</small></div><div class="course-stat"><strong>${p.total?p.total:'—'}</strong><small>Карточек</small></div><div class="course-stat"><strong>${p.quizTotal?quizRate+'%':'—'}</strong><small>Тесты</small></div></div>${p.total?`<div class="course-progress-bar"><i style="width:${percent}%"></i></div><p class="sub" style="margin-top:8px">Изучено ${percent}% карточек · Повторить сегодня: ${p.due}</p>`:'<p class="sub" style="margin-top:12px">Статистика этого языка будет заполняться по мере добавления уроков, карточек и тестов.</p>'}`;
+}
 function renderLanguages(){
  const list=document.getElementById('my-languages-list');
  if(!list)return;
@@ -276,7 +306,8 @@ function renderLanguages(){
   const name=document.createElement('strong');
   name.textContent=languageOptions[lang] || lang;
   const note=document.createElement('small');
-  note.textContent=lang==='en'?'Основной курс':'Язык добавлен';
+  const progress=getLanguageProgress(lang);
+  note.textContent=lang==='en'?`Основной курс · ${progress.known} выучено`:`Отдельный прогресс · ${progress.known} выучено`;
   info.append(name,note);
   row.append(info);
   const actions=document.createElement('span');
@@ -308,6 +339,7 @@ function openCourse(lang){
  const detail=document.getElementById('course-detail');
  const actions=document.getElementById('course-actions');
  actions.innerHTML='';
+ renderCourseProgress(lang);
  if(lang==='en'){
   description.textContent='Американский английский — твой основной курс.';
   status.textContent='Активен';
@@ -348,7 +380,7 @@ function removeLanguage(lang){
 
 function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();if(id==='languages')renderLanguages();updateProgress();window.scrollTo(0,0)}
 function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
- 
+
 async function speakText(text) {
   try {
     const response = await fetch(
@@ -390,7 +422,7 @@ function markKnown(){if(!known.includes(index)){known.push(index);localStorage.s
 function updateProgress(){let n=known.length,p=Math.round(n/words.length*100);document.getElementById('home-count').textContent=n+' / '+words.length;document.getElementById('known-count').textContent=n+' / '+words.length;document.getElementById('known-stat').textContent=n;document.getElementById('home-bar').style.width=p+'%';document.getElementById('progress-bar').style.width=p+'%';document.getElementById('progress-caption').textContent=p+'% набора изучено. '+(n===20?'Отличная работа!':'Продолжай в своём темпе.');document.getElementById('streak').textContent=localStorage.getItem('de-streak')||'0';document.getElementById('quiz-stat').textContent=answered?Math.round(score/answered*100)+'%':'—';let due=words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length;let dueEl=document.getElementById('due-count');if(dueEl)dueEl.textContent=due;}
 function renderQuiz(){if(qIndex>=quizItems.length){document.getElementById('quiz-question').textContent='Тест завершён!';document.getElementById('quiz-options').innerHTML='<div class="empty">Твой результат: '+score+' из '+quizItems.length+'. Отличная работа — продолжай практиковаться!</div>';document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';return}
 let q=quizItems[qIndex];document.getElementById('quiz-count').textContent='Вопрос '+(qIndex+1)+' из '+quizItems.length;document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-question').textContent=q.q;document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';document.getElementById('quiz-options').innerHTML=q.a.map((a,i)=>'<button class="quiz-option" onclick="answerQuiz('+i+')">'+a+'</button>').join('')}
-function answerQuiz(i){let q=quizItems[qIndex],opts=document.querySelectorAll('.quiz-option');opts.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===i&&i!==q.c)b.classList.add('wrong')});if(i===q.c)score++;answered++;document.getElementById('quiz-feedback').textContent=i===q.c?'Верно! Отлично 🎉':'Правильный ответ: '+q.a[q.c];document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-next').style.display='block';updateProgress()}
+function answerQuiz(i){let q=quizItems[qIndex],opts=document.querySelectorAll('.quiz-option');opts.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===i&&i!==q.c)b.classList.add('wrong')});if(i===q.c)score++;answered++;let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');quizData.quizTotal=(quizData.quizTotal||0)+1;if(i===q.c)quizData.quizCorrect=(quizData.quizCorrect||0)+1;saveLanguageProgress('en',quizData);document.getElementById('quiz-feedback').textContent=i===q.c?'Верно! Отлично 🎉':'Правильный ответ: '+q.a[q.c];document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-next').style.display='block';updateProgress();}
 function nextQuestion(){qIndex++;renderQuiz()}
 function filterTopic(t){selectedTopic=t;let ids=words.map((w,i)=>w[3]===t?i:null).filter(x=>x!==null);if(ids.length){index=ids[0];openPage('cards');document.getElementById('topic-note').textContent='Открыты карточки по теме: '+t+'.';}}
 function resetProgress(){if(confirm('Точно сбросить изученные карточки и результаты на этом устройстве?')){known=[];score=0;answered=0;localStorage.removeItem('de-known');updateProgress();}}
@@ -398,7 +430,7 @@ renderCard();renderQuiz();updateProgress();renderLanguages();
 try{const tg=window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
 if('speechSynthesis' in window){window.speechSynthesis.getVoices();}
 </script>
- <script src="daily_english_material.js"></script>
+<script src="daily_english_material.js"></script>
 <script src="daily_english_rich_pack.js"></script>
 </body>
 </html>
