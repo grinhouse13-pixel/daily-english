@@ -194,7 +194,39 @@ const quizItems=[
 ];
 function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();updateProgress();window.scrollTo(0,0)}
 function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
-function speakText(text){if(!('speechSynthesis' in window)){alert('Озвучка не поддерживается в этом браузере. Попробуй открыть приложение в Telegram или Chrome.');return;}window.speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.88;u.pitch=1;let voices=window.speechSynthesis.getVoices();let v=voices.find(x=>x.lang==='en-US'&&/Samantha|Google US English|United States/i.test(x.name))||voices.find(x=>x.lang==='en-US');if(v)u.voice=v;window.speechSynthesis.speak(u);}
+ 
+async function speakText(text) {
+  try {
+    const response = await fetch(
+      "https://still-water-38f1.damnrock-19.workers.dev",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: text })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("ElevenLabs error: " + response.status);
+    }
+
+    const audioBlob = await response.blob();
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+
+    audio.onended = () => URL.revokeObjectURL(audioUrl);
+    audio.onerror = () => URL.revokeObjectURL(audioUrl);
+
+    await audio.play();
+
+  } catch (error) {
+    console.error("Speech error:", error);
+    alert("Не удалось воспроизвести аудио. Попробуй ещё раз.");
+  }
+}
+
 function speakCurrent(){speakText(words[index][0]);}
 function speakExample(){speakText(words[index][2]);}
 function rateCard(level){let now=Date.now(),old=srs[index]||{interval:0};let days=level==='hard'?1:level==='good'?(old.interval?Math.max(2,Math.round(old.interval*2)):2):(old.interval?Math.max(4,Math.round(old.interval*2.5)):4);srs[index]={interval:days,due:now+days*86400000,last:now,level};localStorage.setItem('de-srs',JSON.stringify(srs));if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known));}document.getElementById('srs-hint').textContent='Готово! Следующее повторение через '+days+' дн.';updateProgress();setTimeout(nextCard,450);}
