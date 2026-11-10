@@ -216,10 +216,70 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  <div class="section-head"><h3>Программа обучения</h3><span class="muted" style="font-size:12px">A1 → B1</span></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 01 · A1–A2</div><h3>👋 Introductions & Small Talk</h3><p>Знакомство, приветствия, рассказ о себе и простой разговор.</p><button class="lesson-action" onclick="openLesson('introductions')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><button class="lesson-action" onclick="openLesson('shopping')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><button class="lesson-action" onclick="openLesson('work')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+</section>
+
+<section id="lesson-work" class="page">
+ <button class="back" onclick="openPage('learning')">← К программе</button>
+ <div class="eyebrow">LESSON 03 · A1–A2 · AMERICAN ENGLISH</div>
+ <h1>Work & Employment</h1>
+ <p class="sub">Цель: рассказать о работе, опыте и графике, а также задать простые вопросы работодателю.</p>
+ <div class="lesson-step">
+  <h4>1. Понятный диалог · Listen & understand</h4>
+  <p class="lesson-note">Alex ищет работу и разговаривает с менеджером кафе. Сначала прочитай, затем прослушай весь разговор.</p>
+  <div class="dialogue-line"><b>Manager:</b> Hi! Are you looking for a job?</div>
+  <div class="dialogue-line"><b>Alex:</b> Yes, I am. Are you hiring?</div>
+  <div class="dialogue-line"><b>Manager:</b> We are. Do you have any experience?</div>
+  <div class="dialogue-line"><b>Alex:</b> Yes. I worked in a restaurant for two years.</div>
+  <div class="dialogue-line"><b>Manager:</b> Great. When can you start?</div>
+  <div class="dialogue-line"><b>Alex:</b> I can start next Monday.</div>
+  <button class="lesson-action" data-text="Hi! Are you looking for a job? Yes, I am. Are you hiring? We are. Do you have any experience? Yes. I worked in a restaurant for two years. Great. When can you start? I can start next Monday." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
+ </div>
+ <div class="lesson-step">
+  <h4>2. Пойми смысл · Comprehension</h4>
+  <p class="lesson-note">How long did Alex work in a restaurant?</p>
+  <button class="lesson-choice" onclick="checkWorkAnswer(this,false)">For two months.</button>
+  <button class="lesson-choice" onclick="checkWorkAnswer(this,true)">For two years.</button>
+  <button class="lesson-choice" onclick="checkWorkAnswer(this,false)">For five years.</button>
+  <p id="work-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>3. Полезные разговорные блоки · Chunks</h4>
+  <div class="chunk"><strong>Are you hiring?</strong><small>Вы сейчас нанимаете сотрудников?</small><button class="speak-example" onclick="speakText('Are you hiring?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>I'm looking for a job.</strong><small>Я ищу работу.</small><button class="speak-example" onclick="speakText('I\'m looking for a job.')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Do you have any experience?</strong><small>У вас есть опыт работы?</small><button class="speak-example" onclick="speakText('Do you have any experience?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>When can you start?</strong><small>Когда вы можете приступить?</small><button class="speak-example" onclick="speakText('When can you start?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>I can start next Monday.</strong><small>Я могу начать в следующий понедельник.</small><button class="speak-example" onclick="speakText('I can start next Monday.')">▶ Слушать</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>4. Вспомни без подсказки · Active recall</h4>
+  <p class="lesson-note">Как спросить работодателя: «Вы сейчас нанимаете?»</p>
+  <button class="lesson-choice" onclick="document.getElementById('work-recall').textContent='Are you hiring?'">Показать ответ</button>
+  <p id="work-recall" class="lesson-note"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>5. Скажи о себе · Speaking</h4>
+  <p class="lesson-note">Ответь на вопрос: <b style="color:#fff">“What kind of work are you looking for?”</b></p>
+  <button class="speak-example" onclick="speakText('What kind of work are you looking for?')">▶ Прослушать вопрос</button>
+  <textarea class="lesson-input" id="work-speaking" placeholder="I'm looking for a job in..."></textarea>
+  <p class="lesson-note">Попробуй сказать 2–3 предложения вслух. Поле помогает подготовить ответ, автоматической проверки пока нет.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>6. Реальная ситуация · Real life</h4>
+  <p class="lesson-note">Менеджер спрашивает: “When can you start?” Ты можешь начать в понедельник. Что ответишь?</p>
+  <button class="lesson-choice" onclick="checkWorkRole(this,false)">I started last Monday.</button>
+  <button class="lesson-choice" onclick="checkWorkRole(this,true)">I can start next Monday.</button>
+  <button class="lesson-choice" onclick="checkWorkRole(this,false)">I work every Monday.</button>
+  <p id="work-role-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>Урок завершён?</h4>
+  <button class="primary" onclick="completeLesson('work')">Отметить урок пройденным</button>
+  <p id="work-complete-note" class="lesson-note"></p>
+ </div>
 </section>
 
 <section id="lesson" class="page">
@@ -569,7 +629,7 @@ function removeLanguage(lang){
 
 function openLesson(id){
  if(id==='introductions'){openPage('lesson');return;}
- if(id==='shopping'){openPage('lesson-shopping');return;}
+ if(id==='shopping'){openPage('lesson-shopping');return;}\n if(id==='work'){openPage('lesson-work');return;}
 }
 function checkLessonAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
@@ -593,6 +653,17 @@ function checkShoppingRole(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
  choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
  document.getElementById('shopping-role-feedback').textContent=isCorrect?'Именно так! “No, I’m good, thanks” — естественный разговорный отказ от пакета.':'Попробуй ещё раз. Если пакет не нужен, можно сказать: “No, I’m good, thanks.”';
+}
+
+function checkWorkAnswer(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('work-feedback').textContent=isCorrect?'Верно! Alex работал в ресторане два года.':'Не совсем. Послушай ответ Alex ещё раз: “for two years.”';
+}
+function checkWorkRole(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('work-role-feedback').textContent=isCorrect?'Правильно! Так естественно сказать, когда можешь начать в следующий понедельник.':'Попробуй ещё раз. “I can start” означает «Я могу начать».';
 }
 
 function completeLesson(id){
