@@ -217,8 +217,8 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  <div class="lesson-card"><div class="lesson-meta">Урок 01 · A1–A2</div><h3>👋 Introductions & Small Talk</h3><p>Знакомство, приветствия, рассказ о себе и простой разговор.</p><button class="lesson-action" onclick="openLesson('introductions')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><button class="lesson-action" onclick="openLesson('shopping')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><button class="lesson-action" onclick="openLesson('work')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><button class="lesson-action" onclick="openLesson('housing')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><button class="lesson-action" onclick="openLesson('healthcare')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
 </section>
 
@@ -279,69 +279,6 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <h4>Урок завершён?</h4>
   <button class="primary" onclick="completeLesson('work')">Отметить урок пройденным</button>
   <p id="work-complete-note" class="lesson-note"></p>
- </div>
-</section>
-
-
-<section id="lesson-housing" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 04 · A2 · AMERICAN ENGLISH</div>
- <h1>Housing</h1>
- <p class="sub">Цель: спросить об аренде, узнать условия жилья и сообщить о бытовой проблеме.</p>
- <div class="lesson-step">
-  <h4>1. Понятный диалог · Listen & understand</h4>
-  <p class="lesson-note">Jamie звонит по объявлению об аренде квартиры. Прочитай разговор, затем прослушай его целиком.</p>
-  <div class="dialogue-line"><b>Tenant:</b> Hi, I'm calling about the apartment for rent.</div>
-  <div class="dialogue-line"><b>Landlord:</b> Sure. Are you looking to move in soon?</div>
-  <div class="dialogue-line"><b>Tenant:</b> Yes. How much is the rent?</div>
-  <div class="dialogue-line"><b>Landlord:</b> It's $1,200 a month. Utilities are not included.</div>
-  <div class="dialogue-line"><b>Tenant:</b> I see. Is there a security deposit?</div>
-  <div class="dialogue-line"><b>Landlord:</b> Yes, the deposit is one month's rent.</div>
-  <div class="dialogue-line"><b>Tenant:</b> Okay. Can I see the apartment this Saturday?</div>
-  <div class="dialogue-line"><b>Landlord:</b> Of course. How about 10 a.m.?</div>
-  <button class="lesson-action" data-text="Hi, I'm calling about the apartment for rent. Sure. Are you looking to move in soon? Yes. How much is the rent? It's twelve hundred dollars a month. Utilities are not included. I see. Is there a security deposit? Yes, the deposit is one month's rent. Okay. Can I see the apartment this Saturday? Of course. How about ten a.m." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">How much is the monthly rent?</p>
-  <button class="lesson-choice" onclick="checkHousingAnswer(this,false)">$900 a month.</button>
-  <button class="lesson-choice" onclick="checkHousingAnswer(this,true)">$1,200 a month.</button>
-  <button class="lesson-choice" onclick="checkHousingAnswer(this,false)">$1,500 a month.</button>
-  <p id="housing-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>I'm calling about the apartment for rent.</strong><small>Я звоню насчёт квартиры, которая сдаётся.</small><button class="speak-example" data-text="I'm calling about the apartment for rent." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>How much is the rent?</strong><small>Сколько стоит аренда?</small><button class="speak-example" data-text="How much is the rent?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Are utilities included?</strong><small>Коммунальные услуги включены в стоимость?</small><button class="speak-example" data-text="Are utilities included?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Is there a security deposit?</strong><small>Есть ли залог за жильё?</small><button class="speak-example" data-text="Is there a security deposit?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Can I see the apartment?</strong><small>Можно посмотреть квартиру?</small><button class="speak-example" data-text="Can I see the apartment?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
- </div>
- <div class="lesson-step">
-  <h4>4. Вспомни без подсказки · Active Recall</h4>
-  <p class="lesson-note">Как спросить: «Коммунальные услуги включены?»</p>
-  <button class="lesson-choice" onclick="document.getElementById('housing-recall').textContent='Are utilities included?'">Показать ответ</button>
-  <p id="housing-recall" class="lesson-note"></p>
- </div>
- <div class="lesson-step">
-  <h4>5. Скажи о себе · Speaking</h4>
-  <p class="lesson-note">Ответь на вопрос: <b style="color:#fff">“What kind of place are you looking for?”</b></p>
-  <button class="speak-example" data-text="What kind of place are you looking for?" onclick="speakText(this.dataset.text)">▶ Прослушать вопрос</button>
-  <textarea class="lesson-input" id="housing-speaking" placeholder="I'm looking for an apartment..."></textarea>
-  <p class="lesson-note">Напиши 2–3 предложения, а затем попробуй произнести их вслух. Автоматической проверки пока нет.</p>
- </div>
- <div class="lesson-step">
-  <h4>6. Реальная ситуация · Real life</h4>
-  <p class="lesson-note">Ты хочешь узнать, включены ли коммунальные услуги в аренду. Что спросишь?</p>
-  <button class="lesson-choice" onclick="checkHousingRole(this,false)">Do you have any experience?</button>
-  <button class="lesson-choice" onclick="checkHousingRole(this,true)">Are utilities included?</button>
-  <button class="lesson-choice" onclick="checkHousingRole(this,false)">When can you start?</button>
-  <p id="housing-role-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>Урок завершён?</h4>
-  <button class="primary" onclick="completeLesson('housing')">Отметить урок пройденным</button>
-  <p id="housing-complete-note" class="lesson-note"></p>
  </div>
 </section>
 
@@ -468,6 +405,92 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <p class="lesson-note">Повтори пять разговорных блоков и попробуй разыграть покупку самостоятельно.</p>
   <button class="lesson-action" onclick="completeLesson('shopping')">Отметить урок пройденным ✓</button>
   <p id="shopping-complete-note" class="lesson-note" style="margin-top:10px"></p>
+ </div>
+</section>
+
+
+<section id="lesson-healthcare" class="page">
+ <button class="back" onclick="openPage('learning')">← К программе</button>
+ <div class="eyebrow">LESSON 05 · A2 · AMERICAN ENGLISH</div>
+ <h1>Healthcare</h1>
+ <p class="sub">Цель: записаться на приём, простыми словами описать симптомы и спросить о лекарстве в аптеке.</p>
+ <div class="lesson-step">
+  <h4>1. Понятный диалог · At the doctor's office</h4>
+  <p class="lesson-note">Майк звонит в клинику, чтобы записаться на приём. Прочитай разговор, затем прослушай его целиком.</p>
+  <div class="dialogue-line"><b>Receptionist:</b> Good morning. How can I help you?</div>
+  <div class="dialogue-line"><b>Mike:</b> Hi. I'd like to make an appointment.</div>
+  <div class="dialogue-line"><b>Receptionist:</b> Sure. What's the problem?</div>
+  <div class="dialogue-line"><b>Mike:</b> I have a sore throat and a cough.</div>
+  <div class="dialogue-line"><b>Receptionist:</b> When did it start?</div>
+  <div class="dialogue-line"><b>Mike:</b> It started two days ago.</div>
+  <div class="dialogue-line"><b>Receptionist:</b> We have an opening tomorrow at 10 a.m.</div>
+  <div class="dialogue-line"><b>Mike:</b> That works for me. Thank you.</div>
+  <button class="lesson-action" data-text="Good morning. How can I help you? Hi. I'd like to make an appointment. Sure. What's the problem? I have a sore throat and a cough. When did it start? It started two days ago. We have an opening tomorrow at 10 a.m. That works for me. Thank you." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
+ </div>
+ <div class="lesson-step">
+  <h4>2. Пойми смысл · Comprehension</h4>
+  <p class="lesson-note">Why does Mike call the clinic?</p>
+  <button class="lesson-choice" onclick="checkHealthcareAnswer(this,false)">To cancel an appointment.</button>
+  <button class="lesson-choice" onclick="checkHealthcareAnswer(this,true)">To make an appointment.</button>
+  <button class="lesson-choice" onclick="checkHealthcareAnswer(this,false)">To ask for directions.</button>
+  <p id="healthcare-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>3. Полезные разговорные блоки · Chunks</h4>
+  <div class="chunk"><strong>I'd like to make an appointment.</strong><small>Я хотел(а) бы записаться на приём.</small><button class="speak-example" onclick="speakText(\"I'd like to make an appointment.\")">▶ Слушать</button></div>
+  <div class="chunk"><strong>I have a sore throat.</strong><small>У меня болит горло.</small><button class="speak-example" onclick="speakText('I have a sore throat.')">▶ Слушать</button></div>
+  <div class="chunk"><strong>I have a cough.</strong><small>У меня кашель.</small><button class="speak-example" onclick="speakText('I have a cough.')">▶ Слушать</button></div>
+  <div class="chunk"><strong>When did it start?</strong><small>Когда это началось?</small><button class="speak-example" onclick="speakText('When did it start?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>That works for me.</strong><small>Мне подходит.</small><button class="speak-example" onclick="speakText('That works for me.')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Do I need a prescription?</strong><small>Мне нужен рецепт?</small><button class="speak-example" onclick="speakText('Do I need a prescription?')">▶ Слушать</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>4. Слова по теме · Useful vocabulary</h4>
+  <div class="chunk"><strong>appointment</strong><small>запись / приём</small><button class="speak-example" onclick="speakText('appointment')">▶</button></div>
+  <div class="chunk"><strong>symptoms</strong><small>симптомы</small><button class="speak-example" onclick="speakText('symptoms')">▶</button></div>
+  <div class="chunk"><strong>fever</strong><small>температура / жар</small><button class="speak-example" onclick="speakText('fever')">▶</button></div>
+  <div class="chunk"><strong>headache</strong><small>головная боль</small><button class="speak-example" onclick="speakText('headache')">▶</button></div>
+  <div class="chunk"><strong>pharmacy</strong><small>аптека</small><button class="speak-example" onclick="speakText('pharmacy')">▶</button></div>
+  <div class="chunk"><strong>prescription</strong><small>рецепт</small><button class="speak-example" onclick="speakText('prescription')">▶</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>5. Грамматика в контексте · I have / I feel</h4>
+  <p class="lesson-note"><b style="color:#fff">I have...</b> часто используют, чтобы назвать симптом: <i>I have a headache.</i> — У меня болит голова. <b style="color:#fff">I feel...</b> описывает общее самочувствие: <i>I feel tired.</i> — Я чувствую усталость.</p>
+  <div class="dialogue-line"><b>I have a fever.</b> — У меня температура.</div>
+  <div class="dialogue-line"><b>I feel dizzy.</b> — У меня кружится голова.</div>
+  <div class="dialogue-line"><b>My stomach hurts.</b> — У меня болит живот.</div>
+  <button class="lesson-action" data-text="I have a fever. I feel dizzy. My stomach hurts." onclick="speakText(this.dataset.text)">🔊 Послушать примеры</button>
+ </div>
+ <div class="lesson-step">
+  <h4>6. Вспомни без подсказки · Active recall</h4>
+  <p class="lesson-note">Как сказать: «Я хотел бы записаться на приём»?</p>
+  <button class="lesson-action" onclick="document.getElementById('healthcare-recall').textContent=\"I'd like to make an appointment.\"">Показать ответ</button>
+  <p id="healthcare-recall" class="recall-answer" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>7. Твоя очередь говорить · Speaking</h4>
+  <p class="lesson-note">Представь, что ты звонишь в клинику. Скажи, что у тебя болит горло и кашель, и спроси, есть ли свободное время завтра.</p>
+  <button class="lesson-action" data-text="I'd like to make an appointment. I have a sore throat and a cough. Do you have any openings tomorrow?" onclick="speakText(this.dataset.text)">🔊 Послушать пример</button>
+  <textarea class="lesson-input" id="healthcare-speaking" placeholder="I'd like to make an appointment. I have..."></textarea>
+  <p class="lesson-note">Составь 2–3 предложения и произнеси их вслух. Автоматической проверки ответа пока нет.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>8. Реальная ситуация · At the pharmacy</h4>
+  <p class="lesson-note">Фармацевт спрашивает: “Do you have a prescription?” Ты хочешь узнать, нужен ли рецепт. Что спросишь?</p>
+  <button class="lesson-choice" onclick="checkHealthcareRole(this,false)">Where is the doctor?</button>
+  <button class="lesson-choice" onclick="checkHealthcareRole(this,true)">Do I need a prescription?</button>
+  <button class="lesson-choice" onclick="checkHealthcareRole(this,false)">When did it start?</button>
+  <p id="healthcare-role-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>9. Важно знать в США</h4>
+  <p class="lesson-note">В экстренной ситуации в США звонят <b style="color:#fff">911</b>. Для обычной записи к врачу можно сказать: “I'd like to make an appointment.” Учебный урок не заменяет медицинскую консультацию.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>Урок завершён?</h4>
+  <p class="lesson-note">Повтори диалог, чанки и попробуй самостоятельно разыграть звонок в клинику.</p>
+  <button class="primary" onclick="completeLesson('healthcare')">Отметить урок пройденным ✓</button>
+  <p id="healthcare-complete-note" class="lesson-note"></p>
  </div>
 </section>
 
@@ -694,7 +717,7 @@ function openLesson(id){
  if(id==='introductions'){openPage('lesson');return;}
  if(id==='shopping'){openPage('lesson-shopping');return;}
  if(id==='work'){openPage('lesson-work');return;}
- if(id==='housing'){openPage('lesson-housing');return;}
+ if(id==='healthcare'){openPage('lesson-healthcare');return;}
 }
 function checkLessonAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
@@ -720,18 +743,6 @@ function checkShoppingRole(button,isCorrect){
  document.getElementById('shopping-role-feedback').textContent=isCorrect?'Именно так! “No, I’m good, thanks” — естественный разговорный отказ от пакета.':'Попробуй ещё раз. Если пакет не нужен, можно сказать: “No, I’m good, thanks.”';
 }
 
-
-function checkHousingAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('housing-feedback').textContent=isCorrect?'Верно! Аренда составляет $1,200 в месяц.':'Не совсем. В диалоге арендодатель говорит: “twelve hundred dollars a month.”';
-}
-function checkHousingRole(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('housing-role-feedback').textContent=isCorrect?'Правильно! Так спрашивают, включены ли коммунальные услуги.':'Попробуй ещё раз: utilities — это коммунальные услуги.';
-}
-
 function checkWorkAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
  choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
@@ -741,6 +752,17 @@ function checkWorkRole(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
  choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
  document.getElementById('work-role-feedback').textContent=isCorrect?'Правильно! Так естественно сказать, когда можешь начать в следующий понедельник.':'Попробуй ещё раз. “I can start” означает «Я могу начать».';
+}
+
+function checkHealthcareAnswer(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('healthcare-feedback').textContent=isCorrect?'Верно! Майк звонит, чтобы записаться на приём.':'Не совсем. В начале Майк говорит: “I’d like to make an appointment.”';
+}
+function checkHealthcareRole(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('healthcare-role-feedback').textContent=isCorrect?'Правильно! “Do I need a prescription?” — «Мне нужен рецепт?»':'Попробуй ещё раз. Чтобы спросить о рецепте, скажи: “Do I need a prescription?”';
 }
 
 function completeLesson(id){
