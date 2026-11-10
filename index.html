@@ -215,7 +215,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  </div>
  <div class="section-head"><h3>Программа обучения</h3><span class="muted" style="font-size:12px">A1 → B1</span></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 01 · A1–A2</div><h3>👋 Introductions & Small Talk</h3><p>Знакомство, приветствия, рассказ о себе и простой разговор.</p><button class="lesson-action" onclick="openLesson('introductions')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><button class="lesson-action" onclick="openLesson('shopping')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
@@ -273,6 +273,78 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <p class="lesson-note">Перед завершением попробуй без подсказки произнести три выражения из урока и коротко представиться.</p>
   <button class="lesson-action" onclick="completeLesson('introductions')">Отметить урок пройденным ✓</button>
   <p id="lesson-complete-note" class="lesson-note" style="margin-top:10px"></p>
+ </div>
+</section>
+
+
+<section id="lesson-shopping" class="page">
+ <button class="back" onclick="openPage('learning')">← К программе</button>
+ <div class="eyebrow">LESSON 02 · A1–A2 · AMERICAN ENGLISH</div>
+ <h1>Shopping & Money</h1>
+ <p class="sub">Цель: спросить цену, найти нужный товар, понять продавца и оплатить покупку в американском магазине.</p>
+
+ <div class="lesson-step">
+  <h4>1. Понятный диалог · Listen & understand</h4>
+  <p class="lesson-note">Ты в магазине одежды. Сначала прочитай диалог, затем прослушай его целиком.</p>
+  <div class="dialogue-line"><b>Customer:</b> Excuse me, how much is this T-shirt?</div>
+  <div class="dialogue-line"><b>Clerk:</b> It's twenty dollars.</div>
+  <div class="dialogue-line"><b>Customer:</b> Do you have it in a medium?</div>
+  <div class="dialogue-line"><b>Clerk:</b> Let me check. Yes, here you go.</div>
+  <div class="dialogue-line"><b>Customer:</b> Great. Can I pay by card?</div>
+  <div class="dialogue-line"><b>Clerk:</b> Sure. You can tap right here.</div>
+  <div class="dialogue-line"><b>Customer:</b> Thanks!</div>
+  <div class="dialogue-line"><b>Clerk:</b> You're welcome. Have a good one!</div>
+  <button class="lesson-action" data-text="Excuse me, how much is this T-shirt? It's twenty dollars. Do you have it in a medium? Let me check. Yes, here you go. Great. Can I pay by card? Sure. You can tap right here. Thanks! You're welcome. Have a good one!" onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
+ </div>
+
+ <div class="lesson-step">
+  <h4>2. Пойми смысл · Comprehension</h4>
+  <p class="lesson-note">Выбери правильный ответ по диалогу.</p>
+  <p style="margin:12px 0 7px;font-size:14px">How much is the T-shirt?</p>
+  <button class="lesson-choice" onclick="checkShoppingAnswer(this,false)">Ten dollars.</button>
+  <button class="lesson-choice" onclick="checkShoppingAnswer(this,true)">Twenty dollars.</button>
+  <button class="lesson-choice" onclick="checkShoppingAnswer(this,false)">Thirty dollars.</button>
+  <p id="shopping-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+
+ <div class="lesson-step">
+  <h4>3. Полезные разговорные блоки · Chunks</h4>
+  <div class="chunk"><strong>How much is this?</strong><small>Сколько это стоит?</small><button class="speak-example" data-text="How much is this?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>Do you have it in a medium?</strong><small>У вас есть это в размере M?</small><button class="speak-example" data-text="Do you have it in a medium?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>Can I pay by card?</strong><small>Можно оплатить картой?</small><button class="speak-example" data-text="Can I pay by card?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>I'm just looking, thanks.</strong><small>Я просто смотрю, спасибо.</small><button class="speak-example" data-text="I'm just looking, thanks." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+  <div class="chunk"><strong>Can I get a receipt?</strong><small>Можно получить чек?</small><button class="speak-example" data-text="Can I get a receipt?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
+ </div>
+
+ <div class="lesson-step">
+  <h4>4. Вспомни без подсказки · Active Recall</h4>
+  <p class="lesson-note">Как спросить по-английски: «Сколько это стоит?»</p>
+  <button class="lesson-action" onclick="revealShoppingRecall()">Показать ответ</button>
+  <p id="shopping-recall" class="recall-answer" aria-live="polite"></p>
+ </div>
+
+ <div class="lesson-step">
+  <h4>5. Твоя очередь говорить · Speaking</h4>
+  <p class="lesson-note">Представь, что ты покупаешь футболку. Скажи вслух: спроси цену, нужный размер и можно ли оплатить картой.</p>
+  <button class="lesson-action" data-text="Excuse me, how much is this T-shirt? Do you have it in a medium? Can I pay by card?" onclick="speakText(this.dataset.text)">🔊 Послушать пример</button>
+  <textarea id="shopping-speaking" rows="3" placeholder="Напиши свой вариант на английском..."></textarea>
+  <p class="lesson-note">Попробуй произнести свой вариант вслух. Поле помогает подготовить ответ, автоматической проверки здесь пока нет.</p>
+ </div>
+
+ <div class="lesson-step">
+  <h4>6. Мини-ситуация · Real life</h4>
+  <p class="lesson-note">Продавец спрашивает: “Would you like a bag?” — «Вам нужен пакет?» Что ты ответишь, если пакет не нужен?</p>
+  <button class="lesson-choice" onclick="checkShoppingRole(this,false)">Yes, please.</button>
+  <button class="lesson-choice" onclick="checkShoppingRole(this,true)">No, I'm good, thanks.</button>
+  <button class="lesson-choice" onclick="checkShoppingRole(this,false)">How much is it?</button>
+  <p id="shopping-role-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+
+ <div class="lesson-step">
+  <h4>7. Завершение урока</h4>
+  <p class="lesson-note">Повтори пять разговорных блоков и попробуй разыграть покупку самостоятельно.</p>
+  <button class="lesson-action" onclick="completeLesson('shopping')">Отметить урок пройденным ✓</button>
+  <p id="shopping-complete-note" class="lesson-note" style="margin-top:10px"></p>
  </div>
 </section>
 
@@ -496,8 +568,8 @@ function removeLanguage(lang){
 }
 
 function openLesson(id){
- if(id!=='introductions')return;
- openPage('lesson');
+ if(id==='introductions'){openPage('lesson');return;}
+ if(id==='shopping'){openPage('lesson-shopping');return;}
 }
 function checkLessonAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
@@ -508,6 +580,21 @@ function checkLessonAnswer(button,isCorrect){
 function revealLessonRecall(){
  document.getElementById('lesson-recall').textContent='Nice to meet you.';
 }
+
+function checkShoppingAnswer(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('shopping-feedback').textContent=isCorrect?'Верно! Продавец говорит: “It’s twenty dollars.”':'Не совсем. В диалоге продавец называет цену: “It’s twenty dollars.”';
+}
+function revealShoppingRecall(){
+ document.getElementById('shopping-recall').textContent='How much is this?';
+}
+function checkShoppingRole(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('shopping-role-feedback').textContent=isCorrect?'Именно так! “No, I’m good, thanks” — естественный разговорный отказ от пакета.':'Попробуй ещё раз. Если пакет не нужен, можно сказать: “No, I’m good, thanks.”';
+}
+
 function completeLesson(id){
  const completed=JSON.parse(localStorage.getItem('dl-completed-lessons-en')||'[]');
  if(!completed.includes(id)){completed.push(id);localStorage.setItem('dl-completed-lessons-en',JSON.stringify(completed));}
