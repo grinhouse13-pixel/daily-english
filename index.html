@@ -236,7 +236,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
   <div class="dialogue-line"><b>Sam:</b> Nice to meet you, Alex. I'm Sam.</div>
   <div class="dialogue-line"><b>Alex:</b> Nice to meet you too. Are you from around here?</div>
   <div class="dialogue-line"><b>Sam:</b> Not really. I just moved here.</div>
-  <button class="lesson-action" onclick="speakText(\"Hey, how's it going? Pretty good, thanks. How about you? I'm doing well. I'm Alex, by the way. Nice to meet you, Alex. I'm Sam. Nice to meet you too. Are you from around here? Not really. I just moved here.\")">🔊 Прослушать диалог</button>
+  <button class="lesson-action" data-text="Hey, how's it going? Pretty good, thanks. How about you? I'm doing well. I'm Alex, by the way. Nice to meet you, Alex. I'm Sam. Nice to meet you too. Are you from around here? Not really. I just moved here." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
  </div>
  <div class="lesson-step">
   <h4>2. Пойми смысл · Comprehension</h4>
@@ -249,10 +249,10 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  </div>
  <div class="lesson-step">
   <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>How's it going?</strong><small>Как дела? Неформальное приветствие.</small><button class="speak-example" onclick="speakText(\"How's it going?\")">▶ Слушать</button></div>
+  <div class="chunk"><strong>How's it going?</strong><small>Как дела? Неформальное приветствие.</small><button class="speak-example" data-text="How's it going?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
   <div class="chunk"><strong>How about you?</strong><small>А ты? / А у тебя?</small><button class="speak-example" onclick="speakText('How about you?')">▶ Слушать</button></div>
   <div class="chunk"><strong>Nice to meet you.</strong><small>Приятно познакомиться.</small><button class="speak-example" onclick="speakText('Nice to meet you.')">▶ Слушать</button></div>
-  <div class="chunk"><strong>I'm ... by the way.</strong><small>Я ..., кстати. Удобно представиться в разговоре.</small><button class="speak-example" onclick="speakText(\"I'm Alex, by the way.\")">▶ Слушать</button></div>
+  <div class="chunk"><strong>I'm ... by the way.</strong><small>Я ..., кстати. Удобно представиться в разговоре.</small><button class="speak-example" data-text="I'm Alex, by the way." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
   <div class="chunk"><strong>Are you from around here?</strong><small>Ты местный? / Ты отсюда?</small><button class="speak-example" onclick="speakText('Are you from around here?')">▶ Слушать</button></div>
  </div>
  <div class="lesson-step">
