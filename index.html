@@ -219,7 +219,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><button class="lesson-action" onclick="openLesson('work')">Открыть урок →</button></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
  <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><button class="lesson-action" onclick="openLesson('healthcare')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><p class="lesson-note" style="margin-top:8px">Следующий модуль программы.</p></div>
+ <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><button class="lesson-action" onclick="openLesson('transportation')">Открыть урок →</button></div>
 </section>
 
 <section id="lesson-work" class="page">
@@ -494,6 +494,93 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  </div>
 </section>
 
+<section id="lesson-transportation" class="page">
+ <button class="back" onclick="openPage('learning')">← К программе</button>
+ <div class="eyebrow">LESSON 06 · A2–B1 · AMERICAN ENGLISH</div>
+ <h1>Transportation & Directions</h1>
+ <p class="sub">Цель: спросить дорогу, разобраться с автобусом или метро, купить билет и объяснить, куда тебе нужно попасть.</p>
+ <div class="lesson-step">
+  <h4>1. Понятный диалог · At the bus stop</h4>
+  <p class="lesson-note">Эмма хочет доехать до центра города. Она спрашивает местного жителя, на какой автобус сесть. Прочитай диалог, затем прослушай его целиком.</p>
+  <div class="dialogue-line"><b>Emma:</b> Excuse me. Does this bus go downtown?</div>
+  <div class="dialogue-line"><b>Man:</b> Yes, it does. You need the number 12.</div>
+  <div class="dialogue-line"><b>Emma:</b> Where can I get a ticket?</div>
+  <div class="dialogue-line"><b>Man:</b> You can pay on the bus with a card.</div>
+  <div class="dialogue-line"><b>Emma:</b> How long does it take?</div>
+  <div class="dialogue-line"><b>Man:</b> About twenty minutes, depending on traffic.</div>
+  <div class="dialogue-line"><b>Emma:</b> Thanks for your help!</div>
+  <div class="dialogue-line"><b>Man:</b> No problem.</div>
+  <button class="lesson-action" data-text="Excuse me. Does this bus go downtown? Yes, it does. You need the number 12. Where can I get a ticket? You can pay on the bus with a card. How long does it take? About twenty minutes, depending on traffic. Thanks for your help! No problem." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
+ </div>
+ <div class="lesson-step">
+  <h4>2. Пойми смысл · Comprehension</h4>
+  <p class="lesson-note">How can Emma pay for the bus?</p>
+  <button class="lesson-choice" onclick="checkTransportAnswer(this,false)">Only with cash at the station.</button>
+  <button class="lesson-choice" onclick="checkTransportAnswer(this,true)">With a card on the bus.</button>
+  <button class="lesson-choice" onclick="checkTransportAnswer(this,false)">She doesn't need a ticket.</button>
+  <p id="transport-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>3. Полезные разговорные блоки · Chunks</h4>
+  <div class="chunk"><strong>Does this bus go downtown?</strong><small>Этот автобус едет в центр?</small><button class="speak-example" onclick="speakText('Does this bus go downtown?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Where can I get a ticket?</strong><small>Где можно купить билет?</small><button class="speak-example" onclick="speakText('Where can I get a ticket?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>How long does it take?</strong><small>Сколько времени это занимает?</small><button class="speak-example" onclick="speakText('How long does it take?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Which way is the subway?</strong><small>В какой стороне метро?</small><button class="speak-example" onclick="speakText('Which way is the subway?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Where should I get off?</strong><small>Где мне выходить?</small><button class="speak-example" onclick="speakText('Where should I get off?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>Is it within walking distance?</strong><small>До этого можно дойти пешком?</small><button class="speak-example" onclick="speakText('Is it within walking distance?')">▶ Слушать</button></div>
+  <div class="chunk"><strong>I'm looking for this address.</strong><small>Я ищу этот адрес.</small><button class="speak-example" onclick="speakText(\"I'm looking for this address.\")">▶ Слушать</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>4. Слова по теме · Useful vocabulary</h4>
+  <div class="chunk"><strong>bus stop</strong><small>автобусная остановка</small><button class="speak-example" onclick="speakText('bus stop')">▶</button></div>
+  <div class="chunk"><strong>subway</strong><small>метро (обычное американское название)</small><button class="speak-example" onclick="speakText('subway')">▶</button></div>
+  <div class="chunk"><strong>fare</strong><small>стоимость проезда</small><button class="speak-example" onclick="speakText('fare')">▶</button></div>
+  <div class="chunk"><strong>transfer</strong><small>пересадка</small><button class="speak-example" onclick="speakText('transfer')">▶</button></div>
+  <div class="chunk"><strong>one-way ticket</strong><small>билет в одну сторону</small><button class="speak-example" onclick="speakText('one-way ticket')">▶</button></div>
+  <div class="chunk"><strong>traffic</strong><small>дорожное движение / пробки</small><button class="speak-example" onclick="speakText('traffic')">▶</button></div>
+  <div class="chunk"><strong>intersection</strong><small>перекрёсток</small><button class="speak-example" onclick="speakText('intersection')">▶</button></div>
+ </div>
+ <div class="lesson-step">
+  <h4>5. Грамматика в контексте · How do I get to…?</h4>
+  <p class="lesson-note"><b style="color:#fff">How do I get to…?</b> — Как мне добраться до…? Используй <b style="color:#fff">by</b> перед видом транспорта: <i>by bus</i> — на автобусе, <i>by train</i> — на поезде. Но говорим <i>on foot</i> — пешком.</p>
+  <div class="dialogue-line"><b>How do I get to the airport?</b> — Как добраться до аэропорта?</div>
+  <div class="dialogue-line"><b>Take the number 8 bus.</b> — Сядьте на автобус № 8.</div>
+  <div class="dialogue-line"><b>Get off at the next stop.</b> — Выйдите на следующей остановке.</div>
+  <button class="lesson-action" data-text="How do I get to the airport? Take the number 8 bus. Get off at the next stop. I usually go to work by bus. I go there on foot." onclick="speakText(this.dataset.text)">🔊 Послушать примеры</button>
+ </div>
+ <div class="lesson-step">
+  <h4>6. Вспомни без подсказки · Active recall</h4>
+  <p class="lesson-note">Как спросить: «Где мне выходить?»</p>
+  <button class="lesson-action" onclick="document.getElementById('transport-recall').textContent='Where should I get off?'">Показать ответ</button>
+  <p id="transport-recall" class="recall-answer" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>7. Твоя очередь говорить · Speaking</h4>
+  <p class="lesson-note">Представь, что ты стоишь на остановке. Спроси, едет ли автобус до центра, где купить билет и сколько займёт поездка.</p>
+  <button class="lesson-action" data-text="Excuse me. Does this bus go downtown? Where can I get a ticket? How long does it take?" onclick="speakText(this.dataset.text)">🔊 Послушать пример</button>
+  <textarea class="lesson-input" id="transport-speaking" placeholder="Excuse me. Does this bus..."></textarea>
+  <p class="lesson-note">Составь 2–3 предложения и произнеси их вслух. Автоматической проверки ответа пока нет.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>8. Реальная ситуация · Asking for directions</h4>
+  <p class="lesson-note">Ты спрашиваешь, как добраться до библиотеки. Человек отвечает: “Take the number 5 bus and get off at the third stop.” Что значит <b style="color:#fff">get off</b>?</p>
+  <button class="lesson-choice" onclick="checkTransportRole(this,true)">Выйти из транспорта.</button>
+  <button class="lesson-choice" onclick="checkTransportRole(this,false)">Сесть в транспорт.</button>
+  <button class="lesson-choice" onclick="checkTransportRole(this,false)">Купить билет.</button>
+  <p id="transport-role-feedback" class="lesson-note" aria-live="polite"></p>
+ </div>
+ <div class="lesson-step">
+  <h4>9. Полезно знать в США</h4>
+  <p class="lesson-note">В США транспортные системы и способы оплаты отличаются в зависимости от города. Перед поездкой проверь маршрут, расписание и способы оплаты на официальном сайте местного перевозчика. В разговоре <b style="color:#fff">downtown</b> обычно означает центр города.</p>
+ </div>
+ <div class="lesson-step">
+  <h4>Урок завершён?</h4>
+  <p class="lesson-note">Повтори диалог, чанки и попробуй объяснить вслух, как добраться до нужного места.</p>
+  <button class="primary" onclick="completeLesson('transportation')">Отметить урок пройденным ✓</button>
+  <p id="transportation-complete-note" class="lesson-note"></p>
+ </div>
+</section>
+
 <section id="languages" class="page">
  <button class="back" onclick="openPage('home')">← Главная</button>
  <div class="eyebrow">MY LANGUAGES</div>
@@ -718,6 +805,7 @@ function openLesson(id){
  if(id==='shopping'){openPage('lesson-shopping');return;}
  if(id==='work'){openPage('lesson-work');return;}
  if(id==='healthcare'){openPage('lesson-healthcare');return;}
+ if(id==='transportation'){openPage('lesson-transportation');return;}
 }
 function checkLessonAnswer(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
@@ -752,6 +840,17 @@ function checkWorkRole(button,isCorrect){
  const choices=button.parentElement.querySelectorAll('.lesson-choice');
  choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
  document.getElementById('work-role-feedback').textContent=isCorrect?'Правильно! Так естественно сказать, когда можешь начать в следующий понедельник.':'Попробуй ещё раз. “I can start” означает «Я могу начать».';
+}
+
+function checkTransportAnswer(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('transport-feedback').textContent=isCorrect?'Верно! Emma может оплатить проезд картой в автобусе.':'Не совсем. В диалоге сказано: “You can pay on the bus with a card.”';
+}
+function checkTransportRole(button,isCorrect){
+ const choices=button.parentElement.querySelectorAll('.lesson-choice');
+ choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
+ document.getElementById('transport-role-feedback').textContent=isCorrect?'Правильно! Get off — выйти из автобуса, поезда или другого транспорта.':'Не совсем. Get off означает выйти из транспорта. Get on — сесть в транспорт.';
 }
 
 function checkHealthcareAnswer(button,isCorrect){
