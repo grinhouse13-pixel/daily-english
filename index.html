@@ -1,1130 +1,762 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f7f8f5">
-<title>Daily Languages</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-:root{--bg:#f7f8f5;--surface:#fff;--ink:#18221d;--muted:#7c8780;--line:#e8ece7;--green:#236b4a;--mint:#e8f3ec;--yellow:#f5edcf;--shadow:0 8px 28px rgba(23,42,30,.06)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button{font:inherit;cursor:pointer;border:0} .app{max-width:520px;margin:auto;padding:env(safe-area-inset-top) 18px calc(88px + env(safe-area-inset-bottom))}
-header{display:flex;justify-content:space-between;align-items:center;padding:22px 2px 18px}
-.brand{font-size:20px;font-weight:800;letter-spacing:-.7px}.brand span{color:var(--green)}
-.streak{background:var(--surface);border:1px solid var(--line);padding:9px 12px;border-radius:30px;font-size:13px;font-weight:700}
-.language-top{background:#182a40;border:1px solid var(--line);color:#55d1f0;padding:9px 11px;border-radius:30px;font-size:12px;font-weight:750}
-.eyebrow{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
-h1{font-size:29px;line-height:1.12;letter-spacing:-1.1px;margin:8px 0 10px}
-.sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
-.hero{background:var(--green);color:#fff;border-radius:24px;padding:22px;margin:20px 0;position:relative;overflow:hidden}
-.hero:after{content:"Aa";position:absolute;right:17px;top:8px;font-size:84px;font-weight:800;color:rgba(255,255,255,.09)}
-.hero .eyebrow{color:#c5dfce}.hero h2{font-size:22px;margin:10px 0 6px;max-width:260px;line-height:1.2}.hero p{font-size:13px;color:#d7e8dd;margin:0 0 18px}
-.primary{background:#fff;color:var(--green);padding:12px 17px;border-radius:13px;font-weight:750;font-size:14px}
-.section-head{display:flex;justify-content:space-between;align-items:center;margin:24px 0 12px}.section-head h3{font-size:17px;margin:0;letter-spacing:-.3px}.small-link{color:var(--green);font-size:13px;font-weight:700;background:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;min-height:118px;box-shadow:var(--shadow);color:var(--ink)}
-.tile .emoji{font-size:22px}.tile strong{display:block;margin:12px 0 4px;font-size:14px}.tile small{color:var(--muted);font-size:12px}
-.progress-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px}
-.progress-top{display:flex;justify-content:space-between;font-size:13px;font-weight:700}.bar{height:7px;background:#edf0ec;border-radius:20px;margin-top:12px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);width:0%;border-radius:20px}
-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:9px 8px calc(9px + env(safe-area-inset-bottom));z-index:5}
-.nav-inner{width:100%;max-width:520px;display:flex;justify-content:space-around}.nav-btn{background:none;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:4px}.nav-btn b{font-size:19px;font-weight:500}.nav-btn.active{color:var(--green);font-weight:800}
-.page{display:none}.page.active{display:block}
-.back{background:none;color:var(--green);font-weight:700;padding:8px 0;margin:8px 0}
-.flash{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px 20px;text-align:center;box-shadow:var(--shadow);min-height:270px;display:flex;flex-direction:column;justify-content:center}
-.flash .tag{align-self:center;background:var(--mint);color:var(--green);padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800}
-.phrase{font-size:29px;line-height:1.2;font-weight:800;letter-spacing:-.8px;margin:25px 0 10px}
-.translation{color:var(--muted);font-size:15px}.example{background:#f7f8f5;border-radius:14px;padding:13px;text-align:left;font-size:13px;line-height:1.5;margin-top:20px}
-.actions{display:flex;gap:10px;margin-top:14px}.actions button{flex:1;padding:14px;border-radius:14px;font-weight:750}.outline{background:var(--surface);border:1px solid var(--line);color:var(--ink)}.solid{background:var(--green);color:white}
-.counter{text-align:center;color:var(--muted);font-size:12px;margin:13px}
-.quiz-option{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);padding:15px;border-radius:14px;margin:9px 0;color:var(--ink)}
-.quiz-option.correct{border-color:var(--green);background:var(--mint)}.quiz-option.wrong{border-color:#cf6a60;background:#fff0ee}
-.topic{display:flex;justify-content:space-between;align-items:center;background:var(--surface);padding:16px;border:1px solid var(--line);border-radius:16px;margin:9px 0;text-align:left;width:100%}
-.topic strong{font-size:14px}.topic small{display:block;color:var(--muted);margin-top:4px}
-.muted{color:var(--muted)}.empty{padding:24px;text-align:center;color:var(--muted)}
-</style>
+:root{--bg:#f7f8f5;--surface:#fff;--ink:#18221d;--muted:#7c8780;--line:#e8ece7;--green:#236b4a;--mint:#e8f3ec;--yellow:#f5edcf;--shadow:0 8px 28px rgba(23,42,30,.06)} *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif} button{font:inherit;cursor:pointer;border:0} .app{max-width:520px;margin:auto;padding:env(safe-area-inset-top) 18px calc(88px + env(safe-area-inset-bottom))} header{display:flex;justify-content:space-between;align-items:center;padding:22px 2px 18px} .brand{font-size:20px;font-weight:800;letter-spacing:-.7px}.brand span{color:var(--green)} .streak{background:var(--surface);border:1px solid var(--line);padding:9px 12px;border-radius:30px;font-size:13px;font-weight:700} .language-top{background:#182a40;border:1px solid var(--line);color:#55d1f0;padding:9px 11px;border-radius:30px;font-size:12px;font-weight:750} .eyebrow{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase} h1{font-size:29px;line-height:1.12;letter-spacing:-1.1px;margin:8px 0 10px} .sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0} .hero{background:var(--green);color:#fff;border-radius:24px;padding:22px;margin:20px 0;position:relative;overflow:hidden} .hero:after{content:"Aa";position:absolute;right:17px;top:8px;font-size:84px;font-weight:800;color:rgba(255,255,255,.09)} .hero .eyebrow{color:#c5dfce}.hero h2{font-size:22px;margin:10px 0 6px;max-width:260px;line-height:1.2}.hero p{font-size:13px;color:#d7e8dd;margin:0 0 18px} .primary{background:#fff;color:var(--green);padding:12px 17px;border-radius:13px;font-weight:750;font-size:14px} .section-head{display:flex;justify-content:space-between;align-items:center;margin:24px 0 12px}.section-head h3{font-size:17px;margin:0;letter-spacing:-.3px}.small-link{color:var(--green);font-size:13px;font-weight:700;background:none} .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px} .tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;min-height:118px;box-shadow:var(--shadow);color:var(--ink)} .tile .emoji{font-size:22px}.tile strong{display:block;margin:12px 0 4px;font-size:14px}.tile small{color:var(--muted);font-size:12px} .progress-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px} .progress-top{display:flex;justify-content:space-between;font-size:13px;font-weight:700}.bar{height:7px;background:#edf0ec;border-radius:20px;margin-top:12px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);width:0%;border-radius:20px} nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:9px 8px calc(9px + env(safe-area-inset-bottom));z-index:5} .nav-inner{width:100%;max-width:520px;display:flex;justify-content:space-around}.nav-btn{background:none;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:4px}.nav-btn b{font-size:19px;font-weight:500}.nav-btn.active{color:var(--green);font-weight:800} .page{display:none}.page.active{display:block} .back{background:none;color:var(--green);font-weight:700;padding:8px 0;margin:8px 0} .flash{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px 20px;text-align:center;box-shadow:var(--shadow);min-height:270px;display:flex;flex-direction:column;justify-content:center} .flash .tag{align-self:center;background:var(--mint);color:var(--green);padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800} .phrase{font-size:29px;line-height:1.2;font-weight:800;letter-spacing:-.8px;margin:25px 0 10px} .translation{color:var(--muted);font-size:15px}.example{background:#f7f8f5;border-radius:14px;padding:13px;text-align:left;font-size:13px;line-height:1.5;margin-top:20px} .actions{display:flex;gap:10px;margin-top:14px}.actions button{flex:1;padding:14px;border-radius:14px;font-weight:750}.outline{background:var(--surface);border:1px solid var(--line);color:var(--ink)}.solid{background:var(--green);color:white} .counter{text-align:center;color:var(--muted);font-size:12px;margin:13px} .quiz-option{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);padding:15px;border-radius:14px;margin:9px 0;color:var(--ink)} .quiz-option.correct{border-color:var(--green);background:var(--mint)}.quiz-option.wrong{border-color:#cf6a60;background:#fff0ee} .topic{display:flex;justify-content:space-between;align-items:center;background:var(--surface);padding:16px;border:1px solid var(--line);border-radius:16px;margin:9px 0;text-align:left;width:100%} .topic strong{font-size:14px}.topic small{display:block;color:var(--muted);margin-top:4px} .muted{color:var(--muted)}.empty{padding:24px;text-align:center;color:var(--muted)} /* Daily English — refreshed visual theme */ :root{ --bg:#091321;--surface:#111f31;--ink:#f3f7fb;--muted:#9aacc0; --line:rgba(160,190,220,.15);--green:#29c7ee;--mint:rgba(41,199,238,.13); --yellow:#ff665f;--shadow:0 14px 36px rgba(0,0,0,.22) } body{background:radial-gradient(ellipse at 50% -15%,#203d5b 0%,#091321 48%);color:var(--ink)} .app{max-width:540px;padding-left:16px;padding-right:16px} header{padding-top:20px} .brand{font-size:21px;letter-spacing:-.8px}.brand span{color:#ff665f} .streak{background:#182a40;border:1px solid var(--line);color:#fff} .eyebrow{color:#56cdec;letter-spacing:1.35px} h1{font-size:31px;letter-spacing:-1.3px} .sub{color:#a5b5c8} .hero{background:linear-gradient(135deg,#153c5a 0%,#10263d 55%,#291f38 100%);border:1px solid rgba(89,190,232,.2);box-shadow:var(--shadow);border-radius:25px} .hero:after{content:"USA";font-size:65px;right:18px;top:12px;color:rgba(255,255,255,.08);letter-spacing:3px} .hero .eyebrow{color:#75ddf5}.hero h2{font-size:25px}.hero p{color:#c0d4e7} .primary{background:linear-gradient(100deg,#25bfe8,#3187ec);color:#041522;border-radius:14px;box-shadow:0 8px 22px rgba(37,191,232,.2)} .section-head h3{color:#f5f8fc}.small-link{color:#55d1f0} .tile,.progress-card{background:linear-gradient(145deg,#14263b,#101c2d);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;color:#f4f8fc} .tile{min-height:126px}.tile .emoji{font-size:25px}.tile strong{font-size:15px}.tile small{color:#a5b5c8} .bar{background:#25364b}.bar i{background:linear-gradient(90deg,#25c9ec,#5b9cff)} nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)} .nav-btn{color:#8398ae}.nav-btn.active{color:#4bd0f0} .flash{background:linear-gradient(145deg,#162b42,#101d30);border:1px solid rgba(83,194,230,.2);border-radius:26px;box-shadow:var(--shadow)} .flash .tag{background:rgba(41,199,238,.14);color:#62d7f1} .phrase{font-size:30px;color:#fff} .translation{color:#a8bbcf} .example{background:#0b1929;border:1px solid var(--line);color:#d7e4ef;border-radius:15px} .actions button{border-radius:14px} .outline{background:#14263a;border:1px solid var(--line);color:#eaf4fb} .solid{background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521} .back{color:#55d1f0} .quiz-option,.topic{background:linear-gradient(145deg,#15283e,#101d2e);border:1px solid var(--line);color:#f2f7fb;border-radius:15px} .quiz-option.correct{border-color:#36c99b;background:rgba(54,201,155,.14)} .quiz-option.wrong{border-color:#ff756c;background:rgba(255,117,108,.13)} .quiz-option:disabled{opacity:1} .empty{color:#a9bbce} @media(min-width:520px){.app{padding-top:12px}} .course-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px} .course-stat{background:linear-gradient(145deg,#14263b,#101c2d);border:1px solid var(--line);border-radius:16px;padding:13px 9px;text-align:center} .course-stat strong{display:block;font-size:21px;color:#55d1f0} .course-stat small{display:block;color:#a5b5c8;font-size:11px;margin-top:4px} .course-progress-bar{height:7px;background:#25364b;border-radius:20px;overflow:hidden;margin-top:12px} .course-progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#25c9ec,#5b9cff);width:0%} .speak-btn,.speak-example{display:block;width:100%;border:1px solid rgba(75,208,240,.24);background:rgba(41,199,238,.1);color:#62d7f1;padding:12px;border-radius:13px;font-weight:750;margin-top:16px} .speak-example{background:rgba(255,255,255,.04);color:#b9cde0;border-color:var(--line);font-size:13px;margin-top:8px} .srs-actions button{font-size:13px;padding:13px 8px} #srs-hint{margin:12px 0 4px;color:#9db3c8} .weekly-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:124px;padding-top:8px} .week-day{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;min-width:0} .week-bar-wrap{height:88px;width:100%;display:flex;align-items:flex-end;justify-content:center;background:rgba(255,255,255,.035);border-radius:9px;overflow:hidden} .week-bar{width:70%;min-height:3px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#62d7f1,#8a69ed)} .week-day small{font-size:10px;color:#9aacc0}.week-day b{font-size:10px;color:#dce8f4;font-weight:650} .language-stat-row{background:linear-gradient(145deg,#15283e,#101d2e);border:1px solid var(--line);border-radius:15px;padding:13px;margin:8px 0} .language-stat-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700} .language-stat-head span:last-child{color:#55d1f0}.language-stat-row .bar{margin-top:9px} /* Practical ESL learning module */ .lesson-card{background:linear-gradient(145deg,#152b43,#101d30);border:1px solid rgba(83,194,230,.2);border-radius:18px;padding:16px;margin:10px 0} .lesson-card h3{margin:0 0 7px;font-size:16px}.lesson-card p{margin:0;color:#a9bbce;font-size:13px;line-height:1.5} .lesson-meta{font-size:11px;color:#55d1f0;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px} .lesson-action{margin-top:12px;width:100%;padding:12px;border-radius:12px;background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521;font-weight:800} .lesson-step{background:#0d1b2c;border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0} .lesson-step h4{margin:0 0 9px;font-size:14px;color:#65d8f1} .dialogue-line{padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45} .dialogue-line:last-child{border:0}.dialogue-line b{color:#fff} .chunk{padding:11px 12px;border-radius:12px;background:rgba(41,199,238,.08);margin:8px 0} .chunk strong{display:block;color:#fff;font-size:14px}.chunk small{display:block;color:#a9bbce;margin-top:4px} .lesson-choice{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:#14263a;color:#f2f7fb;margin:7px 0} .lesson-choice.correct{border-color:#36c99b;background:rgba(54,201,155,.14)} .lesson-choice.wrong{border-color:#ff756c;background:rgba(255,117,108,.13)} .lesson-input{width:100%;min-height:88px;background:#0d1b2c;color:#f2f7fb;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;resize:vertical} .lesson-note{font-size:12px;color:#9aacc0;line-height:1.5} /* Text Buddy */ .buddy-shell{margin-top:16px} .buddy-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0} .buddy-tab{padding:13px 8px;border-radius:13px;background:#14263a;border:1px solid var(--line);color:#a9bbce;font-weight:800} .buddy-tab.active{background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521;border-color:transparent} .buddy-panel{background:linear-gradient(145deg,#15283e,#101d2e);border:1px solid var(--line);border-radius:18px;padding:14px;margin:12px 0} .buddy-chat{height:330px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:5px 2px} .buddy-msg{max-width:88%;padding:11px 13px;border-radius:14px;font-size:14px;line-height:1.45;white-space:pre-wrap} .buddy-msg.bot{align-self:flex-start;background:#1b3048;color:#edf6ff;border:1px solid var(--line);border-bottom-left-radius:4px} .buddy-msg.user{align-self:flex-end;background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521;border-bottom-right-radius:4px} .buddy-compose{display:flex;gap:8px;margin-top:10px} .buddy-compose input{min-width:0;flex:1;background:#0d1b2c;color:#f2f7fb;border:1px solid var(--line);border-radius:12px;padding:13px;font:inherit} .buddy-send{background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521;border-radius:12px;padding:0 16px;font-weight:850} .buddy-scenario{width:100%;text-align:left;background:#14263a;color:#f2f7fb;border:1px solid var(--line);padding:14px;border-radius:14px;margin:7px 0} .buddy-scenario strong{display:block;margin-bottom:4px} .buddy-scenario small{color:#a9bbce} .buddy-choice{display:block;width:100%;text-align:left;background:#14263a;color:#f2f7fb;border:1px solid var(--line);padding:12px;border-radius:12px;margin:8px 0} .buddy-choice.correct{border-color:#36c99b;background:rgba(54,201,155,.14)} .buddy-choice.wrong{border-color:#ff756c;background:rgba(255,117,108,.13)} .buddy-feedback{font-size:13px;line-height:1.5;color:#a9bbce;margin-top:10px} .buddy-tag{display:inline-block;font-size:11px;font-weight:800;color:#55d1f0;letter-spacing:.7px;text-transform:uppercase} .buddy-hint{background:rgba(41,199,238,.08);border:1px solid rgba(41,199,238,.18);border-radius:12px;padding:11px;color:#b9d5e5;font-size:13px;margin:10px 0} .buddy-disabled{opacity:.8} 
 
-<style>
-/* Daily English — refreshed visual theme */
-:root{
- --bg:#091321;--surface:#111f31;--ink:#f3f7fb;--muted:#9aacc0;
- --line:rgba(160,190,220,.15);--green:#29c7ee;--mint:rgba(41,199,238,.13);
- --yellow:#ff665f;--shadow:0 14px 36px rgba(0,0,0,.22)
-}
-body{background:radial-gradient(ellipse at 50% -15%,#203d5b 0%,#091321 48%);color:var(--ink)}
-.app{max-width:540px;padding-left:16px;padding-right:16px}
-header{padding-top:20px}
-.brand{font-size:21px;letter-spacing:-.8px}.brand span{color:#ff665f}
-.streak{background:#182a40;border:1px solid var(--line);color:#fff}
-.eyebrow{color:#56cdec;letter-spacing:1.35px}
-h1{font-size:31px;letter-spacing:-1.3px}
-.sub{color:#a5b5c8}
-.hero{background:linear-gradient(135deg,#153c5a 0%,#10263d 55%,#291f38 100%);border:1px solid rgba(89,190,232,.2);box-shadow:var(--shadow);border-radius:25px}
-.hero:after{content:"USA";font-size:65px;right:18px;top:12px;color:rgba(255,255,255,.08);letter-spacing:3px}
-.hero .eyebrow{color:#75ddf5}.hero h2{font-size:25px}.hero p{color:#c0d4e7}
-.primary{background:linear-gradient(100deg,#25bfe8,#3187ec);color:#041522;border-radius:14px;box-shadow:0 8px 22px rgba(37,191,232,.2)}
-.section-head h3{color:#f5f8fc}.small-link{color:#55d1f0}
-.tile,.progress-card{background:linear-gradient(145deg,#14263b,#101c2d);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;color:#f4f8fc}
-.tile{min-height:126px}.tile .emoji{font-size:25px}.tile strong{font-size:15px}.tile small{color:#a5b5c8}
-.bar{background:#25364b}.bar i{background:linear-gradient(90deg,#25c9ec,#5b9cff)}
-nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
-.nav-btn{color:#8398ae}.nav-btn.active{color:#4bd0f0}
-.flash{background:linear-gradient(145deg,#162b42,#101d30);border:1px solid rgba(83,194,230,.2);border-radius:26px;box-shadow:var(--shadow)}
-.flash .tag{background:rgba(41,199,238,.14);color:#62d7f1}
-.phrase{font-size:30px;color:#fff}
-.translation{color:#a8bbcf}
-.example{background:#0b1929;border:1px solid var(--line);color:#d7e4ef;border-radius:15px}
-.actions button{border-radius:14px}
-.outline{background:#14263a;border:1px solid var(--line);color:#eaf4fb}
-.solid{background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521}
-.back{color:#55d1f0}
-.quiz-option,.topic{background:linear-gradient(145deg,#15283e,#101d2e);border:1px solid var(--line);color:#f2f7fb;border-radius:15px}
-.quiz-option.correct{border-color:#36c99b;background:rgba(54,201,155,.14)}
-.quiz-option.wrong{border-color:#ff756c;background:rgba(255,117,108,.13)}
-.quiz-option:disabled{opacity:1}
-.empty{color:#a9bbce}
-@media(min-width:520px){.app{padding-top:12px}}
-.course-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
-.course-stat{background:linear-gradient(145deg,#14263b,#101c2d);border:1px solid var(--line);border-radius:16px;padding:13px 9px;text-align:center}
-.course-stat strong{display:block;font-size:21px;color:#55d1f0}
-.course-stat small{display:block;color:#a5b5c8;font-size:11px;margin-top:4px}
-.course-progress-bar{height:7px;background:#25364b;border-radius:20px;overflow:hidden;margin-top:12px}
-.course-progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#25c9ec,#5b9cff);width:0%}
-</style>
+daily.languages
 
+🌍 Языки
 
-<style>
-.speak-btn,.speak-example{display:block;width:100%;border:1px solid rgba(75,208,240,.24);background:rgba(41,199,238,.1);color:#62d7f1;padding:12px;border-radius:13px;font-weight:750;margin-top:16px}
-.speak-example{background:rgba(255,255,255,.04);color:#b9cde0;border-color:var(--line);font-size:13px;margin-top:8px}
-.srs-actions button{font-size:13px;padding:13px 8px}
-#srs-hint{margin:12px 0 4px;color:#9db3c8}
-</style>
+🔥 0 дней
 
+MONDAY • YOUR ENGLISH ROUTINE
 
-<style>
-.weekly-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:124px;padding-top:8px}
-.week-day{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;min-width:0}
-.week-bar-wrap{height:88px;width:100%;display:flex;align-items:flex-end;justify-content:center;background:rgba(255,255,255,.035);border-radius:9px;overflow:hidden}
-.week-bar{width:70%;min-height:3px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#62d7f1,#8a69ed)}
-.week-day small{font-size:10px;color:#9aacc0}.week-day b{font-size:10px;color:#dce8f4;font-weight:650}
-.language-stat-row{background:linear-gradient(145deg,#15283e,#101d2e);border:1px solid var(--line);border-radius:15px;padding:13px;margin:8px 0}
-.language-stat-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}
-.language-stat-head span:last-child{color:#55d1f0}.language-stat-row .bar{margin-top:9px}
-</style>
+Маленький шаг.
+Живой английский.
 
-<style>
-/* Practical ESL learning module */
-.lesson-card{background:linear-gradient(145deg,#152b43,#101d30);border:1px solid rgba(83,194,230,.2);border-radius:18px;padding:16px;margin:10px 0}
-.lesson-card h3{margin:0 0 7px;font-size:16px}.lesson-card p{margin:0;color:#a9bbce;font-size:13px;line-height:1.5}
-.lesson-meta{font-size:11px;color:#55d1f0;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
-.lesson-action{margin-top:12px;width:100%;padding:12px;border-radius:12px;background:linear-gradient(100deg,#26c4e9,#3988ef);color:#061521;font-weight:800}
-.lesson-step{background:#0d1b2c;border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0}
-.lesson-step h4{margin:0 0 9px;font-size:14px;color:#65d8f1}
-.dialogue-line{padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}
-.dialogue-line:last-child{border:0}.dialogue-line b{color:#fff}
-.chunk{padding:11px 12px;border-radius:12px;background:rgba(41,199,238,.08);margin:8px 0}
-.chunk strong{display:block;color:#fff;font-size:14px}.chunk small{display:block;color:#a9bbce;margin-top:4px}
-.lesson-choice{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:#14263a;color:#f2f7fb;margin:7px 0}
-.lesson-choice.correct{border-color:#36c99b;background:rgba(54,201,155,.14)}
-.lesson-choice.wrong{border-color:#ff756c;background:rgba(255,117,108,.13)}
-.lesson-input{width:100%;min-height:88px;background:#0d1b2c;color:#f2f7fb;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;resize:vertical}
-.lesson-note{font-size:12px;color:#9aacc0;line-height:1.5}
-</style>
+Учи готовые выражения и используй их в настоящих разговорах.
 
-</head>
-<body>
-<div class="app">
-<header><div class="brand">daily<span>.</span>languages</div><div style="display:flex;align-items:center;gap:7px"><button class="language-top" onclick="openPage('languages')">🌍 Языки</button><div class="streak">🔥 <span id="streak">0</span> дней</div></div></header>
+ТВОЯ ЦЕЛЬ НА СЕГОДНЯ
 
-<section id="home" class="page active">
- <div class="eyebrow">MONDAY • YOUR ENGLISH ROUTINE</div>
- <h1>Маленький шаг.<br>Живой английский.</h1>
- <p class="sub">Учи готовые выражения и используй их в настоящих разговорах.</p>
- <div class="hero"><div class="eyebrow">ТВОЯ ЦЕЛЬ НА СЕГОДНЯ</div><h2>10 минут английского</h2><p>Несколько выражений — и ты уже ближе к свободной речи.</p><button class="primary" onclick="openPage('cards')">Начать занятие →</button></div>
- <div class="section-head"><h3>Продолжить обучение</h3><button class="small-link" onclick="openPage('cards')">Все карточки</button></div>
- <div class="grid">
-  <button class="tile" onclick="openPage('cards')"><span class="emoji">🗂️</span><strong>Карточки</strong><small>Разговорные chunks</small></button>
-  <button class="tile" onclick="openPage('quiz')"><span class="emoji">✍️</span><strong>Быстрый тест</strong><small>Проверь себя</small></button>
-  <button class="tile" onclick="openPage('topics')"><span class="emoji">🧭</span><strong>Темы</strong><small>Слова по ситуациям</small></button>
-  <button class="tile" onclick="openPage('progress')"><span class="emoji">📈</span><strong>Мой прогресс</strong><small>Твой результат</small></button>
-  <button class="tile" onclick="openPage('languages')"><span class="emoji">🌍</span><strong>Мои языки</strong><small>Добавляй новые языки</small></button>
-  <button class="tile" onclick="openPage('learning')"><span class="emoji">🎓</span><strong>Обучение</strong><small>Практический English A1–B1</small></button>
- </div>
- <div class="section-head"><h3>Повторение на сегодня</h3><button class="small-link" onclick="startDueReview()">Начать →</button></div>
- <div class="progress-card"><div class="progress-top"><span>Карточек пора повторить</span><span id="due-count">20</span></div><p class="sub" style="margin-top:8px">Возвращайся к выражениям до того, как забудешь их.</p></div>
- <div class="section-head"><h3>Твой прогресс</h3></div>
- <div class="progress-card"><div class="progress-top"><span>Изучено выражений</span><span id="home-count">0 / 20</span></div><div class="bar"><i id="home-bar"></i></div></div>
-</section>
+10 минут английского
 
-<section id="cards" class="page">
- <button class="back" onclick="openPage('home')">← Главная</button>
- <div class="eyebrow">FLASHCARDS · A1–A2</div><h1>Разговорные выражения</h1><p class="sub">Прочитай фразу, вспомни значение и переверни карточку.</p>
- <div class="counter" id="card-counter">1 / 20</div>
- <div class="flash" id="flash"><span class="tag">EVERYDAY ENGLISH</span><div class="phrase" id="phrase">How's it going?</div><div class="translation" id="translation">Как дела?</div><button class="speak-btn" onclick="speakCurrent()">🔊 Слушать американское произношение</button><div class="example" id="example">Example: Hey, how's it going?</div><button class="speak-example" onclick="speakExample()">▶ Прослушать пример</button></div>
- <div class="counter" id="srs-hint">Выбери, насколько легко вспомнил выражение</div>
- <div class="actions srs-actions"><button class="outline" onclick="rateCard('hard')">Трудно</button><button class="outline" onclick="rateCard('good')">Нормально</button><button class="solid" onclick="rateCard('easy')">Легко ✓</button></div>
- <div class="actions"><button class="outline" onclick="prevCard()">← Назад</button><button class="outline" onclick="nextCard()">Далее →</button></div>
- <p class="sub" style="text-align:center;margin-top:12px">Оценка ответа запланирует следующее повторение.</p>
-</section>
+Несколько выражений — и ты уже ближе к свободной речи.
 
-<section id="quiz" class="page">
- <button class="back" onclick="openPage('home')">← Главная</button>
- <div class="eyebrow">QUICK QUIZ</div><h1>Проверь себя</h1><p class="sub">Выбери правильный перевод выражения.</p>
- <div class="progress-card" style="margin-top:18px"><div class="progress-top"><span id="quiz-count">Вопрос 1 из 5</span><span id="quiz-score">0 верно</span></div></div>
- <h2 id="quiz-question" style="font-size:24px;margin:24px 0 14px">What's up?</h2><div id="quiz-options"></div><p id="quiz-feedback" class="sub"></p><button id="quiz-next" class="solid" style="width:100%;margin-top:12px;display:none" onclick="nextQuestion()">Следующий вопрос →</button>
-</section>
+Начать занятие →
 
-<section id="topics" class="page">
- <button class="back" onclick="openPage('home')">← Главная</button>
- <div class="eyebrow">LEARN BY SITUATION</div><h1>Выбирай тему</h1><p class="sub">Выражения, которые пригодятся в реальной жизни.</p>
- <button class="topic" onclick="filterTopic('Повседневное общение')"><span>💬 <strong>Повседневное общение</strong><small>Приветствия и small talk</small></span><span>→</span></button>
- <button class="topic" onclick="filterTopic('Работа')"><span>🧰 <strong>Работа</strong><small>Коллеги и рабочие ситуации</small></span><span>→</span></button>
- <button class="topic" onclick="filterTopic('Знакомства')"><span>❤️ <strong>Знакомства</strong><small>Общение и встречи</small></span><span>→</span></button>
- <button class="topic" onclick="filterTopic('Путешествия')"><span>✈️ <strong>Путешествия</strong><small>Поездки и повседневные дела</small></span><span>→</span></button>
- <p class="sub" id="topic-note" style="margin-top:14px">Выбери тему, чтобы посмотреть подходящие карточки.</p>
-</section>
+Продолжить обучение
 
-<section id="progress" class="page">
- <button class="back" onclick="openPage('home')">← Главная</button>
- <div class="eyebrow">YOUR JOURNEY</div><h1>Твой прогресс</h1><p class="sub">Каждое повторение приближает тебя к цели.</p>
- <div class="course-stats" style="margin-top:18px">
-  <div class="course-stat"><strong id="stats-known">0</strong><small>Выучено</small></div>
-  <div class="course-stat"><strong id="stats-streak">0</strong><small>Дней подряд</small></div>
-  <div class="course-stat"><strong id="stats-accuracy">—</strong><small>Точность тестов</small></div>
- </div>
- <div class="progress-card" style="margin-top:14px"><div class="progress-top"><span>Прогресс английского</span><strong id="known-count">0 / 0</strong></div><div class="bar"><i id="progress-bar"></i></div><p class="sub" style="margin-top:12px" id="progress-caption">Начни с первой карточки.</p></div>
- <div class="section-head"><h3>Активность за 7 дней</h3><span class="muted" style="font-size:12px">занятия</span></div>
- <div class="progress-card"><div id="weekly-chart" class="weekly-chart"></div><p class="sub" id="weekly-summary" style="margin-top:12px">Активность начнёт отображаться после занятий.</p></div>
- <div class="section-head"><h3>Прогресс по языкам</h3></div>
- <div id="language-stats-list"></div>
- <div class="section-head"><h3>Твои результаты</h3></div>
- <div class="grid"><div class="tile"><span class="emoji">📚</span><strong id="known-stat">0</strong><small>Выучено выражений</small></div><div class="tile"><span class="emoji">🎯</span><strong id="quiz-stat">—</strong><small>Точность тестов</small></div></div>
- <button class="outline" style="width:100%;margin-top:16px" onclick="resetProgress()">Сбросить прогресс английского</button>
-</section>
+Все карточки
 
-<section id="learning" class="page">
- <button class="back" onclick="openPage('home')">← Главная</button>
- <div class="eyebrow">PRACTICAL ESL · AMERICAN ENGLISH</div>
- <h1>Обучение для жизни в США</h1>
- <p class="sub">Понимай живую речь, общайся в повседневных ситуациях и учись самостоятельно выражать свои мысли.</p>
- <div class="hero">
-  <div class="eyebrow">ТВОЙ ПРАКТИЧЕСКИЙ КУРС</div>
-  <h2>English for Everyday Life</h2>
-  <p>Диалоги, полезные выражения, понимание на слух и разговорная практика.</p>
-  <button class="primary" onclick="openLesson('introductions')">Начать первый урок →</button>
- </div>
- <div class="section-head"><h3>Программа обучения</h3><span class="muted" style="font-size:12px">A1 → B1</span></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 01 · A1–A2</div><h3>👋 Introductions & Small Talk</h3><p>Знакомство, приветствия, рассказ о себе и простой разговор.</p><button class="lesson-action" onclick="openLesson('introductions')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 02 · A1–A2</div><h3>🛒 Shopping & Money</h3><p>Покупки, цены, оплата, вопросы продавцу.</p><button class="lesson-action" onclick="openLesson('shopping')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 03 · A1–A2</div><h3>🧰 Work & Employment</h3><p>Поиск работы, собеседование, график и общение с коллегами.</p><button class="lesson-action" onclick="openLesson('work')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 04 · A2</div><h3>🏠 Housing</h3><p>Аренда жилья, бытовые вопросы, разговор с арендодателем.</p><button class="lesson-action" onclick="openLesson('housing')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 05 · A2</div><h3>🩺 Healthcare</h3><p>Запись к врачу, описание самочувствия, аптека.</p><button class="lesson-action" onclick="openLesson('healthcare')">Открыть урок →</button></div>
- <div class="lesson-card"><div class="lesson-meta">Урок 06 · A2–B1</div><h3>🚌 Transportation & Directions</h3><p>Транспорт, маршруты, вопросы о дороге и поездках.</p><button class="lesson-action" onclick="openLesson('transportation')">Открыть урок →</button></div>
+🗂️КарточкиРазговорные chunks ✍️Быстрый тестПроверь себя 🧭ТемыСлова по ситуациям 📈Мой прогрессТвой результат 🌍Мои языкиДобавляй новые языки 🎓ОбучениеПрактический English A1–B1 💬Text BuddyОбщайся и тренируй английский 
 
+Повторение на сегодня
 
-</section>
+Начать →
 
-<section id="lesson-work" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 03 · A1–A2 · AMERICAN ENGLISH</div>
- <h1>Work & Employment</h1>
- <p class="sub">Цель: рассказать о работе, опыте и графике, а также задать простые вопросы работодателю.</p>
- <div class="lesson-step">
-  <h4>1. Понятный диалог · Listen & understand</h4>
-  <p class="lesson-note">Alex ищет работу и разговаривает с менеджером кафе. Сначала прочитай, затем прослушай весь разговор.</p>
-  <div class="dialogue-line"><b>Manager:</b> Hi! Are you looking for a job?</div>
-  <div class="dialogue-line"><b>Alex:</b> Yes, I am. Are you hiring?</div>
-  <div class="dialogue-line"><b>Manager:</b> We are. Do you have any experience?</div>
-  <div class="dialogue-line"><b>Alex:</b> Yes. I worked in a restaurant for two years.</div>
-  <div class="dialogue-line"><b>Manager:</b> Great. When can you start?</div>
-  <div class="dialogue-line"><b>Alex:</b> I can start next Monday.</div>
-  <button class="lesson-action" data-text="Hi! Are you looking for a job? Yes, I am. Are you hiring? We are. Do you have any experience? Yes. I worked in a restaurant for two years. Great. When can you start? I can start next Monday." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">How long did Alex work in a restaurant?</p>
-  <button class="lesson-choice" onclick="checkWorkAnswer(this,false)">For two months.</button>
-  <button class="lesson-choice" onclick="checkWorkAnswer(this,true)">For two years.</button>
-  <button class="lesson-choice" onclick="checkWorkAnswer(this,false)">For five years.</button>
-  <p id="work-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>Are you hiring?</strong><small>Вы сейчас нанимаете сотрудников?</small><button class="speak-example" onclick="speakText('Are you hiring?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>I'm looking for a job.</strong><small>Я ищу работу.</small><button class="speak-example" onclick="speakText('I\'m looking for a job.')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Do you have any experience?</strong><small>У вас есть опыт работы?</small><button class="speak-example" onclick="speakText('Do you have any experience?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>When can you start?</strong><small>Когда вы можете приступить?</small><button class="speak-example" onclick="speakText('When can you start?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>I can start next Monday.</strong><small>Я могу начать в следующий понедельник.</small><button class="speak-example" onclick="speakText('I can start next Monday.')">▶ Слушать</button></div>
- </div>
- <div class="lesson-step">
-  <h4>4. Вспомни без подсказки · Active recall</h4>
-  <p class="lesson-note">Как спросить работодателя: «Вы сейчас нанимаете?»</p>
-  <button class="lesson-choice" onclick="document.getElementById('work-recall').textContent='Are you hiring?'">Показать ответ</button>
-  <p id="work-recall" class="lesson-note"></p>
- </div>
- <div class="lesson-step">
-  <h4>5. Скажи о себе · Speaking</h4>
-  <p class="lesson-note">Ответь на вопрос: <b style="color:#fff">“What kind of work are you looking for?”</b></p>
-  <button class="speak-example" onclick="speakText('What kind of work are you looking for?')">▶ Прослушать вопрос</button>
-  <textarea class="lesson-input" id="work-speaking" placeholder="I'm looking for a job in..."></textarea>
-  <p class="lesson-note">Попробуй сказать 2–3 предложения вслух. Поле помогает подготовить ответ, автоматической проверки пока нет.</p>
- </div>
- <div class="lesson-step">
-  <h4>6. Реальная ситуация · Real life</h4>
-  <p class="lesson-note">Менеджер спрашивает: “When can you start?” Ты можешь начать в понедельник. Что ответишь?</p>
-  <button class="lesson-choice" onclick="checkWorkRole(this,false)">I started last Monday.</button>
-  <button class="lesson-choice" onclick="checkWorkRole(this,true)">I can start next Monday.</button>
-  <button class="lesson-choice" onclick="checkWorkRole(this,false)">I work every Monday.</button>
-  <p id="work-role-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>Урок завершён?</h4>
-  <button class="primary" onclick="completeLesson('work')">Отметить урок пройденным</button>
-  <p id="work-complete-note" class="lesson-note"></p>
- </div>
-</section>
+Карточек пора повторить20
 
+Возвращайся к выражениям до того, как забудешь их.
 
-<section id="lesson-housing" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 04 · A2 · AMERICAN ENGLISH</div>
- <h1>Housing</h1>
- <p class="sub">Цель: спросить об аренде, узнать условия жилья и сообщить о бытовой проблеме.</p>
- <div class="lesson-step">
-  <h4>1. Понятный диалог · Listen & understand</h4>
-  <p class="lesson-note">Jamie звонит по объявлению об аренде квартиры. Прочитай разговор, затем прослушай его целиком.</p>
-  <div class="dialogue-line"><b>Tenant:</b> Hi, I'm calling about the apartment for rent.</div>
-  <div class="dialogue-line"><b>Landlord:</b> Sure. Are you looking to move in soon?</div>
-  <div class="dialogue-line"><b>Tenant:</b> Yes. How much is the rent?</div>
-  <div class="dialogue-line"><b>Landlord:</b> It's $1,200 a month. Utilities are not included.</div>
-  <div class="dialogue-line"><b>Tenant:</b> I see. Is there a security deposit?</div>
-  <div class="dialogue-line"><b>Landlord:</b> Yes, the deposit is one month's rent.</div>
-  <div class="dialogue-line"><b>Tenant:</b> Okay. Can I see the apartment this Saturday?</div>
-  <div class="dialogue-line"><b>Landlord:</b> Of course. How about 10 a.m.?</div>
-  <button class="lesson-action" data-text="Hi, I'm calling about the apartment for rent. Sure. Are you looking to move in soon? Yes. How much is the rent? It's twelve hundred dollars a month. Utilities are not included. I see. Is there a security deposit? Yes, the deposit is one month's rent. Okay. Can I see the apartment this Saturday? Of course. How about ten a.m." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">How much is the monthly rent?</p>
-  <button class="lesson-choice" onclick="checkHousingAnswer(this,false)">$900 a month.</button>
-  <button class="lesson-choice" onclick="checkHousingAnswer(this,true)">$1,200 a month.</button>
-  <button class="lesson-choice" onclick="checkHousingAnswer(this,false)">$1,500 a month.</button>
-  <p id="housing-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>I'm calling about the apartment for rent.</strong><small>Я звоню насчёт квартиры, которая сдаётся.</small><button class="speak-example" data-text="I'm calling about the apartment for rent." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>How much is the rent?</strong><small>Сколько стоит аренда?</small><button class="speak-example" data-text="How much is the rent?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Are utilities included?</strong><small>Коммунальные услуги включены в стоимость?</small><button class="speak-example" data-text="Are utilities included?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Is there a security deposit?</strong><small>Есть ли залог за жильё?</small><button class="speak-example" data-text="Is there a security deposit?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Can I see the apartment?</strong><small>Можно посмотреть квартиру?</small><button class="speak-example" data-text="Can I see the apartment?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
- </div>
- <div class="lesson-step">
-  <h4>4. Вспомни без подсказки · Active Recall</h4>
-  <p class="lesson-note">Как спросить: «Коммунальные услуги включены?»</p>
-  <button class="lesson-choice" onclick="document.getElementById('housing-recall').textContent='Are utilities included?'">Показать ответ</button>
-  <p id="housing-recall" class="lesson-note"></p>
- </div>
- <div class="lesson-step">
-  <h4>5. Скажи о себе · Speaking</h4>
-  <p class="lesson-note">Ответь на вопрос: <b style="color:#fff">“What kind of place are you looking for?”</b></p>
-  <button class="speak-example" data-text="What kind of place are you looking for?" onclick="speakText(this.dataset.text)">▶ Прослушать вопрос</button>
-  <textarea class="lesson-input" id="housing-speaking" placeholder="I'm looking for an apartment..."></textarea>
-  <p class="lesson-note">Напиши 2–3 предложения, а затем попробуй произнести их вслух. Автоматической проверки пока нет.</p>
- </div>
- <div class="lesson-step">
-  <h4>6. Реальная ситуация · Real life</h4>
-  <p class="lesson-note">Ты хочешь узнать, включены ли коммунальные услуги в аренду. Что спросишь?</p>
-  <button class="lesson-choice" onclick="checkHousingRole(this,false)">Do you have any experience?</button>
-  <button class="lesson-choice" onclick="checkHousingRole(this,true)">Are utilities included?</button>
-  <button class="lesson-choice" onclick="checkHousingRole(this,false)">When can you start?</button>
-  <p id="housing-role-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>Урок завершён?</h4>
-  <button class="primary" onclick="completeLesson('housing')">Отметить урок пройденным</button>
-  <p id="housing-complete-note" class="lesson-note"></p>
- </div>
-</section>
+Твой прогресс
 
-<section id="lesson" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 01 · A1–A2 · AMERICAN ENGLISH</div>
- <h1>Introductions & Small Talk</h1>
- <p class="sub">Цель: представиться, задать простые вопросы и поддержать короткий разговор.</p>
- <div class="lesson-step">
-  <h4>1. Понятный диалог · Listen & understand</h4>
-  <p class="lesson-note">Сначала прочитай диалог целиком и попробуй понять ситуацию. Затем прослушай реплики.</p>
-  <div class="dialogue-line"><b>Alex:</b> Hey, how's it going?</div>
-  <div class="dialogue-line"><b>Sam:</b> Pretty good, thanks. How about you?</div>
-  <div class="dialogue-line"><b>Alex:</b> I'm doing well. I'm Alex, by the way.</div>
-  <div class="dialogue-line"><b>Sam:</b> Nice to meet you, Alex. I'm Sam.</div>
-  <div class="dialogue-line"><b>Alex:</b> Nice to meet you too. Are you from around here?</div>
-  <div class="dialogue-line"><b>Sam:</b> Not really. I just moved here.</div>
-  <button class="lesson-action" data-text="Hey, how's it going? Pretty good, thanks. How about you? I'm doing well. I'm Alex, by the way. Nice to meet you, Alex. I'm Sam. Nice to meet you too. Are you from around here? Not really. I just moved here." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">Ответь на вопросы по диалогу. Не старайся переводить каждое слово — улови общий смысл.</p>
-  <p style="margin:12px 0 7px;font-size:14px">Where did Sam just move?</p>
-  <button class="lesson-choice" onclick="checkLessonAnswer(this,false)">He moved to another country.</button>
-  <button class="lesson-choice" onclick="checkLessonAnswer(this,true)">He moved here.</button>
-  <button class="lesson-choice" onclick="checkLessonAnswer(this,false)">He moved to Alex's house.</button>
-  <p id="lesson-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>How's it going?</strong><small>Как дела? Неформальное приветствие.</small><button class="speak-example" data-text="How's it going?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>How about you?</strong><small>А ты? / А у тебя?</small><button class="speak-example" onclick="speakText('How about you?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Nice to meet you.</strong><small>Приятно познакомиться.</small><button class="speak-example" onclick="speakText('Nice to meet you.')">▶ Слушать</button></div>
-  <div class="chunk"><strong>I'm ... by the way.</strong><small>Я ..., кстати. Удобно представиться в разговоре.</small><button class="speak-example" data-text="I'm Alex, by the way." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Are you from around here?</strong><small>Ты местный? / Ты отсюда?</small><button class="speak-example" onclick="speakText('Are you from around here?')">▶ Слушать</button></div>
- </div>
- <div class="lesson-step">
-  <h4>4. Вспомни без подсказки · Active recall</h4>
-  <p class="lesson-note">Как по-английски сказать «Приятно познакомиться»?</p>
-  <button class="lesson-choice" onclick="revealLessonRecall()">Показать ответ</button>
-  <p id="lesson-recall" class="lesson-note"></p>
- </div>
- <div class="lesson-step">
-  <h4>5. Скажи о себе · Speaking</h4>
-  <p class="lesson-note">Ответь вслух на вопрос: <b style="color:#fff">“Tell me a little about yourself.”</b></p>
-  <button class="speak-example" onclick="speakText('Tell me a little about yourself.')">▶ Прослушать вопрос</button>
-  <textarea id="lesson-speaking" class="lesson-input" placeholder="Напиши свой ответ на английском..."></textarea>
-  <p class="lesson-note">Сначала попробуй произнести ответ вслух. Затем можешь записать его здесь для самостоятельной практики. Текст пока не отправляется на автоматическую проверку.</p>
- </div>
- <div class="lesson-step">
-  <h4>6. Заверши урок</h4>
-  <p class="lesson-note">Перед завершением попробуй без подсказки произнести три выражения из урока и коротко представиться.</p>
-  <button class="lesson-action" onclick="completeLesson('introductions')">Отметить урок пройденным ✓</button>
-  <p id="lesson-complete-note" class="lesson-note" style="margin-top:10px"></p>
- </div>
-</section>
+Изучено выражений0 / 20
 
+← Главная 
 
-<section id="lesson-shopping" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 02 · A1–A2 · AMERICAN ENGLISH</div>
- <h1>Shopping & Money</h1>
- <p class="sub">Цель: спросить цену, найти нужный товар, понять продавца и оплатить покупку в американском магазине.</p>
+FLASHCARDS · A1–A2
 
- <div class="lesson-step">
-  <h4>1. Понятный диалог · Listen & understand</h4>
-  <p class="lesson-note">Ты в магазине одежды. Сначала прочитай диалог, затем прослушай его целиком.</p>
-  <div class="dialogue-line"><b>Customer:</b> Excuse me, how much is this T-shirt?</div>
-  <div class="dialogue-line"><b>Clerk:</b> It's twenty dollars.</div>
-  <div class="dialogue-line"><b>Customer:</b> Do you have it in a medium?</div>
-  <div class="dialogue-line"><b>Clerk:</b> Let me check. Yes, here you go.</div>
-  <div class="dialogue-line"><b>Customer:</b> Great. Can I pay by card?</div>
-  <div class="dialogue-line"><b>Clerk:</b> Sure. You can tap right here.</div>
-  <div class="dialogue-line"><b>Customer:</b> Thanks!</div>
-  <div class="dialogue-line"><b>Clerk:</b> You're welcome. Have a good one!</div>
-  <button class="lesson-action" data-text="Excuse me, how much is this T-shirt? It's twenty dollars. Do you have it in a medium? Let me check. Yes, here you go. Great. Can I pay by card? Sure. You can tap right here. Thanks! You're welcome. Have a good one!" onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
+Разговорные выражения
 
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">Выбери правильный ответ по диалогу.</p>
-  <p style="margin:12px 0 7px;font-size:14px">How much is the T-shirt?</p>
-  <button class="lesson-choice" onclick="checkShoppingAnswer(this,false)">Ten dollars.</button>
-  <button class="lesson-choice" onclick="checkShoppingAnswer(this,true)">Twenty dollars.</button>
-  <button class="lesson-choice" onclick="checkShoppingAnswer(this,false)">Thirty dollars.</button>
-  <p id="shopping-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
+Прочитай фразу, вспомни значение и переверни карточку.
 
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>How much is this?</strong><small>Сколько это стоит?</small><button class="speak-example" data-text="How much is this?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Do you have it in a medium?</strong><small>У вас есть это в размере M?</small><button class="speak-example" data-text="Do you have it in a medium?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Can I pay by card?</strong><small>Можно оплатить картой?</small><button class="speak-example" data-text="Can I pay by card?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>I'm just looking, thanks.</strong><small>Я просто смотрю, спасибо.</small><button class="speak-example" data-text="I'm just looking, thanks." onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
-  <div class="chunk"><strong>Can I get a receipt?</strong><small>Можно получить чек?</small><button class="speak-example" data-text="Can I get a receipt?" onclick="speakText(this.dataset.text)">▶ Слушать</button></div>
- </div>
+1 / 20
 
- <div class="lesson-step">
-  <h4>4. Вспомни без подсказки · Active Recall</h4>
-  <p class="lesson-note">Как спросить по-английски: «Сколько это стоит?»</p>
-  <button class="lesson-action" onclick="revealShoppingRecall()">Показать ответ</button>
-  <p id="shopping-recall" class="recall-answer" aria-live="polite"></p>
- </div>
+EVERYDAY ENGLISH
 
- <div class="lesson-step">
-  <h4>5. Твоя очередь говорить · Speaking</h4>
-  <p class="lesson-note">Представь, что ты покупаешь футболку. Скажи вслух: спроси цену, нужный размер и можно ли оплатить картой.</p>
-  <button class="lesson-action" data-text="Excuse me, how much is this T-shirt? Do you have it in a medium? Can I pay by card?" onclick="speakText(this.dataset.text)">🔊 Послушать пример</button>
-  <textarea id="shopping-speaking" rows="3" placeholder="Напиши свой вариант на английском..."></textarea>
-  <p class="lesson-note">Попробуй произнести свой вариант вслух. Поле помогает подготовить ответ, автоматической проверки здесь пока нет.</p>
- </div>
+How's it going?
 
- <div class="lesson-step">
-  <h4>6. Мини-ситуация · Real life</h4>
-  <p class="lesson-note">Продавец спрашивает: “Would you like a bag?” — «Вам нужен пакет?» Что ты ответишь, если пакет не нужен?</p>
-  <button class="lesson-choice" onclick="checkShoppingRole(this,false)">Yes, please.</button>
-  <button class="lesson-choice" onclick="checkShoppingRole(this,true)">No, I'm good, thanks.</button>
-  <button class="lesson-choice" onclick="checkShoppingRole(this,false)">How much is it?</button>
-  <p id="shopping-role-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
+Как дела?
 
- <div class="lesson-step">
-  <h4>7. Завершение урока</h4>
-  <p class="lesson-note">Повтори пять разговорных блоков и попробуй разыграть покупку самостоятельно.</p>
-  <button class="lesson-action" onclick="completeLesson('shopping')">Отметить урок пройденным ✓</button>
-  <p id="shopping-complete-note" class="lesson-note" style="margin-top:10px"></p>
- </div>
-</section>
+🔊 Слушать американское произношение
 
-<section id="lesson-healthcare" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 05 · A2 · AMERICAN ENGLISH</div>
- <h1>Healthcare</h1>
- <p class="sub">Цель: записаться на приём, простыми словами описать симптомы и спросить о лекарстве в аптеке.</p>
- <div class="lesson-step">
-  <h4>1. Понятный диалог · At the doctor's office</h4>
-  <p class="lesson-note">Майк звонит в клинику, чтобы записаться на приём. Прочитай разговор, затем прослушай его целиком.</p>
-  <div class="dialogue-line"><b>Receptionist:</b> Good morning. How can I help you?</div>
-  <div class="dialogue-line"><b>Mike:</b> Hi. I'd like to make an appointment.</div>
-  <div class="dialogue-line"><b>Receptionist:</b> Sure. What's the problem?</div>
-  <div class="dialogue-line"><b>Mike:</b> I have a sore throat and a cough.</div>
-  <div class="dialogue-line"><b>Receptionist:</b> When did it start?</div>
-  <div class="dialogue-line"><b>Mike:</b> It started two days ago.</div>
-  <div class="dialogue-line"><b>Receptionist:</b> We have an opening tomorrow at 10 a.m.</div>
-  <div class="dialogue-line"><b>Mike:</b> That works for me. Thank you.</div>
-  <button class="lesson-action" data-text="Good morning. How can I help you? Hi. I'd like to make an appointment. Sure. What's the problem? I have a sore throat and a cough. When did it start? It started two days ago. We have an opening tomorrow at 10 a.m. That works for me. Thank you." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">Why does Mike call the clinic?</p>
-  <button class="lesson-choice" onclick="checkHealthcareAnswer(this,false)">To cancel an appointment.</button>
-  <button class="lesson-choice" onclick="checkHealthcareAnswer(this,true)">To make an appointment.</button>
-  <button class="lesson-choice" onclick="checkHealthcareAnswer(this,false)">To ask for directions.</button>
-  <p id="healthcare-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>I'd like to make an appointment.</strong><small>Я хотел(а) бы записаться на приём.</small><button class="speak-example" onclick="speakText(\"I'd like to make an appointment.\")">▶ Слушать</button></div>
-  <div class="chunk"><strong>I have a sore throat.</strong><small>У меня болит горло.</small><button class="speak-example" onclick="speakText('I have a sore throat.')">▶ Слушать</button></div>
-  <div class="chunk"><strong>I have a cough.</strong><small>У меня кашель.</small><button class="speak-example" onclick="speakText('I have a cough.')">▶ Слушать</button></div>
-  <div class="chunk"><strong>When did it start?</strong><small>Когда это началось?</small><button class="speak-example" onclick="speakText('When did it start?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>That works for me.</strong><small>Мне подходит.</small><button class="speak-example" onclick="speakText('That works for me.')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Do I need a prescription?</strong><small>Мне нужен рецепт?</small><button class="speak-example" onclick="speakText('Do I need a prescription?')">▶ Слушать</button></div>
- </div>
- <div class="lesson-step">
-  <h4>4. Слова по теме · Useful vocabulary</h4>
-  <div class="chunk"><strong>appointment</strong><small>запись / приём</small><button class="speak-example" onclick="speakText('appointment')">▶</button></div>
-  <div class="chunk"><strong>symptoms</strong><small>симптомы</small><button class="speak-example" onclick="speakText('symptoms')">▶</button></div>
-  <div class="chunk"><strong>fever</strong><small>температура / жар</small><button class="speak-example" onclick="speakText('fever')">▶</button></div>
-  <div class="chunk"><strong>headache</strong><small>головная боль</small><button class="speak-example" onclick="speakText('headache')">▶</button></div>
-  <div class="chunk"><strong>pharmacy</strong><small>аптека</small><button class="speak-example" onclick="speakText('pharmacy')">▶</button></div>
-  <div class="chunk"><strong>prescription</strong><small>рецепт</small><button class="speak-example" onclick="speakText('prescription')">▶</button></div>
- </div>
- <div class="lesson-step">
-  <h4>5. Грамматика в контексте · I have / I feel</h4>
-  <p class="lesson-note"><b style="color:#fff">I have...</b> часто используют, чтобы назвать симптом: <i>I have a headache.</i> — У меня болит голова. <b style="color:#fff">I feel...</b> описывает общее самочувствие: <i>I feel tired.</i> — Я чувствую усталость.</p>
-  <div class="dialogue-line"><b>I have a fever.</b> — У меня температура.</div>
-  <div class="dialogue-line"><b>I feel dizzy.</b> — У меня кружится голова.</div>
-  <div class="dialogue-line"><b>My stomach hurts.</b> — У меня болит живот.</div>
-  <button class="lesson-action" data-text="I have a fever. I feel dizzy. My stomach hurts." onclick="speakText(this.dataset.text)">🔊 Послушать примеры</button>
- </div>
- <div class="lesson-step">
-  <h4>6. Вспомни без подсказки · Active recall</h4>
-  <p class="lesson-note">Как сказать: «Я хотел бы записаться на приём»?</p>
-  <button class="lesson-action" onclick="document.getElementById('healthcare-recall').textContent=\"I'd like to make an appointment.\"">Показать ответ</button>
-  <p id="healthcare-recall" class="recall-answer" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>7. Твоя очередь говорить · Speaking</h4>
-  <p class="lesson-note">Представь, что ты звонишь в клинику. Скажи, что у тебя болит горло и кашель, и спроси, есть ли свободное время завтра.</p>
-  <button class="lesson-action" data-text="I'd like to make an appointment. I have a sore throat and a cough. Do you have any openings tomorrow?" onclick="speakText(this.dataset.text)">🔊 Послушать пример</button>
-  <textarea class="lesson-input" id="healthcare-speaking" placeholder="I'd like to make an appointment. I have..."></textarea>
-  <p class="lesson-note">Составь 2–3 предложения и произнеси их вслух. Автоматической проверки ответа пока нет.</p>
- </div>
- <div class="lesson-step">
-  <h4>8. Реальная ситуация · At the pharmacy</h4>
-  <p class="lesson-note">Фармацевт спрашивает: “Do you have a prescription?” Ты хочешь узнать, нужен ли рецепт. Что спросишь?</p>
-  <button class="lesson-choice" onclick="checkHealthcareRole(this,false)">Where is the doctor?</button>
-  <button class="lesson-choice" onclick="checkHealthcareRole(this,true)">Do I need a prescription?</button>
-  <button class="lesson-choice" onclick="checkHealthcareRole(this,false)">When did it start?</button>
-  <p id="healthcare-role-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>9. Важно знать в США</h4>
-  <p class="lesson-note">В экстренной ситуации в США звонят <b style="color:#fff">911</b>. Для обычной записи к врачу можно сказать: “I'd like to make an appointment.” Учебный урок не заменяет медицинскую консультацию.</p>
- </div>
- <div class="lesson-step">
-  <h4>Урок завершён?</h4>
-  <p class="lesson-note">Повтори диалог, чанки и попробуй самостоятельно разыграть звонок в клинику.</p>
-  <button class="primary" onclick="completeLesson('healthcare')">Отметить урок пройденным ✓</button>
-  <p id="healthcare-complete-note" class="lesson-note"></p>
- </div>
-</section>
+Example: Hey, how's it going?
 
-<section id="lesson-transportation" class="page">
- <button class="back" onclick="openPage('learning')">← К программе</button>
- <div class="eyebrow">LESSON 06 · A2–B1 · AMERICAN ENGLISH</div>
- <h1>Transportation & Directions</h1>
- <p class="sub">Цель: спросить дорогу, разобраться с автобусом или метро, купить билет и объяснить, куда тебе нужно попасть.</p>
- <div class="lesson-step">
-  <h4>1. Понятный диалог · At the bus stop</h4>
-  <p class="lesson-note">Эмма хочет доехать до центра города. Она спрашивает местного жителя, на какой автобус сесть. Прочитай диалог, затем прослушай его целиком.</p>
-  <div class="dialogue-line"><b>Emma:</b> Excuse me. Does this bus go downtown?</div>
-  <div class="dialogue-line"><b>Man:</b> Yes, it does. You need the number 12.</div>
-  <div class="dialogue-line"><b>Emma:</b> Where can I get a ticket?</div>
-  <div class="dialogue-line"><b>Man:</b> You can pay on the bus with a card.</div>
-  <div class="dialogue-line"><b>Emma:</b> How long does it take?</div>
-  <div class="dialogue-line"><b>Man:</b> About twenty minutes, depending on traffic.</div>
-  <div class="dialogue-line"><b>Emma:</b> Thanks for your help!</div>
-  <div class="dialogue-line"><b>Man:</b> No problem.</div>
-  <button class="lesson-action" data-text="Excuse me. Does this bus go downtown? Yes, it does. You need the number 12. Where can I get a ticket? You can pay on the bus with a card. How long does it take? About twenty minutes, depending on traffic. Thanks for your help! No problem." onclick="speakText(this.dataset.text)">🔊 Прослушать диалог</button>
- </div>
- <div class="lesson-step">
-  <h4>2. Пойми смысл · Comprehension</h4>
-  <p class="lesson-note">How can Emma pay for the bus?</p>
-  <button class="lesson-choice" onclick="checkTransportAnswer(this,false)">Only with cash at the station.</button>
-  <button class="lesson-choice" onclick="checkTransportAnswer(this,true)">With a card on the bus.</button>
-  <button class="lesson-choice" onclick="checkTransportAnswer(this,false)">She doesn't need a ticket.</button>
-  <p id="transport-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>3. Полезные разговорные блоки · Chunks</h4>
-  <div class="chunk"><strong>Does this bus go downtown?</strong><small>Этот автобус едет в центр?</small><button class="speak-example" onclick="speakText('Does this bus go downtown?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Where can I get a ticket?</strong><small>Где можно купить билет?</small><button class="speak-example" onclick="speakText('Where can I get a ticket?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>How long does it take?</strong><small>Сколько времени это занимает?</small><button class="speak-example" onclick="speakText('How long does it take?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Which way is the subway?</strong><small>В какой стороне метро?</small><button class="speak-example" onclick="speakText('Which way is the subway?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Where should I get off?</strong><small>Где мне выходить?</small><button class="speak-example" onclick="speakText('Where should I get off?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>Is it within walking distance?</strong><small>До этого можно дойти пешком?</small><button class="speak-example" onclick="speakText('Is it within walking distance?')">▶ Слушать</button></div>
-  <div class="chunk"><strong>I'm looking for this address.</strong><small>Я ищу этот адрес.</small><button class="speak-example" onclick="speakText(\"I'm looking for this address.\")">▶ Слушать</button></div>
- </div>
- <div class="lesson-step">
-  <h4>4. Слова по теме · Useful vocabulary</h4>
-  <div class="chunk"><strong>bus stop</strong><small>автобусная остановка</small><button class="speak-example" onclick="speakText('bus stop')">▶</button></div>
-  <div class="chunk"><strong>subway</strong><small>метро (обычное американское название)</small><button class="speak-example" onclick="speakText('subway')">▶</button></div>
-  <div class="chunk"><strong>fare</strong><small>стоимость проезда</small><button class="speak-example" onclick="speakText('fare')">▶</button></div>
-  <div class="chunk"><strong>transfer</strong><small>пересадка</small><button class="speak-example" onclick="speakText('transfer')">▶</button></div>
-  <div class="chunk"><strong>one-way ticket</strong><small>билет в одну сторону</small><button class="speak-example" onclick="speakText('one-way ticket')">▶</button></div>
-  <div class="chunk"><strong>traffic</strong><small>дорожное движение / пробки</small><button class="speak-example" onclick="speakText('traffic')">▶</button></div>
-  <div class="chunk"><strong>intersection</strong><small>перекрёсток</small><button class="speak-example" onclick="speakText('intersection')">▶</button></div>
- </div>
- <div class="lesson-step">
-  <h4>5. Грамматика в контексте · How do I get to…?</h4>
-  <p class="lesson-note"><b style="color:#fff">How do I get to…?</b> — Как мне добраться до…? Используй <b style="color:#fff">by</b> перед видом транспорта: <i>by bus</i> — на автобусе, <i>by train</i> — на поезде. Но говорим <i>on foot</i> — пешком.</p>
-  <div class="dialogue-line"><b>How do I get to the airport?</b> — Как добраться до аэропорта?</div>
-  <div class="dialogue-line"><b>Take the number 8 bus.</b> — Сядьте на автобус № 8.</div>
-  <div class="dialogue-line"><b>Get off at the next stop.</b> — Выйдите на следующей остановке.</div>
-  <button class="lesson-action" data-text="How do I get to the airport? Take the number 8 bus. Get off at the next stop. I usually go to work by bus. I go there on foot." onclick="speakText(this.dataset.text)">🔊 Послушать примеры</button>
- </div>
- <div class="lesson-step">
-  <h4>6. Вспомни без подсказки · Active recall</h4>
-  <p class="lesson-note">Как спросить: «Где мне выходить?»</p>
-  <button class="lesson-action" onclick="document.getElementById('transport-recall').textContent='Where should I get off?'">Показать ответ</button>
-  <p id="transport-recall" class="recall-answer" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>7. Твоя очередь говорить · Speaking</h4>
-  <p class="lesson-note">Представь, что ты стоишь на остановке. Спроси, едет ли автобус до центра, где купить билет и сколько займёт поездка.</p>
-  <button class="lesson-action" data-text="Excuse me. Does this bus go downtown? Where can I get a ticket? How long does it take?" onclick="speakText(this.dataset.text)">🔊 Послушать пример</button>
-  <textarea class="lesson-input" id="transport-speaking" placeholder="Excuse me. Does this bus..."></textarea>
-  <p class="lesson-note">Составь 2–3 предложения и произнеси их вслух. Автоматической проверки ответа пока нет.</p>
- </div>
- <div class="lesson-step">
-  <h4>8. Реальная ситуация · Asking for directions</h4>
-  <p class="lesson-note">Ты спрашиваешь, как добраться до библиотеки. Человек отвечает: “Take the number 5 bus and get off at the third stop.” Что значит <b style="color:#fff">get off</b>?</p>
-  <button class="lesson-choice" onclick="checkTransportRole(this,true)">Выйти из транспорта.</button>
-  <button class="lesson-choice" onclick="checkTransportRole(this,false)">Сесть в транспорт.</button>
-  <button class="lesson-choice" onclick="checkTransportRole(this,false)">Купить билет.</button>
-  <p id="transport-role-feedback" class="lesson-note" aria-live="polite"></p>
- </div>
- <div class="lesson-step">
-  <h4>9. Полезно знать в США</h4>
-  <p class="lesson-note">В США транспортные системы и способы оплаты отличаются в зависимости от города. Перед поездкой проверь маршрут, расписание и способы оплаты на официальном сайте местного перевозчика. В разговоре <b style="color:#fff">downtown</b> обычно означает центр города.</p>
- </div>
- <div class="lesson-step">
-  <h4>Урок завершён?</h4>
-  <p class="lesson-note">Повтори диалог, чанки и попробуй объяснить вслух, как добраться до нужного места.</p>
-  <button class="primary" onclick="completeLesson('transportation')">Отметить урок пройденным ✓</button>
-  <p id="transportation-complete-note" class="lesson-note"></p>
- </div>
-</section>
+▶ Прослушать пример
 
-<section id="languages" class="page">
- <button class="back" onclick="openPage('home')">← Главная</button>
- <div class="eyebrow">MY LANGUAGES</div>
- <h1>Мои языки 🌍</h1>
- <p class="sub">Выбирай родной язык и добавляй языки для изучения.</p>
- <div class="progress-card" style="margin-top:20px">
-  <strong>Мой родной язык</strong>
-  <select id="native-language" class="quiz-option" onchange="saveLanguageSettings()">
-   <option value="ru">🇷🇺 Русский</option><option value="en">🇺🇸 English</option><option value="es">🇪🇸 Español</option><option value="de">🇩🇪 Deutsch</option><option value="fr">🇫🇷 Français</option><option value="it">🇮🇹 Italiano</option><option value="pt">🇵🇹 Português</option><option value="ja">🇯🇵 日本語</option><option value="ko">🇰🇷 한국어</option><option value="zh">🇨🇳 中文</option>
-  </select>
- </div>
- <div class="section-head"><h3>Изучаемые языки</h3></div>
- <div id="my-languages-list"></div>
- <div class="progress-card" style="margin-top:18px">
-  <strong>Добавить язык</strong>
-  <select id="new-language" class="quiz-option">
-   <option value="en">🇺🇸 English (US)</option><option value="es">🇪🇸 Español</option><option value="de">🇩🇪 Deutsch</option><option value="fr">🇫🇷 Français</option><option value="it">🇮🇹 Italiano</option><option value="pt">🇵🇹 Português</option><option value="ja">🇯🇵 日本語</option><option value="ko">🇰🇷 한국어</option><option value="zh">🇨🇳 中文</option>
-  </select>
-  <button class="solid" style="width:100%;padding:14px;border-radius:14px" onclick="addLanguage()">+ Добавить язык</button>
- </div>
- <p class="sub" style="margin-top:14px">Пока здесь можно управлять списком языков. Учебные материалы для новых языков подключим отдельно.</p>
-</section>
+Выбери, насколько легко вспомнил выражение
 
-<section id="course" class="page">
- <button class="back" onclick="openPage('languages')">← Мои языки</button>
- <div class="eyebrow">YOUR LANGUAGE COURSE</div>
- <h1 id="course-title">Мой курс</h1>
- <p class="sub" id="course-description">Выбери язык, чтобы начать обучение.</p>
- <div class="progress-card" style="margin-top:20px">
-  <div class="progress-top"><span>Статус курса</span><strong id="course-status">Готов</strong></div>
-  <p class="sub" id="course-detail" style="margin-top:10px">Материалы курса появятся здесь.</p>
- </div>
- <div id="course-progress-panel"></div>
- <div id="course-actions" style="margin-top:16px"></div>
-</section>
-</div>
+ТрудноНормальноЛегко ✓
 
-<nav><div class="nav-inner">
-<button class="nav-btn active" data-page="home" onclick="openPage('home')"><b>⌂</b>Главная</button>
-<button class="nav-btn" data-page="cards" onclick="openPage('cards')"><b>▤</b>Карточки</button>
-<button class="nav-btn" data-page="quiz" onclick="openPage('quiz')"><b>✓</b>Тест</button>
-<button class="nav-btn" data-page="topics" onclick="openPage('topics')"><b>⌘</b>Темы</button>
-<button class="nav-btn" data-page="progress" onclick="openPage('progress')"><b>◷</b>Прогресс</button>
-</div></nav>
-<script>
-const words=[
-["How's it going?","Как дела?","Hey, how's it going?","Повседневное общение"],
-["What's up?","Что нового? / Как дела?","Hey, what's up?","Повседневное общение"],
-["I'm doing pretty well.","У меня всё довольно хорошо.","I'm doing pretty well, thanks.","Повседневное общение"],
-["Sounds good.","Звучит отлично / Договорились.","Friday at seven? — Sounds good.","Повседневное общение"],
-["No worries.","Не переживай / Ничего страшного.","No worries, it happens.","Повседневное общение"],
-["Take your time.","Не торопись.","Take your time. I'm not in a hurry.","Повседневное общение"],
-["I'm on my way.","Я уже в пути.","I'm on my way. See you soon.","Повседневное общение"],
-["Let me know.","Дай мне знать.","Let me know when you're free.","Повседневное общение"],
-["I have no idea.","Понятия не имею.","I have no idea where it is.","Повседневное общение"],
-["That makes sense.","В этом есть смысл / Логично.","Oh, that makes sense.","Повседневное общение"],
-["I'm looking for a job.","Я ищу работу.","I'm looking for a job right now.","Работа"],
-["I just got off work.","Я только что закончил работу.","I'm tired. I just got off work.","Работа"],
-["I'm running late.","Я опаздываю.","Sorry, I'm running a little late.","Работа"],
-["Can you give me a hand?","Можешь мне помочь?","Can you give me a hand with this?","Работа"],
-["I'm done for today.","На сегодня я закончил.","I'm done for today. See you tomorrow.","Работа"],
-["I'd love to.","Я бы с удовольствием.","Would you like to get coffee? — I'd love to.","Знакомства"],
-["Are you free tonight?","Ты свободна сегодня вечером?","Hey, are you free tonight?","Знакомства"],
-["I had a great time.","Я отлично провёл время.","I had a great time with you.","Знакомства"],
-["What do you feel like doing?","Чем хочешь заняться?","What do you feel like doing this weekend?","Знакомства"],
-["I'm just looking around.","Я просто присматриваюсь.","Thanks, I'm just looking around.","Путешествия"],
-["I'm a little tired.", "Я немного устал.", "I'm a little tired today. — Сегодня я немного устал.\nI didn't sleep well, so I'm tired. — Я плохо спал, поэтому устал.", "Повседневное общение"],
-["Not really.", "Не особо / Не совсем.", "Are you hungry? — Not really. — Ты голоден? — Не особо.\nDo you like it? — Not really. — Тебе нравится? — Не особо.", "Повседневное общение"],
-["I'm just kidding.", "Я просто шучу.", "Relax, I'm just kidding. — Расслабься, я просто шучу.\nI didn't mean it. I'm just kidding. — Я не это имел в виду, я просто шучу.", "Повседневное общение"],
-["You never know.", "Кто знает / Никогда не знаешь.", "Maybe he'll call. You never know. — Может, он позвонит. Кто знает.\nYou never know what might happen. — Никогда не знаешь, что может случиться.", "Повседневное общение"],
-["That's a good point.", "Хорошее замечание.", "That's a good point. I agree. — Хорошее замечание. Я согласен.\nYou make a good point. — Ты говоришь дело.", "Повседневное общение"],
-["I guess so.", "Наверное, да.", "Are you coming? — I guess so. — Ты придёшь? — Наверное, да.\nI guess so, but I'm not sure. — Наверное, да, но я не уверен.", "Повседневное общение"],
-["I don't think so.", "Не думаю.", "Is he home? — I don't think so. — Он дома? — Не думаю.\nI don't think so. It looks closed. — Не думаю. Похоже, закрыто.", "Повседневное общение"],
-["That's too bad.", "Очень жаль.", "You missed the bus? That's too bad. — Ты опоздал на автобус? Очень жаль.\nThat's too bad. Maybe next time. — Очень жаль. Может, в следующий раз.", "Повседневное общение"],
-["No big deal.", "Ничего страшного.", "It's no big deal. Don't worry. — Ничего страшного. Не переживай.\nI can fix it. It's no big deal. — Я могу это исправить. Пустяки.", "Повседневное общение"],
-["I'm not in the mood.", "У меня нет настроения.", "I'm not in the mood to go out. — У меня нет настроения куда-то идти.\nI'm not in the mood for a movie. — Мне сейчас не хочется смотреть фильм.", "Повседневное общение"],
-["It happens.", "Бывает.", "Don't worry. It happens. — Не переживай. Бывает.\nEveryone makes mistakes. It happens. — Все ошибаются. Так бывает.", "Повседневное общение"],
-["I'm in a hurry.", "Я спешу.", "Sorry, I'm in a hurry. — Извини, я спешу.\nI can't talk right now. I'm in a hurry. — Сейчас не могу говорить. Я тороплюсь.", "Повседневное общение"],
-["What's the matter?", "Что случилось?", "You look upset. What's the matter? — Ты выглядишь расстроенным. Что случилось?\nWhat's the matter with your phone? — Что случилось с твоим телефоном?", "Повседневное общение"],
-["Are you serious?", "Ты серьёзно?", "Are you serious? That's amazing! — Ты серьёзно? Это потрясающе!\nWait, are you serious? — Подожди, ты серьёзно?", "Повседневное общение"],
-["I see what you mean.", "Я понимаю, что ты имеешь в виду.", "I see what you mean now. — Теперь я понимаю, что ты имеешь в виду.\nI see what you mean, but I disagree. — Я понимаю твою мысль, но не согласен.", "Повседневное общение"],
-["Let me think.", "Дай подумать.", "Let me think for a minute. — Дай мне минуту подумать.\nHmm, let me think about it. — Хм, дай мне подумать об этом.", "Повседневное общение"],
-["That's not bad.", "Это неплохо.", "Your English is pretty good. — That's not bad! — У тебя довольно хороший английский. — Неплохо!\nThat's not a bad idea. — Это неплохая идея.", "Повседневное общение"],
-["I'm getting better.", "У меня получается всё лучше.", "My English is getting better. — Мой английский становится лучше.\nI'm getting better at cooking. — У меня всё лучше получается готовить.", "Повседневное общение"],
-["I don't mind.", "Я не против.", "We can walk if you want. — I don't mind. — Можем прогуляться, если хочешь. — Я не против.\nI don't mind waiting. — Я не против подождать.", "Повседневное общение"],
-["It sounds familiar.", "Звучит знакомо.", "That name sounds familiar. — Это имя кажется знакомым.\nThis place sounds familiar. — Это место мне знакомо.", "Повседневное общение"],
-["I'm afraid not.", "Боюсь, что нет.", "Is the store open? — I'm afraid not. — Магазин открыт? — Боюсь, что нет.\nCan you come tomorrow? — I'm afraid not. — Ты можешь прийти завтра? — Боюсь, что нет.", "Повседневное общение"],
-["That's exactly what I thought.", "Я именно так и думал.", "That's exactly what I thought. — Я именно так и думал.\nI knew it! That's exactly what I thought. — Я так и знал! Именно так я и думал.", "Повседневное общение"],
-["I'm looking forward to it.", "Я с нетерпением этого жду.", "I'm looking forward to the weekend. — Я с нетерпением жду выходных.\nI'm looking forward to seeing you. — Я с нетерпением жду встречи с тобой.", "Повседневное общение"],
-["It's been a long day.", "День был долгим и тяжёлым.", "It's been a long day. I need some rest. — День был тяжёлым. Мне нужно отдохнуть.\nWow, it's been a long day. — Ух, какой долгий день.", "Повседневное общение"],
-["I'll see what I can do.", "Посмотрю, что можно сделать.", "I'll see what I can do for you. — Посмотрю, чем могу тебе помочь.\nI can't promise anything, but I'll see what I can do. — Ничего не обещаю, но посмотрю, что можно сделать.", "Повседневное общение"],
-];
-let index=0, known=JSON.parse(localStorage.getItem('de-known')||'[]'), score=0, answered=0, qIndex=0, selectedTopic='';
-let srs=JSON.parse(localStorage.getItem('de-srs')||'{}'), reviewQueue=[];
-const quizItems=[
-{q:"What's up?",a:["Что нового?","Где это?","Сколько стоит?"],c:0},
-{q:"No worries.",a:["Я волнуюсь.","Ничего страшного.","Я не знаю."],c:1},
-{q:"I'm on my way.",a:["Я уже в пути.","Я ищу дорогу.","Я дома."],c:0},
-{q:"Take your time.",a:["Поторопись.","Не переживай.","Не торопись."],c:2},
-{q:"I had a great time.",a:["Я отлично провёл время.","Я опоздал.","Я устал."],c:0}
-];
-// DAILY LANGUAGES: сохранение списка языков и родного языка на устройстве
-const languageOptions = {
- en: "🇺🇸 English (US)", es: "🇪🇸 Español", de: "🇩🇪 Deutsch",
- fr: "🇫🇷 Français", it: "🇮🇹 Italiano", pt: "🇵🇹 Português",
- ja: "🇯🇵 日本語", ko: "🇰🇷 한국어", zh: "🇨🇳 中文"
-};
-let myLanguages = JSON.parse(localStorage.getItem('dl-languages') || '["en"]');
-function saveLanguageSettings(){
- const native=document.getElementById('native-language').value;
- localStorage.setItem('dl-native',native);
-}
-// Independent progress records for every language. English keeps its existing data keys.
-function getLanguageProgress(lang){
- if(lang==='en'){
-  const quiz=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');
-  return {known:Array.isArray(known)?known.length:0,total:words.length,due:words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length,quizCorrect:quiz.quizCorrect||0,quizTotal:quiz.quizTotal||0};
- }
- const data=JSON.parse(localStorage.getItem('dl-progress-'+lang)||'{"known":[],"srs":{},"quizCorrect":0,"quizTotal":0}');
- return {known:(data.known||[]).length,total:0,due:0,quizCorrect:data.quizCorrect||0,quizTotal:data.quizTotal||0};
-}
-function saveLanguageProgress(lang,data){
- if(lang==='en'){
-  localStorage.setItem('dl-progress-en',JSON.stringify({quizCorrect:data.quizCorrect||0,quizTotal:data.quizTotal||0}));
- }else{
-  localStorage.setItem('dl-progress-'+lang,JSON.stringify(data));
- }
-}
-function renderCourseProgress(lang){
- const panel=document.getElementById('course-progress-panel');
- if(!panel)return;
- const p=getLanguageProgress(lang);
- const percent=p.total?Math.round(p.known/p.total*100):0;
- const quizRate=p.quizTotal?Math.round(p.quizCorrect/p.quizTotal*100):0;
- panel.innerHTML=`<div class="course-stats"><div class="course-stat"><strong>${p.known}</strong><small>Выучено</small></div><div class="course-stat"><strong>${p.total?p.total:'—'}</strong><small>Карточек</small></div><div class="course-stat"><strong>${p.quizTotal?quizRate+'%':'—'}</strong><small>Тесты</small></div></div>${p.total?`<div class="course-progress-bar"><i style="width:${percent}%"></i></div><p class="sub" style="margin-top:8px">Изучено ${percent}% карточек · Повторить сегодня: ${p.due}</p>`:'<p class="sub" style="margin-top:12px">Статистика этого языка будет заполняться по мере добавления уроков, карточек и тестов.</p>'}`;
-}
-function renderLanguages(){
- const list=document.getElementById('my-languages-list');
- if(!list)return;
- list.innerHTML='';
- myLanguages.forEach(lang=>{
-  const row=document.createElement('div');
-  row.className='topic';
-  const info=document.createElement('span');
-  const name=document.createElement('strong');
-  name.textContent=languageOptions[lang] || lang;
-  const note=document.createElement('small');
-  const progress=getLanguageProgress(lang);
-  note.textContent=lang==='en'?`Основной курс · ${progress.known} выучено`:`Отдельный прогресс · ${progress.known} выучено`;
-  info.append(name,note);
-  row.append(info);
-  const actions=document.createElement('span');
-  actions.style.display='flex';
-  actions.style.alignItems='center';
-  actions.style.gap='10px';
-  const open=document.createElement('button');
-  open.className='small-link';
-  open.textContent='Открыть →';
-  open.onclick=()=>openCourse(lang);
-  actions.append(open);
-  if(lang!=='en'){
-   const remove=document.createElement('button');
-   remove.className='small-link'; remove.textContent='Удалить';
-   remove.onclick=()=>removeLanguage(lang);
-   actions.append(remove);
-  }
-  row.append(actions);
-  list.append(row);
- });
- const native=document.getElementById('native-language');
- native.value=localStorage.getItem('dl-native') || 'ru';
-}
-function openCourse(lang){
- const title=languageOptions[lang] || lang;
- document.getElementById('course-title').textContent=title;
- const description=document.getElementById('course-description');
- const status=document.getElementById('course-status');
- const detail=document.getElementById('course-detail');
- const actions=document.getElementById('course-actions');
- actions.innerHTML='';
- renderCourseProgress(lang);
- if(lang==='en'){
-  description.textContent='Американский английский — твой основной курс.';
-  status.textContent='Активен';
-  detail.textContent='В этом курсе уже доступны разговорные карточки, тесты, темы, произношение и повторение.';
-  const start=document.createElement('button');
-  start.className='solid';
-  start.style.width='100%';
-  start.textContent='Продолжить английский →';
-  start.onclick=()=>openPage('home');
-  actions.append(start);
- }else{
-  description.textContent='Отдельный курс выбранного языка.';
-  status.textContent='Скоро';
-  detail.textContent='Курс создан. Следующим этапом добавим сюда алфавит и произношение, базовые фразы, тематические чанки, аудирование и тесты. Твой английский и его прогресс остаются отдельно.';
-  const back=document.createElement('button');
-  back.className='outline';
-  back.style.width='100%';
-  back.textContent='Вернуться к языкам';
-  back.onclick=()=>openPage('languages');
-  actions.append(back);
- }
- openPage('course');
-}
+← НазадДалее →
 
-function addLanguage(){
- const select=document.getElementById('new-language');
- const lang=select.value;
- if(myLanguages.includes(lang)){alert('Этот язык уже добавлен!');return;}
- myLanguages.push(lang);
- localStorage.setItem('dl-languages',JSON.stringify(myLanguages));
- renderLanguages();
-}
-function removeLanguage(lang){
- myLanguages=myLanguages.filter(item=>item!==lang);
- localStorage.setItem('dl-languages',JSON.stringify(myLanguages));
- renderLanguages();
-}
+Оценка ответа запланирует следующее повторение.
 
-function openLesson(id){
- if(id==='introductions'){openPage('lesson');return;}
- if(id==='shopping'){openPage('lesson-shopping');return;}
- if(id==='work'){openPage('lesson-work');return;}
- if(id==='housing'){openPage('lesson-housing');return;}
- if(id==='healthcare'){openPage('lesson-healthcare');return;}
- if(id==='transportation'){openPage('lesson-transportation');return;}
-}
-function checkLessonAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- const feedback=document.getElementById('lesson-feedback');
- feedback.textContent=isCorrect?'Верно! Sam говорит: “I just moved here.”':'Не совсем. Посмотри на последнюю реплику Sam: “I just moved here.”';
-}
-function revealLessonRecall(){
- document.getElementById('lesson-recall').textContent='Nice to meet you.';
-}
+← Главная 
 
-function checkShoppingAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('shopping-feedback').textContent=isCorrect?'Верно! Продавец говорит: “It’s twenty dollars.”':'Не совсем. В диалоге продавец называет цену: “It’s twenty dollars.”';
-}
-function revealShoppingRecall(){
- document.getElementById('shopping-recall').textContent='How much is this?';
-}
-function checkShoppingRole(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('shopping-role-feedback').textContent=isCorrect?'Именно так! “No, I’m good, thanks” — естественный разговорный отказ от пакета.':'Попробуй ещё раз. Если пакет не нужен, можно сказать: “No, I’m good, thanks.”';
-}
+QUICK QUIZ
 
+Проверь себя
 
-function checkHousingAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('housing-feedback').textContent=isCorrect?'Верно! Аренда составляет $1,200 в месяц.':'Не совсем. В диалоге арендодатель говорит: “twelve hundred dollars a month.”';
-}
-function checkHousingRole(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('housing-role-feedback').textContent=isCorrect?'Правильно! Так спрашивают, включены ли коммунальные услуги.':'Попробуй ещё раз: utilities — это коммунальные услуги.';
-}
+Выбери правильный перевод выражения.
 
-function checkWorkAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('work-feedback').textContent=isCorrect?'Верно! Alex работал в ресторане два года.':'Не совсем. Послушай ответ Alex ещё раз: “for two years.”';
-}
-function checkWorkRole(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('work-role-feedback').textContent=isCorrect?'Правильно! Так естественно сказать, когда можешь начать в следующий понедельник.':'Попробуй ещё раз. “I can start” означает «Я могу начать».';
-}
+Вопрос 1 из 50 верно
 
-function checkHealthcareAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('healthcare-feedback').textContent=isCorrect?'Верно! Майк звонит, чтобы записаться на приём.':'Не совсем. В начале Майк говорит: “I’d like to make an appointment.”';
-}
-function checkHealthcareRole(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('healthcare-role-feedback').textContent=isCorrect?'Правильно! “Do I need a prescription?” — «Мне нужен рецепт?»':'Попробуй ещё раз. Чтобы спросить о рецепте, скажи: “Do I need a prescription?”';
-}
+What's up?
 
-function checkTransportAnswer(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('transport-feedback').textContent=isCorrect?'Верно! Emma может оплатить проезд картой в автобусе.':'Не совсем. В диалоге сказано: “You can pay on the bus with a card.”';
-}
+Следующий вопрос → ← Главная 
 
-function checkTransportRole(button,isCorrect){
- const choices=button.parentElement.querySelectorAll('.lesson-choice');
- choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');});
- document.getElementById('transport-role-feedback').textContent=isCorrect?'Правильно! Get off — выйти из автобуса, поезда или другого транспорта.':'Не совсем. Get off означает выйти из транспорта. Get on — сесть в транспорт.';
-}
+LEARN BY SITUATION
 
-function completeLesson(id){
- const completed=JSON.parse(localStorage.getItem('dl-completed-lessons-en')||'[]');
- if(!completed.includes(id)){completed.push(id);localStorage.setItem('dl-completed-lessons-en',JSON.stringify(completed));}
- logActivity('cards','en');
- const note=document.getElementById(id+'-complete-note')||document.getElementById('lesson-complete-note');
- if(note) note.textContent='Урок отмечен как пройденный. Отличная работа! Возвращайся к выражениям для повторения.';
-}
-function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();if(id==='languages')renderLanguages();updateProgress();window.scrollTo(0,0)}
-function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
- 
-let dlCurrentAudio = null;
-let dlCurrentAudioUrl = null;
-let dlSpeechRequestId = 0;
-let dlSpeechAbortController = null;
+Выбирай тему
 
-function speakBrowserFallback(phrase) {
-  if (!('speechSynthesis' in window)) {
-    alert('Сервис озвучки временно недоступен. Браузерная озвучка не поддерживается.');
-    return;
-  }
-  try {
-    const utterance = new SpeechSynthesisUtterance(phrase);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.92;
-    utterance.pitch = 1;
-    const voices = window.speechSynthesis.getVoices();
-    const americanVoice = voices.find(v => /^en-US$/i.test(v.lang))
-      || voices.find(v => /^en[-_]US/i.test(v.lang))
-      || voices.find(v => /^en/i.test(v.lang));
-    if (americanVoice) utterance.voice = americanVoice;
-    window.speechSynthesis.speak(utterance);
-  } catch (error) {
-    console.error('Browser speech fallback failed:', error);
-    alert('Не удалось воспроизвести озвучку. Проверь звук и настройки браузера.');
-  }
-}
+Выражения, которые пригодятся в реальной жизни.
 
-function speakText(text) {
-  const phrase = String(text || '').trim();
-  if (!phrase) return;
+💬 Повседневное общениеПриветствия и small talk→ 🧰 РаботаКоллеги и рабочие ситуации→ ❤️ ЗнакомстваОбщение и встречи→ ✈️ ПутешествияПоездки и повседневные дела→ 
 
-  // A new click cancels the previous request, preventing overlapping/racing audio.
-  const requestId = ++dlSpeechRequestId;
-  if (dlSpeechAbortController) {
-    try { dlSpeechAbortController.abort(); } catch (e) {}
-  }
-  dlSpeechAbortController = new AbortController();
+Выбери тему, чтобы посмотреть подходящие карточки.
 
-  try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {}
-  if (dlCurrentAudio) {
-    try {
-      dlCurrentAudio.pause();
-      dlCurrentAudio.removeAttribute('src');
-      dlCurrentAudio.load();
-    } catch (e) {}
-    dlCurrentAudio = null;
-  }
-  if (dlCurrentAudioUrl) {
-    URL.revokeObjectURL(dlCurrentAudioUrl);
-    dlCurrentAudioUrl = null;
-  }
+← Главная 
 
-  const controller = dlSpeechAbortController;
+YOUR JOURNEY
 
-  (async () => {
-    try {
-      const response = await fetch('https://still-water-38f1.damnrock-19.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: phrase }),
-        signal: controller.signal
-      });
+Твой прогресс
 
-      if (!response.ok) throw new Error('Audio service error: ' + response.status);
-      const contentType = (response.headers.get('content-type') || '').toLowerCase();
-      if (!contentType.startsWith('audio/')) {
-        const detail = await response.text().catch(() => '');
-        throw new Error('Worker returned non-audio response: ' + contentType + ' ' + detail.slice(0, 180));
-      }
+Каждое повторение приближает тебя к цели.
 
-      const blob = await response.blob();
-      if (requestId !== dlSpeechRequestId) return;
-      if (!blob.size) throw new Error('The audio service returned an empty file.');
+0Выучено
 
-      const audioUrl = URL.createObjectURL(blob);
-      const audio = new Audio(audioUrl);
-      audio.preload = 'auto';
-      dlCurrentAudioUrl = audioUrl;
-      dlCurrentAudio = audio;
+0Дней подряд
 
-      const cleanup = () => {
-        if (dlCurrentAudio === audio) dlCurrentAudio = null;
-        if (dlCurrentAudioUrl === audioUrl) {
-          URL.revokeObjectURL(audioUrl);
-          dlCurrentAudioUrl = null;
-        }
-      };
-      audio.addEventListener('ended', cleanup, { once: true });
-      audio.addEventListener('error', cleanup, { once: true });
+—Точность тестов
 
-      try {
-        await audio.play();
-      } catch (playError) {
-        cleanup();
-        throw playError;
-      }
-    } catch (workerError) {
-      if (workerError && workerError.name === 'AbortError') return;
-      if (requestId !== dlSpeechRequestId) return;
-      console.warn('ElevenLabs Worker playback failed; using browser voice fallback:', workerError);
-      if (dlCurrentAudio) {
-        try { dlCurrentAudio.pause(); } catch (e) {}
-        dlCurrentAudio = null;
-      }
-      if (dlCurrentAudioUrl) {
-        URL.revokeObjectURL(dlCurrentAudioUrl);
-        dlCurrentAudioUrl = null;
-      }
-      speakBrowserFallback(phrase);
-    }
-  })();
-}
-function speakCurrent(){speakText(words[index][0]);}
-function speakExample(){speakText(words[index][2]);}
-function localDayKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');}
-function logActivity(type,lang='en'){
- const key='dl-activity-'+lang;
- const data=JSON.parse(localStorage.getItem(key)||'{}');
- const day=localDayKey();
- if(!data[day])data[day]={cards:0,tests:0};
- data[day][type]=(data[day][type]||0)+1;
- localStorage.setItem(key,JSON.stringify(data));
- updateStreak();
-}
-function updateStreak(){
- const data=JSON.parse(localStorage.getItem('dl-activity-en')||'{}');
- if(Object.keys(data).length===0)return Number(localStorage.getItem('de-streak')||0);
- let streak=0,day=new Date();
- if(!data[localDayKey(day)])day.setDate(day.getDate()-1);
- while(data[localDayKey(day)]&&(data[localDayKey(day)].cards||0)+(data[localDayKey(day)].tests||0)>0){streak++;day.setDate(day.getDate()-1);}
- localStorage.setItem('de-streak',String(streak));
- const el=document.getElementById('streak');if(el)el.textContent=streak;
- return streak;
-}
-function renderStatistics(){
- const knownCount=document.getElementById('stats-known');if(!knownCount)return;
- const quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');
- const accuracy=quizData.quizTotal?Math.round(quizData.quizCorrect/quizData.quizTotal*100)+'%':'—';
- const streak=updateStreak();
- knownCount.textContent=known.length;
- document.getElementById('stats-streak').textContent=streak;
- document.getElementById('stats-accuracy').textContent=accuracy;
- const total=words.length,percent=total?Math.round(known.length/total*100):0;
- document.getElementById('known-count').textContent=known.length+' / '+total;
- document.getElementById('progress-bar').style.width=percent+'%';
- document.getElementById('progress-caption').textContent=percent+'% набора изучено. '+(percent===100?'Отличная работа!':'Продолжай в своём темпе.');
- const activity=JSON.parse(localStorage.getItem('dl-activity-en')||'{}');
- const chart=document.getElementById('weekly-chart');chart.innerHTML='';
- const days=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];let values=[];
- for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=localDayKey(d);const v=activity[key]||{cards:0,tests:0};values.push({label:days[d.getDay()],count:(v.cards||0)+(v.tests||0)});}
- const max=Math.max(1,...values.map(v=>v.count));
- values.forEach(v=>{const item=document.createElement('div');item.className='week-day';const num=document.createElement('b');num.textContent=v.count||'';const wrap=document.createElement('div');wrap.className='week-bar-wrap';const bar=document.createElement('i');bar.className='week-bar';bar.style.height=(v.count?Math.max(7,v.count/max*100):3)+'%';wrap.append(bar);const label=document.createElement('small');label.textContent=v.label;item.append(num,wrap,label);chart.append(item);});
- const sum=values.reduce((a,v)=>a+v.count,0);document.getElementById('weekly-summary').textContent=sum?`За последние 7 дней: ${sum} учебных действий.`:'Активность начнёт отображаться после занятий.';
- const list=document.getElementById('language-stats-list');list.innerHTML='';
- (myLanguages||['en']).forEach(lang=>{const row=document.createElement('div');row.className='language-stat-row';const head=document.createElement('div');head.className='language-stat-head';const name=document.createElement('span');name.textContent=languageOptions[lang]||lang;const p=getLanguageProgress(lang);const pct=p.total?Math.round(p.known/p.total*100):0;const val=document.createElement('span');val.textContent=p.total?`${p.known}/${p.total} · ${pct}%`:`${p.known} выучено`;head.append(name,val);row.append(head);const track=document.createElement('div');track.className='bar';const fill=document.createElement('i');fill.style.width=p.total?pct+'%':'0%';track.append(fill);row.append(track);list.append(row);});
-}
-function rateCard(level){let now=Date.now(),old=srs[index]||{interval:0};let days=level==='hard'?1:level==='good'?(old.interval?Math.max(2,Math.round(old.interval*2)):2):(old.interval?Math.max(4,Math.round(old.interval*2.5)):4);srs[index]={interval:days,due:now+days*86400000,last:now,level};localStorage.setItem('de-srs',JSON.stringify(srs));logActivity('cards');if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known));}document.getElementById('srs-hint').textContent='Готово! Следующее повторение через '+days+' дн.';updateProgress();setTimeout(nextCard,450);}
-function startDueReview(){reviewQueue=words.map((w,i)=>i).filter(i=>!srs[i]||srs[i].due<=Date.now());if(!reviewQueue.length){alert('На сегодня повторений нет. Отличная работа!');return;}index=reviewQueue[0];openPage('cards');document.getElementById('card-counter').textContent='Повторение 1 / '+reviewQueue.length;}
-function nextCard(){if(reviewQueue.length){reviewQueue.shift();if(reviewQueue.length){index=reviewQueue[0];}else{reviewQueue=[];alert('Повторение завершено! Отличная работа 🎉');openPage('home');return;}renderCard();return;}index=(index+1)%words.length;renderCard()}function prevCard(){index=(index-1+words.length)%words.length;renderCard()}
-function markKnown(){if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known))}nextCard();updateProgress()}
-function updateProgress(){let n=known.length,p=Math.round(n/words.length*100);document.getElementById('home-count').textContent=n+' / '+words.length;document.getElementById('known-count').textContent=n+' / '+words.length;document.getElementById('known-stat').textContent=n;document.getElementById('home-bar').style.width=p+'%';document.getElementById('progress-bar').style.width=p+'%';document.getElementById('progress-caption').textContent=p+'% набора изучено. '+(p===100?'Отличная работа!':'Продолжай в своём темпе.');document.getElementById('streak').textContent=updateStreak();let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');document.getElementById('quiz-stat').textContent=quizData.quizTotal?Math.round(quizData.quizCorrect/quizData.quizTotal*100)+'%':'—';let due=words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length;let dueEl=document.getElementById('due-count');if(dueEl)dueEl.textContent=due;renderStatistics();}
-function renderQuiz(){if(qIndex>=quizItems.length){document.getElementById('quiz-question').textContent='Тест завершён!';document.getElementById('quiz-options').innerHTML='<div class="empty">Твой результат: '+score+' из '+quizItems.length+'. Отличная работа — продолжай практиковаться!</div>';document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';return}
-let q=quizItems[qIndex];document.getElementById('quiz-count').textContent='Вопрос '+(qIndex+1)+' из '+quizItems.length;document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-question').textContent=q.q;document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';document.getElementById('quiz-options').innerHTML=q.a.map((a,i)=>'<button class="quiz-option" onclick="answerQuiz('+i+')">'+a+'</button>').join('')}
-function answerQuiz(i){let q=quizItems[qIndex],opts=document.querySelectorAll('.quiz-option');opts.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===i&&i!==q.c)b.classList.add('wrong')});if(i===q.c)score++;answered++;logActivity('tests');let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');quizData.quizTotal=(quizData.quizTotal||0)+1;if(i===q.c)quizData.quizCorrect=(quizData.quizCorrect||0)+1;saveLanguageProgress('en',quizData);document.getElementById('quiz-feedback').textContent=i===q.c?'Верно! Отлично 🎉':'Правильный ответ: '+q.a[q.c];document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-next').style.display='block';updateProgress();}
-function nextQuestion(){qIndex++;renderQuiz()}
-function filterTopic(t){selectedTopic=t;let ids=words.map((w,i)=>w[3]===t?i:null).filter(x=>x!==null);if(ids.length){index=ids[0];openPage('cards');document.getElementById('topic-note').textContent='Открыты карточки по теме: '+t+'.';}}
-function resetProgress(){if(confirm('Точно сбросить изученные карточки и результаты на этом устройстве?')){known=[];score=0;answered=0;localStorage.removeItem('de-known');updateProgress();}}
-renderCard();renderQuiz();renderLanguages();updateProgress();
-try{const tg=window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
-if('speechSynthesis' in window){window.speechSynthesis.getVoices();}
-window.addEventListener('load',()=>{renderCard();updateProgress();});
-</script>
- <script src="daily_english_material.js"></script>
-<script src="daily_english_rich_pack.js"></script>
-</body>
-</html>
+Прогресс английского0 / 0
+
+Начни с первой карточки.
+
+Активность за 7 дней
+
+занятия
+
+Активность начнёт отображаться после занятий.
+
+Прогресс по языкам
+
+Твои результаты
+
+📚0Выучено выражений
+
+🎯—Точность тестов
+
+Сбросить прогресс английского ← Главная 
+
+PRACTICAL ESL · AMERICAN ENGLISH
+
+Обучение для жизни в США
+
+Понимай живую речь, общайся в повседневных ситуациях и учись самостоятельно выражать свои мысли.
+
+ТВОЙ ПРАКТИЧЕСКИЙ КУРС
+
+English for Everyday Life
+
+Диалоги, полезные выражения, понимание на слух и разговорная практика.
+
+Начать первый урок → 
+
+Программа обучения
+
+A1 → B1
+
+Урок 01 · A1–A2
+
+👋 Introductions & Small Talk
+
+Знакомство, приветствия, рассказ о себе и простой разговор.
+
+Открыть урок →
+
+Урок 02 · A1–A2
+
+🛒 Shopping & Money
+
+Покупки, цены, оплата, вопросы продавцу.
+
+Открыть урок →
+
+Урок 03 · A1–A2
+
+🧰 Work & Employment
+
+Поиск работы, собеседование, график и общение с коллегами.
+
+Открыть урок →
+
+Урок 04 · A2
+
+🏠 Housing
+
+Аренда жилья, бытовые вопросы, разговор с арендодателем.
+
+Открыть урок →
+
+Урок 05 · A2
+
+🩺 Healthcare
+
+Запись к врачу, описание самочувствия, аптека.
+
+Открыть урок →
+
+Урок 06 · A2–B1
+
+🚌 Transportation & Directions
+
+Транспорт, маршруты, вопросы о дороге и поездках.
+
+Открыть урок →
+
+← К программе 
+
+LESSON 03 · A1–A2 · AMERICAN ENGLISH
+
+Work & Employment
+
+Цель: рассказать о работе, опыте и графике, а также задать простые вопросы работодателю.
+
+1. Понятный диалог · Listen & understand
+
+Alex ищет работу и разговаривает с менеджером кафе. Сначала прочитай, затем прослушай весь разговор.
+
+Manager: Hi! Are you looking for a job?
+
+Alex: Yes, I am. Are you hiring?
+
+Manager: We are. Do you have any experience?
+
+Alex: Yes. I worked in a restaurant for two years.
+
+Manager: Great. When can you start?
+
+Alex: I can start next Monday.
+
+🔊 Прослушать диалог 
+
+2. Пойми смысл · Comprehension
+
+How long did Alex work in a restaurant?
+
+For two months. For two years. For five years. 
+
+3. Полезные разговорные блоки · Chunks
+
+Are you hiring?Вы сейчас нанимаете сотрудников?▶ Слушать
+
+I'm looking for a job.Я ищу работу.▶ Слушать
+
+Do you have any experience?У вас есть опыт работы?▶ Слушать
+
+When can you start?Когда вы можете приступить?▶ Слушать
+
+I can start next Monday.Я могу начать в следующий понедельник.▶ Слушать
+
+4. Вспомни без подсказки · Active recall
+
+Как спросить работодателя: «Вы сейчас нанимаете?»
+
+Показать ответ 
+
+5. Скажи о себе · Speaking
+
+Ответь на вопрос: “What kind of work are you looking for?”
+
+▶ Прослушать вопрос 
+
+Попробуй сказать 2–3 предложения вслух. Поле помогает подготовить ответ, автоматической проверки пока нет.
+
+6. Реальная ситуация · Real life
+
+Менеджер спрашивает: “When can you start?” Ты можешь начать в понедельник. Что ответишь?
+
+I started last Monday. I can start next Monday. I work every Monday. 
+
+Урок завершён?
+
+Отметить урок пройденным 
+
+← К программе 
+
+LESSON 04 · A2 · AMERICAN ENGLISH
+
+Housing
+
+Цель: спросить об аренде, узнать условия жилья и сообщить о бытовой проблеме.
+
+1. Понятный диалог · Listen & understand
+
+Jamie звонит по объявлению об аренде квартиры. Прочитай разговор, затем прослушай его целиком.
+
+Tenant: Hi, I'm calling about the apartment for rent.
+
+Landlord: Sure. Are you looking to move in soon?
+
+Tenant: Yes. How much is the rent?
+
+Landlord: It's $1,200 a month. Utilities are not included.
+
+Tenant: I see. Is there a security deposit?
+
+Landlord: Yes, the deposit is one month's rent.
+
+Tenant: Okay. Can I see the apartment this Saturday?
+
+Landlord: Of course. How about 10 a.m.?
+
+🔊 Прослушать диалог 
+
+2. Пойми смысл · Comprehension
+
+How much is the monthly rent?
+
+$900 a month. $1,200 a month. $1,500 a month. 
+
+3. Полезные разговорные блоки · Chunks
+
+I'm calling about the apartment for rent.Я звоню насчёт квартиры, которая сдаётся.▶ Слушать
+
+How much is the rent?Сколько стоит аренда?▶ Слушать
+
+Are utilities included?Коммунальные услуги включены в стоимость?▶ Слушать
+
+Is there a security deposit?Есть ли залог за жильё?▶ Слушать
+
+Can I see the apartment?Можно посмотреть квартиру?▶ Слушать
+
+4. Вспомни без подсказки · Active Recall
+
+Как спросить: «Коммунальные услуги включены?»
+
+Показать ответ 
+
+5. Скажи о себе · Speaking
+
+Ответь на вопрос: “What kind of place are you looking for?”
+
+▶ Прослушать вопрос 
+
+Напиши 2–3 предложения, а затем попробуй произнести их вслух. Автоматической проверки пока нет.
+
+6. Реальная ситуация · Real life
+
+Ты хочешь узнать, включены ли коммунальные услуги в аренду. Что спросишь?
+
+Do you have any experience? Are utilities included? When can you start? 
+
+Урок завершён?
+
+Отметить урок пройденным 
+
+← К программе 
+
+LESSON 01 · A1–A2 · AMERICAN ENGLISH
+
+Introductions & Small Talk
+
+Цель: представиться, задать простые вопросы и поддержать короткий разговор.
+
+1. Понятный диалог · Listen & understand
+
+Сначала прочитай диалог целиком и попробуй понять ситуацию. Затем прослушай реплики.
+
+Alex: Hey, how's it going?
+
+Sam: Pretty good, thanks. How about you?
+
+Alex: I'm doing well. I'm Alex, by the way.
+
+Sam: Nice to meet you, Alex. I'm Sam.
+
+Alex: Nice to meet you too. Are you from around here?
+
+Sam: Not really. I just moved here.
+
+🔊 Прослушать диалог 
+
+2. Пойми смысл · Comprehension
+
+Ответь на вопросы по диалогу. Не старайся переводить каждое слово — улови общий смысл.
+
+Where did Sam just move?
+
+He moved to another country. He moved here. He moved to Alex's house. 
+
+3. Полезные разговорные блоки · Chunks
+
+How's it going?Как дела? Неформальное приветствие.▶ Слушать
+
+How about you?А ты? / А у тебя?▶ Слушать
+
+Nice to meet you.Приятно познакомиться.▶ Слушать
+
+I'm ... by the way.Я ..., кстати. Удобно представиться в разговоре.▶ Слушать
+
+Are you from around here?Ты местный? / Ты отсюда?▶ Слушать
+
+4. Вспомни без подсказки · Active recall
+
+Как по-английски сказать «Приятно познакомиться»?
+
+Показать ответ 
+
+5. Скажи о себе · Speaking
+
+Ответь вслух на вопрос: “Tell me a little about yourself.”
+
+▶ Прослушать вопрос 
+
+Сначала попробуй произнести ответ вслух. Затем можешь записать его здесь для самостоятельной практики. Текст пока не отправляется на автоматическую проверку.
+
+6. Заверши урок
+
+Перед завершением попробуй без подсказки произнести три выражения из урока и коротко представиться.
+
+Отметить урок пройденным ✓ 
+
+← К программе 
+
+LESSON 02 · A1–A2 · AMERICAN ENGLISH
+
+Shopping & Money
+
+Цель: спросить цену, найти нужный товар, понять продавца и оплатить покупку в американском магазине.
+
+1. Понятный диалог · Listen & understand
+
+Ты в магазине одежды. Сначала прочитай диалог, затем прослушай его целиком.
+
+Customer: Excuse me, how much is this T-shirt?
+
+Clerk: It's twenty dollars.
+
+Customer: Do you have it in a medium?
+
+Clerk: Let me check. Yes, here you go.
+
+Customer: Great. Can I pay by card?
+
+Clerk: Sure. You can tap right here.
+
+Customer: Thanks!
+
+Clerk: You're welcome. Have a good one!
+
+🔊 Прослушать диалог 
+
+2. Пойми смысл · Comprehension
+
+Выбери правильный ответ по диалогу.
+
+How much is the T-shirt?
+
+Ten dollars. Twenty dollars. Thirty dollars. 
+
+3. Полезные разговорные блоки · Chunks
+
+How much is this?Сколько это стоит?▶ Слушать
+
+Do you have it in a medium?У вас есть это в размере M?▶ Слушать
+
+Can I pay by card?Можно оплатить картой?▶ Слушать
+
+I'm just looking, thanks.Я просто смотрю, спасибо.▶ Слушать
+
+Can I get a receipt?Можно получить чек?▶ Слушать
+
+4. Вспомни без подсказки · Active Recall
+
+Как спросить по-английски: «Сколько это стоит?»
+
+Показать ответ 
+
+5. Твоя очередь говорить · Speaking
+
+Представь, что ты покупаешь футболку. Скажи вслух: спроси цену, нужный размер и можно ли оплатить картой.
+
+🔊 Послушать пример 
+
+Попробуй произнести свой вариант вслух. Поле помогает подготовить ответ, автоматической проверки здесь пока нет.
+
+6. Мини-ситуация · Real life
+
+Продавец спрашивает: “Would you like a bag?” — «Вам нужен пакет?» Что ты ответишь, если пакет не нужен?
+
+Yes, please. No, I'm good, thanks. How much is it? 
+
+7. Завершение урока
+
+Повтори пять разговорных блоков и попробуй разыграть покупку самостоятельно.
+
+Отметить урок пройденным ✓ 
+
+← К программе 
+
+LESSON 05 · A2 · AMERICAN ENGLISH
+
+Healthcare
+
+Цель: записаться на приём, простыми словами описать симптомы и спросить о лекарстве в аптеке.
+
+1. Понятный диалог · At the doctor's office
+
+Майк звонит в клинику, чтобы записаться на приём. Прочитай разговор, затем прослушай его целиком.
+
+Receptionist: Good morning. How can I help you?
+
+Mike: Hi. I'd like to make an appointment.
+
+Receptionist: Sure. What's the problem?
+
+Mike: I have a sore throat and a cough.
+
+Receptionist: When did it start?
+
+Mike: It started two days ago.
+
+Receptionist: We have an opening tomorrow at 10 a.m.
+
+Mike: That works for me. Thank you.
+
+🔊 Прослушать диалог 
+
+2. Пойми смысл · Comprehension
+
+Why does Mike call the clinic?
+
+To cancel an appointment. To make an appointment. To ask for directions. 
+
+3. Полезные разговорные блоки · Chunks
+
+I'd like to make an appointment.Я хотел(а) бы записаться на приём.▶ Слушать
+
+I have a sore throat.У меня болит горло.▶ Слушать
+
+I have a cough.У меня кашель.▶ Слушать
+
+When did it start?Когда это началось?▶ Слушать
+
+That works for me.Мне подходит.▶ Слушать
+
+Do I need a prescription?Мне нужен рецепт?▶ Слушать
+
+4. Слова по теме · Useful vocabulary
+
+appointmentзапись / приём▶
+
+symptomsсимптомы▶
+
+feverтемпература / жар▶
+
+headacheголовная боль▶
+
+pharmacyаптека▶
+
+prescriptionрецепт▶
+
+5. Грамматика в контексте · I have / I feel
+
+I have... часто используют, чтобы назвать симптом: I have a headache. — У меня болит голова. I feel... описывает общее самочувствие: I feel tired. — Я чувствую усталость.
+
+I have a fever. — У меня температура.
+
+I feel dizzy. — У меня кружится голова.
+
+My stomach hurts. — У меня болит живот.
+
+🔊 Послушать примеры 
+
+6. Вспомни без подсказки · Active recall
+
+Как сказать: «Я хотел бы записаться на приём»?
+
+Показать ответ 
+
+7. Твоя очередь говорить · Speaking
+
+Представь, что ты звонишь в клинику. Скажи, что у тебя болит горло и кашель, и спроси, есть ли свободное время завтра.
+
+🔊 Послушать пример 
+
+Составь 2–3 предложения и произнеси их вслух. Автоматической проверки ответа пока нет.
+
+8. Реальная ситуация · At the pharmacy
+
+Фармацевт спрашивает: “Do you have a prescription?” Ты хочешь узнать, нужен ли рецепт. Что спросишь?
+
+Where is the doctor? Do I need a prescription? When did it start? 
+
+9. Важно знать в США
+
+В экстренной ситуации в США звонят 911. Для обычной записи к врачу можно сказать: “I'd like to make an appointment.” Учебный урок не заменяет медицинскую консультацию.
+
+Урок завершён?
+
+Повтори диалог, чанки и попробуй самостоятельно разыграть звонок в клинику.
+
+Отметить урок пройденным ✓ 
+
+← К программе 
+
+LESSON 06 · A2–B1 · AMERICAN ENGLISH
+
+Transportation & Directions
+
+Цель: спросить дорогу, разобраться с автобусом или метро, купить билет и объяснить, куда тебе нужно попасть.
+
+1. Понятный диалог · At the bus stop
+
+Эмма хочет доехать до центра города. Она спрашивает местного жителя, на какой автобус сесть. Прочитай диалог, затем прослушай его целиком.
+
+Emma: Excuse me. Does this bus go downtown?
+
+Man: Yes, it does. You need the number 12.
+
+Emma: Where can I get a ticket?
+
+Man: You can pay on the bus with a card.
+
+Emma: How long does it take?
+
+Man: About twenty minutes, depending on traffic.
+
+Emma: Thanks for your help!
+
+Man: No problem.
+
+🔊 Прослушать диалог 
+
+2. Пойми смысл · Comprehension
+
+How can Emma pay for the bus?
+
+Only with cash at the station. With a card on the bus. She doesn't need a ticket. 
+
+3. Полезные разговорные блоки · Chunks
+
+Does this bus go downtown?Этот автобус едет в центр?▶ Слушать
+
+Where can I get a ticket?Где можно купить билет?▶ Слушать
+
+How long does it take?Сколько времени это занимает?▶ Слушать
+
+Which way is the subway?В какой стороне метро?▶ Слушать
+
+Where should I get off?Где мне выходить?▶ Слушать
+
+Is it within walking distance?До этого можно дойти пешком?▶ Слушать
+
+I'm looking for this address.Я ищу этот адрес.▶ Слушать
+
+4. Слова по теме · Useful vocabulary
+
+bus stopавтобусная остановка▶
+
+subwayметро (обычное американское название)▶
+
+fareстоимость проезда▶
+
+transferпересадка▶
+
+one-way ticketбилет в одну сторону▶
+
+trafficдорожное движение / пробки▶
+
+intersectionперекрёсток▶
+
+5. Грамматика в контексте · How do I get to…?
+
+How do I get to…? — Как мне добраться до…? Используй by перед видом транспорта: by bus — на автобусе, by train — на поезде. Но говорим on foot — пешком.
+
+How do I get to the airport? — Как добраться до аэропорта?
+
+Take the number 8 bus. — Сядьте на автобус № 8.
+
+Get off at the next stop. — Выйдите на следующей остановке.
+
+🔊 Послушать примеры 
+
+6. Вспомни без подсказки · Active recall
+
+Как спросить: «Где мне выходить?»
+
+Показать ответ 
+
+7. Твоя очередь говорить · Speaking
+
+Представь, что ты стоишь на остановке. Спроси, едет ли автобус до центра, где купить билет и сколько займёт поездка.
+
+🔊 Послушать пример 
+
+Составь 2–3 предложения и произнеси их вслух. Автоматической проверки ответа пока нет.
+
+8. Реальная ситуация · Asking for directions
+
+Ты спрашиваешь, как добраться до библиотеки. Человек отвечает: “Take the number 5 bus and get off at the third stop.” Что значит get off?
+
+Выйти из транспорта. Сесть в транспорт. Купить билет. 
+
+9. Полезно знать в США
+
+В США транспортные системы и способы оплаты отличаются в зависимости от города. Перед поездкой проверь маршрут, расписание и способы оплаты на официальном сайте местного перевозчика. В разговоре downtown обычно означает центр города.
+
+Урок завершён?
+
+Повтори диалог, чанки и попробуй объяснить вслух, как добраться до нужного места.
+
+Отметить урок пройденным ✓ 
+
+← Главная 
+
+YOUR ENGLISH CONVERSATION PARTNER
+
+💬 Text Buddy
+
+Практикуй американский английский в переписке. Ошибаться можно — для этого мы здесь.
+
+💬 AI Chat 🎭 Scenarios 
+
+FREE CONVERSATION · A1–B1
+
+Let's talk!
+
+Выбери тему и напиши ответ на английском. Пока подключён тренировочный режим с подготовленными репликами; для настоящего свободного AI-чата потребуется отдельный защищённый AI-сервер.
+
+Daily life Work Weekend 
+
+Hey! I'm your Text Buddy. Pick a topic above and let's practice American English. 😊
+
+Send 
+
+Подсказка: старайся отвечать полным предложением.
+
+REAL-LIFE ROLE PLAY
+
+Choose a situation
+
+Выбери ситуацию. Buddy будет собеседником, а ты — участником разговора.
+
+☕ Ordering coffeeЗаказать кофе и уточнить размер · A1 🧰 Job interviewРассказать об опыте и графике · A2 🩺 At the doctor's officeОписать симптомы и записаться · A2 🚌 Asking for directionsУзнать, как добраться до места · A2 🏠 Renting an apartmentСпросить об аренде и условиях · A2 
+
+← Все ситуации 
+
+Continue → 🔊 Listen to the question 
+
+Совет: сначала ответь самостоятельно, затем прочитай объяснение. Не стремись к идеальной грамматике — цель научиться общаться.
+
+← Главная 
+
+MY LANGUAGES
+
+Мои языки 🌍
+
+Выбирай родной язык и добавляй языки для изучения.
+
+Мой родной язык 🇷🇺 Русский🇺🇸 English🇪🇸 Español🇩🇪 Deutsch🇫🇷 Français🇮🇹 Italiano🇵🇹 Português🇯🇵 日本語🇰🇷 한국어🇨🇳 中文 
+
+Изучаемые языки
+
+Добавить язык 🇺🇸 English (US)🇪🇸 Español🇩🇪 Deutsch🇫🇷 Français🇮🇹 Italiano🇵🇹 Português🇯🇵 日本語🇰🇷 한국어🇨🇳 中文 + Добавить язык 
+
+Пока здесь можно управлять списком языков. Учебные материалы для новых языков подключим отдельно.
+
+← Мои языки 
+
+YOUR LANGUAGE COURSE
+
+Мой курс
+
+Выбери язык, чтобы начать обучение.
+
+Статус курсаГотов
+
+Материалы курса появятся здесь.
+
+⌂Главная ▤Карточки ✓Тест ⌘Темы ◷Прогресс 
+
+const words=[ ["How's it going?","Как дела?","Hey, how's it going?","Повседневное общение"], ["What's up?","Что нового? / Как дела?","Hey, what's up?","Повседневное общение"], ["I'm doing pretty well.","У меня всё довольно хорошо.","I'm doing pretty well, thanks.","Повседневное общение"], ["Sounds good.","Звучит отлично / Договорились.","Friday at seven? — Sounds good.","Повседневное общение"], ["No worries.","Не переживай / Ничего страшного.","No worries, it happens.","Повседневное общение"], ["Take your time.","Не торопись.","Take your time. I'm not in a hurry.","Повседневное общение"], ["I'm on my way.","Я уже в пути.","I'm on my way. See you soon.","Повседневное общение"], ["Let me know.","Дай мне знать.","Let me know when you're free.","Повседневное общение"], ["I have no idea.","Понятия не имею.","I have no idea where it is.","Повседневное общение"], ["That makes sense.","В этом есть смысл / Логично.","Oh, that makes sense.","Повседневное общение"], ["I'm looking for a job.","Я ищу работу.","I'm looking for a job right now.","Работа"], ["I just got off work.","Я только что закончил работу.","I'm tired. I just got off work.","Работа"], ["I'm running late.","Я опаздываю.","Sorry, I'm running a little late.","Работа"], ["Can you give me a hand?","Можешь мне помочь?","Can you give me a hand with this?","Работа"], ["I'm done for today.","На сегодня я закончил.","I'm done for today. See you tomorrow.","Работа"], ["I'd love to.","Я бы с удовольствием.","Would you like to get coffee? — I'd love to.","Знакомства"], ["Are you free tonight?","Ты свободна сегодня вечером?","Hey, are you free tonight?","Знакомства"], ["I had a great time.","Я отлично провёл время.","I had a great time with you.","Знакомства"], ["What do you feel like doing?","Чем хочешь заняться?","What do you feel like doing this weekend?","Знакомства"], ["I'm just looking around.","Я просто присматриваюсь.","Thanks, I'm just looking around.","Путешествия"], ["I'm a little tired.", "Я немного устал.", "I'm a little tired today. — Сегодня я немного устал.\nI didn't sleep well, so I'm tired. — Я плохо спал, поэтому устал.", "Повседневное общение"], ["Not really.", "Не особо / Не совсем.", "Are you hungry? — Not really. — Ты голоден? — Не особо.\nDo you like it? — Not really. — Тебе нравится? — Не особо.", "Повседневное общение"], ["I'm just kidding.", "Я просто шучу.", "Relax, I'm just kidding. — Расслабься, я просто шучу.\nI didn't mean it. I'm just kidding. — Я не это имел в виду, я просто шучу.", "Повседневное общение"], ["You never know.", "Кто знает / Никогда не знаешь.", "Maybe he'll call. You never know. — Может, он позвонит. Кто знает.\nYou never know what might happen. — Никогда не знаешь, что может случиться.", "Повседневное общение"], ["That's a good point.", "Хорошее замечание.", "That's a good point. I agree. — Хорошее замечание. Я согласен.\nYou make a good point. — Ты говоришь дело.", "Повседневное общение"], ["I guess so.", "Наверное, да.", "Are you coming? — I guess so. — Ты придёшь? — Наверное, да.\nI guess so, but I'm not sure. — Наверное, да, но я не уверен.", "Повседневное общение"], ["I don't think so.", "Не думаю.", "Is he home? — I don't think so. — Он дома? — Не думаю.\nI don't think so. It looks closed. — Не думаю. Похоже, закрыто.", "Повседневное общение"], ["That's too bad.", "Очень жаль.", "You missed the bus? That's too bad. — Ты опоздал на автобус? Очень жаль.\nThat's too bad. Maybe next time. — Очень жаль. Может, в следующий раз.", "Повседневное общение"], ["No big deal.", "Ничего страшного.", "It's no big deal. Don't worry. — Ничего страшного. Не переживай.\nI can fix it. It's no big deal. — Я могу это исправить. Пустяки.", "Повседневное общение"], ["I'm not in the mood.", "У меня нет настроения.", "I'm not in the mood to go out. — У меня нет настроения куда-то идти.\nI'm not in the mood for a movie. — Мне сейчас не хочется смотреть фильм.", "Повседневное общение"], ["It happens.", "Бывает.", "Don't worry. It happens. — Не переживай. Бывает.\nEveryone makes mistakes. It happens. — Все ошибаются. Так бывает.", "Повседневное общение"], ["I'm in a hurry.", "Я спешу.", "Sorry, I'm in a hurry. — Извини, я спешу.\nI can't talk right now. I'm in a hurry. — Сейчас не могу говорить. Я тороплюсь.", "Повседневное общение"], ["What's the matter?", "Что случилось?", "You look upset. What's the matter? — Ты выглядишь расстроенным. Что случилось?\nWhat's the matter with your phone? — Что случилось с твоим телефоном?", "Повседневное общение"], ["Are you serious?", "Ты серьёзно?", "Are you serious? That's amazing! — Ты серьёзно? Это потрясающе!\nWait, are you serious? — Подожди, ты серьёзно?", "Повседневное общение"], ["I see what you mean.", "Я понимаю, что ты имеешь в виду.", "I see what you mean now. — Теперь я понимаю, что ты имеешь в виду.\nI see what you mean, but I disagree. — Я понимаю твою мысль, но не согласен.", "Повседневное общение"], ["Let me think.", "Дай подумать.", "Let me think for a minute. — Дай мне минуту подумать.\nHmm, let me think about it. — Хм, дай мне подумать об этом.", "Повседневное общение"], ["That's not bad.", "Это неплохо.", "Your English is pretty good. — That's not bad! — У тебя довольно хороший английский. — Неплохо!\nThat's not a bad idea. — Это неплохая идея.", "Повседневное общение"], ["I'm getting better.", "У меня получается всё лучше.", "My English is getting better. — Мой английский становится лучше.\nI'm getting better at cooking. — У меня всё лучше получается готовить.", "Повседневное общение"], ["I don't mind.", "Я не против.", "We can walk if you want. — I don't mind. — Можем прогуляться, если хочешь. — Я не против.\nI don't mind waiting. — Я не против подождать.", "Повседневное общение"], ["It sounds familiar.", "Звучит знакомо.", "That name sounds familiar. — Это имя кажется знакомым.\nThis place sounds familiar. — Это место мне знакомо.", "Повседневное общение"], ["I'm afraid not.", "Боюсь, что нет.", "Is the store open? — I'm afraid not. — Магазин открыт? — Боюсь, что нет.\nCan you come tomorrow? — I'm afraid not. — Ты можешь прийти завтра? — Боюсь, что нет.", "Повседневное общение"], ["That's exactly what I thought.", "Я именно так и думал.", "That's exactly what I thought. — Я именно так и думал.\nI knew it! That's exactly what I thought. — Я так и знал! Именно так я и думал.", "Повседневное общение"], ["I'm looking forward to it.", "Я с нетерпением этого жду.", "I'm looking forward to the weekend. — Я с нетерпением жду выходных.\nI'm looking forward to seeing you. — Я с нетерпением жду встречи с тобой.", "Повседневное общение"], ["It's been a long day.", "День был долгим и тяжёлым.", "It's been a long day. I need some rest. — День был тяжёлым. Мне нужно отдохнуть.\nWow, it's been a long day. — Ух, какой долгий день.", "Повседневное общение"], ["I'll see what I can do.", "Посмотрю, что можно сделать.", "I'll see what I can do for you. — Посмотрю, чем могу тебе помочь.\nI can't promise anything, but I'll see what I can do. — Ничего не обещаю, но посмотрю, что можно сделать.", "Повседневное общение"], ]; let index=0, known=JSON.parse(localStorage.getItem('de-known')||'[]'), score=0, answered=0, qIndex=0, selectedTopic=''; let srs=JSON.parse(localStorage.getItem('de-srs')||'{}'), reviewQueue=[]; const quizItems=[ {q:"What's up?",a:["Что нового?","Где это?","Сколько стоит?"],c:0}, {q:"No worries.",a:["Я волнуюсь.","Ничего страшного.","Я не знаю."],c:1}, {q:"I'm on my way.",a:["Я уже в пути.","Я ищу дорогу.","Я дома."],c:0}, {q:"Take your time.",a:["Поторопись.","Не переживай.","Не торопись."],c:2}, {q:"I had a great time.",a:["Я отлично провёл время.","Я опоздал.","Я устал."],c:0} ]; // DAILY LANGUAGES: сохранение списка языков и родного языка на устройстве const languageOptions = { en: "🇺🇸 English (US)", es: "🇪🇸 Español", de: "🇩🇪 Deutsch", fr: "🇫🇷 Français", it: "🇮🇹 Italiano", pt: "🇵🇹 Português", ja: "🇯🇵 日本語", ko: "🇰🇷 한국어", zh: "🇨🇳 中文" }; let myLanguages = JSON.parse(localStorage.getItem('dl-languages') || '["en"]'); function saveLanguageSettings(){ const native=document.getElementById('native-language').value; localStorage.setItem('dl-native',native); } // Independent progress records for every language. English keeps its existing data keys. function getLanguageProgress(lang){ if(lang==='en'){ const quiz=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}'); return {known:Array.isArray(known)?known.length:0,total:words.length,due:words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length,quizCorrect:quiz.quizCorrect||0,quizTotal:quiz.quizTotal||0}; } const data=JSON.parse(localStorage.getItem('dl-progress-'+lang)||'{"known":[],"srs":{},"quizCorrect":0,"quizTotal":0}'); return {known:(data.known||[]).length,total:0,due:0,quizCorrect:data.quizCorrect||0,quizTotal:data.quizTotal||0}; } function saveLanguageProgress(lang,data){ if(lang==='en'){ localStorage.setItem('dl-progress-en',JSON.stringify({quizCorrect:data.quizCorrect||0,quizTotal:data.quizTotal||0})); }else{ localStorage.setItem('dl-progress-'+lang,JSON.stringify(data)); } } function renderCourseProgress(lang){ const panel=document.getElementById('course-progress-panel'); if(!panel)return; const p=getLanguageProgress(lang); const percent=p.total?Math.round(p.known/p.total*100):0; const quizRate=p.quizTotal?Math.round(p.quizCorrect/p.quizTotal*100):0; panel.innerHTML=`<div class="course-stats"><div class="course-stat"><strong>${p.known}</strong><small>Выучено</small></div><div class="course-stat"><strong>${p.total?p.total:'—'}</strong><small>Карточек</small></div><div class="course-stat"><strong>${p.quizTotal?quizRate+'%':'—'}</strong><small>Тесты</small></div></div>${p.total?`<div class="course-progress-bar"><i style="width:${percent}%"></i></div><p class="sub" style="margin-top:8px">Изучено ${percent}% карточек · Повторить сегодня: ${p.due}</p>`:'<p class="sub" style="margin-top:12px">Статистика этого языка будет заполняться по мере добавления уроков, карточек и тестов.</p>'}`; } function renderLanguages(){ const list=document.getElementById('my-languages-list'); if(!list)return; list.innerHTML=''; myLanguages.forEach(lang=>{ const row=document.createElement('div'); row.className='topic'; const info=document.createElement('span'); const name=document.createElement('strong'); name.textContent=languageOptions[lang] || lang; const note=document.createElement('small'); const progress=getLanguageProgress(lang); note.textContent=lang==='en'?`Основной курс · ${progress.known} выучено`:`Отдельный прогресс · ${progress.known} выучено`; info.append(name,note); row.append(info); const actions=document.createElement('span'); actions.style.display='flex'; actions.style.alignItems='center'; actions.style.gap='10px'; const open=document.createElement('button'); open.className='small-link'; open.textContent='Открыть →'; open.onclick=()=>openCourse(lang); actions.append(open); if(lang!=='en'){ const remove=document.createElement('button'); remove.className='small-link'; remove.textContent='Удалить'; remove.onclick=()=>removeLanguage(lang); actions.append(remove); } row.append(actions); list.append(row); }); const native=document.getElementById('native-language'); native.value=localStorage.getItem('dl-native') || 'ru'; } function openCourse(lang){ const title=languageOptions[lang] || lang; document.getElementById('course-title').textContent=title; const description=document.getElementById('course-description'); const status=document.getElementById('course-status'); const detail=document.getElementById('course-detail'); const actions=document.getElementById('course-actions'); actions.innerHTML=''; renderCourseProgress(lang); if(lang==='en'){ description.textContent='Американский английский — твой основной курс.'; status.textContent='Активен'; detail.textContent='В этом курсе уже доступны разговорные карточки, тесты, темы, произношение и повторение.'; const start=document.createElement('button'); start.className='solid'; start.style.width='100%'; start.textContent='Продолжить английский →'; start.onclick=()=>openPage('home'); actions.append(start); }else{ description.textContent='Отдельный курс выбранного языка.'; status.textContent='Скоро'; detail.textContent='Курс создан. Следующим этапом добавим сюда алфавит и произношение, базовые фразы, тематические чанки, аудирование и тесты. Твой английский и его прогресс остаются отдельно.'; const back=document.createElement('button'); back.className='outline'; back.style.width='100%'; back.textContent='Вернуться к языкам'; back.onclick=()=>openPage('languages'); actions.append(back); } openPage('course'); } function addLanguage(){ const select=document.getElementById('new-language'); const lang=select.value; if(myLanguages.includes(lang)){alert('Этот язык уже добавлен!');return;} myLanguages.push(lang); localStorage.setItem('dl-languages',JSON.stringify(myLanguages)); renderLanguages(); } function removeLanguage(lang){ myLanguages=myLanguages.filter(item=>item!==lang); localStorage.setItem('dl-languages',JSON.stringify(myLanguages)); renderLanguages(); } function openLesson(id){ if(id==='introductions'){openPage('lesson');return;} if(id==='shopping'){openPage('lesson-shopping');return;} if(id==='work'){openPage('lesson-work');return;} if(id==='housing'){openPage('lesson-housing');return;} if(id==='healthcare'){openPage('lesson-healthcare');return;} if(id==='transportation'){openPage('lesson-transportation');return;} } function checkLessonAnswer(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); const feedback=document.getElementById('lesson-feedback'); feedback.textContent=isCorrect?'Верно! Sam говорит: “I just moved here.”':'Не совсем. Посмотри на последнюю реплику Sam: “I just moved here.”'; } function revealLessonRecall(){ document.getElementById('lesson-recall').textContent='Nice to meet you.'; } function checkShoppingAnswer(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('shopping-feedback').textContent=isCorrect?'Верно! Продавец говорит: “It’s twenty dollars.”':'Не совсем. В диалоге продавец называет цену: “It’s twenty dollars.”'; } function revealShoppingRecall(){ document.getElementById('shopping-recall').textContent='How much is this?'; } function checkShoppingRole(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('shopping-role-feedback').textContent=isCorrect?'Именно так! “No, I’m good, thanks” — естественный разговорный отказ от пакета.':'Попробуй ещё раз. Если пакет не нужен, можно сказать: “No, I’m good, thanks.”'; } function checkHousingAnswer(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('housing-feedback').textContent=isCorrect?'Верно! Аренда составляет $1,200 в месяц.':'Не совсем. В диалоге арендодатель говорит: “twelve hundred dollars a month.”'; } function checkHousingRole(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('housing-role-feedback').textContent=isCorrect?'Правильно! Так спрашивают, включены ли коммунальные услуги.':'Попробуй ещё раз: utilities — это коммунальные услуги.'; } function checkWorkAnswer(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('work-feedback').textContent=isCorrect?'Верно! Alex работал в ресторане два года.':'Не совсем. Послушай ответ Alex ещё раз: “for two years.”'; } function checkWorkRole(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('work-role-feedback').textContent=isCorrect?'Правильно! Так естественно сказать, когда можешь начать в следующий понедельник.':'Попробуй ещё раз. “I can start” означает «Я могу начать».'; } function checkHealthcareAnswer(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('healthcare-feedback').textContent=isCorrect?'Верно! Майк звонит, чтобы записаться на приём.':'Не совсем. В начале Майк говорит: “I’d like to make an appointment.”'; } function checkHealthcareRole(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('healthcare-role-feedback').textContent=isCorrect?'Правильно! “Do I need a prescription?” — «Мне нужен рецепт?»':'Попробуй ещё раз. Чтобы спросить о рецепте, скажи: “Do I need a prescription?”'; } function checkTransportAnswer(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('transport-feedback').textContent=isCorrect?'Верно! Emma может оплатить проезд картой в автобусе.':'Не совсем. В диалоге сказано: “You can pay on the bus with a card.”'; } function checkTransportRole(button,isCorrect){ const choices=button.parentElement.querySelectorAll('.lesson-choice'); choices.forEach(choice=>{choice.disabled=true;if(choice===button)choice.classList.add(isCorrect?'correct':'wrong');}); document.getElementById('transport-role-feedback').textContent=isCorrect?'Правильно! Get off — выйти из автобуса, поезда или другого транспорта.':'Не совсем. Get off означает выйти из транспорта. Get on — сесть в транспорт.'; } function completeLesson(id){ const completed=JSON.parse(localStorage.getItem('dl-completed-lessons-en')||'[]'); if(!completed.includes(id)){completed.push(id);localStorage.setItem('dl-completed-lessons-en',JSON.stringify(completed));} logActivity('cards','en'); const note=document.getElementById(id+'-complete-note')||document.getElementById('lesson-complete-note'); if(note) note.textContent='Урок отмечен как пройденный. Отличная работа! Возвращайся к выражениям для повторения.'; } function openPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='cards')renderCard();if(id==='quiz'&&!document.getElementById('quiz-options').children.length)renderQuiz();if(id==='languages')renderLanguages();updateProgress();window.scrollTo(0,0)} // TEXT BUDDY — chat practice and guided real-life scenarios. let buddyTopic = 'daily'; let buddyChatTurn = 0; let buddyScenario = null; let buddyScenarioStep = 0; const buddyChatPrompts = { daily: [ {q:"Nice! What did you do today?",h:"You can start with: I went to... / I worked..."}, {q:"Sounds good. What do you usually do after work?",h:"Try: I usually..."}, {q:"Cool! What are you planning to do this weekend?",h:"Try: I'm going to..."} ], work: [ {q:"Got it. What kind of work do you do?",h:"Try: I work as a... / I work in..."}, {q:"How long have you been doing that?",h:"Try: For two years. / Since 2024."}, {q:"What do you like most about your job?",h:"Try: I like... because..."} ], weekend: [ {q:"That sounds nice! Do you prefer staying in or going out?",h:"Try: I prefer..."}, {q:"What do you usually do for fun?",h:"Try: I enjoy... / I like..."}, {q:"Who do you usually spend your free time with?",h:"Try: I usually spend time with..."} ] }; const buddyScenarios = { coffee:{title:"☕ Ordering coffee",context:"You are at a coffee shop. The barista is taking your order.",steps:[ {prompt:"Hi there! What can I get for you?",speech:"Hi there! What can I get for you?",choices:[["I'd like a medium latte, please.",1,"Great natural answer! “I'd like...” is a polite way to order."],["I am coffee want.",0,"Use: “I'd like a coffee” or “I want a coffee, please.”"],["Where coffee is?",0,"To order, say: “Can I get a coffee, please?”"]]}, {prompt:"Sure! Would you like that hot or iced?",speech:"Would you like that hot or iced?",choices:[["Iced, please.",1,"Perfect. Short answers like this are very natural."],["Yes, I like.",0,"Choose one: “Hot, please” or “Iced, please.”"],["I want cold it.",0,"Say: “Iced, please.”"]]}, {prompt:"Anything else for you today?",speech:"Anything else for you today?",choices:[["No, that's all. Thank you.",1,"Excellent! “That's all” means you don't want anything else."],["No more anything.",0,"A natural answer is: “No, that's all, thanks.”"],["I finished.",0,"Try: “That's all, thank you.”"]]} ]}, job:{title:"🧰 Job interview",context:"You are talking to a manager about a job opening.",steps:[ {prompt:"Tell me a little about your work experience.",speech:"Tell me a little about your work experience.",choices:[["I've worked in construction for two years.",1,"Good! Present perfect works well for experience up to now."],["I working construction two year.",0,"Say: “I've worked in construction for two years.”"],["I work yesterday.",0,"Describe your experience: “I've worked in...”"]]}, {prompt:"What kind of work are you looking for?",speech:"What kind of work are you looking for?",choices:[["I'm looking for a full-time job.",1,"Great. “I'm looking for...” is a useful job-search chunk."],["I look work full time.",0,"Say: “I'm looking for a full-time job.”"],["I need work yesterday.",0,"Try: “I'm looking for a job.”"]]}, {prompt:"When would you be available to start?",speech:"When would you be available to start?",choices:[["I can start next Monday.",1,"Perfect. Clear and natural."],["I can starting Monday.",0,"After “can”, use the base verb: “start.”"],["I started next Monday.",0,"For the future, say: “I can start next Monday.”"]]} ]}, doctor:{title:"🩺 At the doctor's office",context:"You are checking in at a medical office. This is language practice, not medical advice.",steps:[ {prompt:"What brings you in today?",speech:"What brings you in today?",choices:[["I have a sore throat and a fever.",1,"Good. “I have...” is a clear way to describe symptoms."],["My throat hurting and hot.",0,"Say: “I have a sore throat and a fever.”"],["I am sick yesterday.",0,"Try: “I don't feel well” or name your symptoms."]]}, {prompt:"How long have you been feeling this way?",speech:"How long have you been feeling this way?",choices:[["Since yesterday.",1,"Exactly. “Since yesterday” gives the starting point."],["For yesterday.",0,"Use “since” with a starting point: “since yesterday.”"],["I feel bad tomorrow.",0,"Try: “Since yesterday.”"]]}, {prompt:"Do you have an appointment?",speech:"Do you have an appointment?",choices:[["Yes, I have an appointment at 10.",1,"Great. You can add the time to make it clear."],["Yes, I appointment.",0,"Say: “Yes, I have an appointment.”"],["I am appointment.",0,"Use: “I have an appointment.”"]]} ]}, directions:{title:"🚌 Asking for directions",context:"You are downtown and need to find the nearest bus stop.",steps:[ {prompt:"Hi! Can I help you?",speech:"Hi! Can I help you?",choices:[["Yes, where is the nearest bus stop?",1,"Excellent. “Where is the nearest...?” is a useful question."],["Where bus stop nearest?",0,"Say: “Where is the nearest bus stop?”"],["I bus stop need.",0,"Try: “I need the nearest bus stop.”"]]}, {prompt:"Go straight for two blocks and turn left.",speech:"Go straight for two blocks and turn left.",choices:[["Thanks! Is it far from here?",1,"Natural follow-up question."],["Thank, it far?",0,"Say: “Thanks! Is it far from here?”"],["I turn left yesterday.",0,"Ask: “Is it far from here?”"]]}, {prompt:"It's just around the corner.",speech:"It's just around the corner.",choices:[["Got it. Thanks for your help!",1,"Perfect. “Got it” means “I understand.”"],["Where corner is?",0,"A natural response: “Got it. Thanks!”"],["I am around.",0,"Try: “Thanks for your help!”"]]} ]}, apartment:{title:"🏠 Renting an apartment",context:"You are calling a landlord about an apartment for rent.",steps:[ {prompt:"Hi! How can I help you?",speech:"Hi! How can I help you?",choices:[["I'm calling about the apartment for rent.",1,"Excellent opening for a rental inquiry."],["I call apartment rent.",0,"Say: “I'm calling about the apartment for rent.”"],["I want house yesterday.",0,"Try: “I'm calling about the apartment for rent.”"]]}, {prompt:"The rent is $1,200 a month. Do you have any questions?",speech:"Do you have any questions?",choices:[["Are utilities included?",1,"Great question. Utilities are gas, electricity, water, etc."],["Utilities include yes?",0,"Ask: “Are utilities included?”"],["How many rent is?",0,"Ask: “How much is the rent?” or “Are utilities included?”"]]}, {prompt:"Would you like to schedule a viewing?",speech:"Would you like to schedule a viewing?",choices:[["Yes, can I see it this Saturday?",1,"Very natural. “Viewing” means a visit to see the apartment."],["Yes, I see Saturday it.",0,"Say: “Can I see it this Saturday?”"],["I view apartment yesterday.",0,"Try: “Can I see it this Saturday?”"]]} ]} }; function setBuddyMode(mode){ const chat=mode==='chat'; document.getElementById('buddy-chat-panel').style.display=chat?'block':'none'; document.getElementById('buddy-scenarios-panel').style.display=chat?'none':'block'; document.getElementById('buddy-tab-chat').classList.toggle('active',chat); document.getElementById('buddy-tab-scenarios').classList.toggle('active',!chat); } function addBuddyMessage(text,who){ const box=document.getElementById('buddy-chat');const item=document.createElement('div'); item.className='buddy-msg '+(who==='user'?'user':'bot');item.textContent=text;box.appendChild(item);box.scrollTop=box.scrollHeight; } function startBuddyChat(topic){ buddyTopic=topic;buddyChatTurn=0; const box=document.getElementById('buddy-chat');box.innerHTML=''; const first={daily:"Hey! How's your day going?",work:"Hey! Let's talk about work. What do you do?",weekend:"Hey! Any fun plans for the weekend?"}; addBuddyMessage(first[topic],'bot'); document.getElementById('buddy-chat-feedback').textContent=buddyChatPrompts[topic][0].h; document.getElementById('buddy-message').focus(); } function sendBuddyMessage(){ const input=document.getElementById('buddy-message');const value=input.value.trim();if(!value)return; addBuddyMessage(value,'user');input.value=''; const lower=value.toLowerCase(); let correction=''; if(/\bi am agree\b/.test(lower))correction='Quick correction: say “I agree,” not “I am agree.”'; else if(/\bi have 30 years\b/.test(lower))correction="Quick correction: say “I am 30 years old.”"; else if(/\bi very like\b/.test(lower))correction='Quick correction: say “I really like...”'; else if(/\byesterday i go\b/.test(lower))correction='Quick correction: say “Yesterday, I went...”'; else if(/\bi am work\b/.test(lower))correction="Quick correction: say “I work...” or “I am working...”"; if(correction)addBuddyMessage(correction,'bot'); const prompts=buddyChatPrompts[buddyTopic];const next=prompts[Math.min(buddyChatTurn,prompts.length-1)]; addBuddyMessage(next.q,'bot');document.getElementById('buddy-chat-feedback').textContent=next.h; buddyChatTurn=Math.min(buddyChatTurn+1,prompts.length-1); } function openBuddyScenario(id){ buddyScenario=id;buddyScenarioStep=0; document.getElementById('buddy-scenario-list').style.display='none'; document.getElementById('buddy-active-scenario').style.display='block'; document.getElementById('buddy-scenario-title').textContent=buddyScenarios[id].title; document.getElementById('buddy-scenario-context').textContent=buddyScenarios[id].context; renderBuddyScenarioStep(); } function backToBuddyScenarios(){ document.getElementById('buddy-active-scenario').style.display='none'; document.getElementById('buddy-scenario-list').style.display='block'; } function renderBuddyScenarioStep(){ const step=buddyScenarios[buddyScenario].steps[buddyScenarioStep]; document.getElementById('buddy-scenario-prompt').textContent='Buddy: “'+step.prompt+'”'; document.getElementById('buddy-scenario-prompt').dataset.speech=step.speech; document.getElementById('buddy-scenario-feedback').textContent='Выбери наиболее естественный ответ.'; document.getElementById('buddy-scenario-next').style.display='none'; const choices=document.getElementById('buddy-scenario-choices');choices.innerHTML=''; step.choices.forEach((choice,i)=>{ const btn=document.createElement('button');btn.className='buddy-choice';btn.textContent=choice[0]; btn.onclick=()=>answerBuddyScenario(btn,i);choices.appendChild(btn); }); } function answerBuddyScenario(button,index){ const step=buddyScenarios[buddyScenario].steps[buddyScenarioStep]; document.querySelectorAll('#buddy-scenario-choices .buddy-choice').forEach((b,i)=>{ b.disabled=true;if(i===index)b.classList.add(step.choices[i][1]?'correct':'wrong'); if(step.choices[i][1])b.classList.add('correct'); }); const choice=step.choices[index]; document.getElementById('buddy-scenario-feedback').textContent=(choice[1]?'✓ ':'✗ ')+choice[2]; const next=document.getElementById('buddy-scenario-next'); next.textContent=buddyScenarioStep===buddyScenarios[buddyScenario].steps.length-1?'Finish scenario ✓':'Continue →'; next.style.display='block'; } function nextBuddyScenarioStep(){ if(buddyScenarioStep<buddyScenarios[buddyScenario].steps.length-1){buddyScenarioStep++;renderBuddyScenarioStep();} else{ document.getElementById('buddy-scenario-prompt').textContent='🎉 Scenario completed!'; document.getElementById('buddy-scenario-choices').innerHTML=''; document.getElementById('buddy-scenario-feedback').textContent='Отличная работа! Повтори полезные фразы и попробуй произнести их вслух.'; document.getElementById('buddy-scenario-next').style.display='none'; } } function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';} let dlCurrentAudio = null; let dlCurrentAudioUrl = null; let dlSpeechRequestId = 0; let dlSpeechAbortController = null; function speakBrowserFallback(phrase) { if (!('speechSynthesis' in window)) { alert('Сервис озвучки временно недоступен. Браузерная озвучка не поддерживается.'); return; } try { const utterance = new SpeechSynthesisUtterance(phrase); utterance.lang = 'en-US'; utterance.rate = 0.92; utterance.pitch = 1; const voices = window.speechSynthesis.getVoices(); const americanVoice = voices.find(v => /^en-US$/i.test(v.lang)) || voices.find(v => /^en[-_]US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang)); if (americanVoice) utterance.voice = americanVoice; window.speechSynthesis.speak(utterance); } catch (error) { console.error('Browser speech fallback failed:', error); alert('Не удалось воспроизвести озвучку. Проверь звук и настройки браузера.'); } } function speakText(text) { const phrase = String(text || '').trim(); if (!phrase) return; // A new click cancels the previous request, preventing overlapping/racing audio. const requestId = ++dlSpeechRequestId; if (dlSpeechAbortController) { try { dlSpeechAbortController.abort(); } catch (e) {} } dlSpeechAbortController = new AbortController(); try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch (e) {} if (dlCurrentAudio) { try { dlCurrentAudio.pause(); dlCurrentAudio.removeAttribute('src'); dlCurrentAudio.load(); } catch (e) {} dlCurrentAudio = null; } if (dlCurrentAudioUrl) { URL.revokeObjectURL(dlCurrentAudioUrl); dlCurrentAudioUrl = null; } const controller = dlSpeechAbortController; (async () => { try { const response = await fetch('https://still-water-38f1.damnrock-19.workers.dev', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: phrase }), signal: controller.signal }); if (!response.ok) throw new Error('Audio service error: ' + response.status); const contentType = (response.headers.get('content-type') || '').toLowerCase(); if (!contentType.startsWith('audio/')) { const detail = await response.text().catch(() => ''); throw new Error('Worker returned non-audio response: ' + contentType + ' ' + detail.slice(0, 180)); } const blob = await response.blob(); if (requestId !== dlSpeechRequestId) return; if (!blob.size) throw new Error('The audio service returned an empty file.'); const audioUrl = URL.createObjectURL(blob); const audio = new Audio(audioUrl); audio.preload = 'auto'; dlCurrentAudioUrl = audioUrl; dlCurrentAudio = audio; const cleanup = () => { if (dlCurrentAudio === audio) dlCurrentAudio = null; if (dlCurrentAudioUrl === audioUrl) { URL.revokeObjectURL(audioUrl); dlCurrentAudioUrl = null; } }; audio.addEventListener('ended', cleanup, { once: true }); audio.addEventListener('error', cleanup, { once: true }); try { await audio.play(); } catch (playError) { cleanup(); throw playError; } } catch (workerError) { if (workerError && workerError.name === 'AbortError') return; if (requestId !== dlSpeechRequestId) return; console.warn('ElevenLabs Worker playback failed; using browser voice fallback:', workerError); if (dlCurrentAudio) { try { dlCurrentAudio.pause(); } catch (e) {} dlCurrentAudio = null; } if (dlCurrentAudioUrl) { URL.revokeObjectURL(dlCurrentAudioUrl); dlCurrentAudioUrl = null; } speakBrowserFallback(phrase); } })(); } function speakCurrent(){speakText(words[index][0]);} function speakExample(){speakText(words[index][2]);} function localDayKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');} function logActivity(type,lang='en'){ const key='dl-activity-'+lang; const data=JSON.parse(localStorage.getItem(key)||'{}'); const day=localDayKey(); if(!data[day])data[day]={cards:0,tests:0}; data[day][type]=(data[day][type]||0)+1; localStorage.setItem(key,JSON.stringify(data)); updateStreak(); } function updateStreak(){ const data=JSON.parse(localStorage.getItem('dl-activity-en')||'{}'); if(Object.keys(data).length===0)return Number(localStorage.getItem('de-streak')||0); let streak=0,day=new Date(); if(!data[localDayKey(day)])day.setDate(day.getDate()-1); while(data[localDayKey(day)]&&(data[localDayKey(day)].cards||0)+(data[localDayKey(day)].tests||0)>0){streak++;day.setDate(day.getDate()-1);} localStorage.setItem('de-streak',String(streak)); const el=document.getElementById('streak');if(el)el.textContent=streak; return streak; } function renderStatistics(){ const knownCount=document.getElementById('stats-known');if(!knownCount)return; const quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}'); const accuracy=quizData.quizTotal?Math.round(quizData.quizCorrect/quizData.quizTotal*100)+'%':'—'; const streak=updateStreak(); knownCount.textContent=known.length; document.getElementById('stats-streak').textContent=streak; document.getElementById('stats-accuracy').textContent=accuracy; const total=words.length,percent=total?Math.round(known.length/total*100):0; document.getElementById('known-count').textContent=known.length+' / '+total; document.getElementById('progress-bar').style.width=percent+'%'; document.getElementById('progress-caption').textContent=percent+'% набора изучено. '+(percent===100?'Отличная работа!':'Продолжай в своём темпе.'); const activity=JSON.parse(localStorage.getItem('dl-activity-en')||'{}'); const chart=document.getElementById('weekly-chart');chart.innerHTML=''; const days=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];let values=[]; for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=localDayKey(d);const v=activity[key]||{cards:0,tests:0};values.push({label:days[d.getDay()],count:(v.cards||0)+(v.tests||0)});} const max=Math.max(1,...values.map(v=>v.count)); values.forEach(v=>{const item=document.createElement('div');item.className='week-day';const num=document.createElement('b');num.textContent=v.count||'';const wrap=document.createElement('div');wrap.className='week-bar-wrap';const bar=document.createElement('i');bar.className='week-bar';bar.style.height=(v.count?Math.max(7,v.count/max*100):3)+'%';wrap.append(bar);const label=document.createElement('small');label.textContent=v.label;item.append(num,wrap,label);chart.append(item);}); const sum=values.reduce((a,v)=>a+v.count,0);document.getElementById('weekly-summary').textContent=sum?`За последние 7 дней: ${sum} учебных действий.`:'Активность начнёт отображаться после занятий.'; const list=document.getElementById('language-stats-list');list.innerHTML=''; (myLanguages||['en']).forEach(lang=>{const row=document.createElement('div');row.className='language-stat-row';const head=document.createElement('div');head.className='language-stat-head';const name=document.createElement('span');name.textContent=languageOptions[lang]||lang;const p=getLanguageProgress(lang);const pct=p.total?Math.round(p.known/p.total*100):0;const val=document.createElement('span');val.textContent=p.total?`${p.known}/${p.total} · ${pct}%`:`${p.known} выучено`;head.append(name,val);row.append(head);const track=document.createElement('div');track.className='bar';const fill=document.createElement('i');fill.style.width=p.total?pct+'%':'0%';track.append(fill);row.append(track);list.append(row);}); } function rateCard(level){let now=Date.now(),old=srs[index]||{interval:0};let days=level==='hard'?1:level==='good'?(old.interval?Math.max(2,Math.round(old.interval*2)):2):(old.interval?Math.max(4,Math.round(old.interval*2.5)):4);srs[index]={interval:days,due:now+days*86400000,last:now,level};localStorage.setItem('de-srs',JSON.stringify(srs));logActivity('cards');if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known));}document.getElementById('srs-hint').textContent='Готово! Следующее повторение через '+days+' дн.';updateProgress();setTimeout(nextCard,450);} function startDueReview(){reviewQueue=words.map((w,i)=>i).filter(i=>!srs[i]||srs[i].due<=Date.now());if(!reviewQueue.length){alert('На сегодня повторений нет. Отличная работа!');return;}index=reviewQueue[0];openPage('cards');document.getElementById('card-counter').textContent='Повторение 1 / '+reviewQueue.length;} function nextCard(){if(reviewQueue.length){reviewQueue.shift();if(reviewQueue.length){index=reviewQueue[0];}else{reviewQueue=[];alert('Повторение завершено! Отличная работа 🎉');openPage('home');return;}renderCard();return;}index=(index+1)%words.length;renderCard()}function prevCard(){index=(index-1+words.length)%words.length;renderCard()} function markKnown(){if(!known.includes(index)){known.push(index);localStorage.setItem('de-known',JSON.stringify(known))}nextCard();updateProgress()} function updateProgress(){let n=known.length,p=Math.round(n/words.length*100);document.getElementById('home-count').textContent=n+' / '+words.length;document.getElementById('known-count').textContent=n+' / '+words.length;document.getElementById('known-stat').textContent=n;document.getElementById('home-bar').style.width=p+'%';document.getElementById('progress-bar').style.width=p+'%';document.getElementById('progress-caption').textContent=p+'% набора изучено. '+(p===100?'Отличная работа!':'Продолжай в своём темпе.');document.getElementById('streak').textContent=updateStreak();let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');document.getElementById('quiz-stat').textContent=quizData.quizTotal?Math.round(quizData.quizCorrect/quizData.quizTotal*100)+'%':'—';let due=words.filter((w,i)=>!srs[i]||srs[i].due<=Date.now()).length;let dueEl=document.getElementById('due-count');if(dueEl)dueEl.textContent=due;renderStatistics();} function renderQuiz(){if(qIndex>=quizItems.length){document.getElementById('quiz-question').textContent='Тест завершён!';document.getElementById('quiz-options').innerHTML='<div class="empty">Твой результат: '+score+' из '+quizItems.length+'. Отличная работа — продолжай практиковаться!</div>';document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';return} let q=quizItems[qIndex];document.getElementById('quiz-count').textContent='Вопрос '+(qIndex+1)+' из '+quizItems.length;document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-question').textContent=q.q;document.getElementById('quiz-feedback').textContent='';document.getElementById('quiz-next').style.display='none';document.getElementById('quiz-options').innerHTML=q.a.map((a,i)=>'<button class="quiz-option" onclick="answerQuiz('+i+')">'+a+'</button>').join('')} function answerQuiz(i){let q=quizItems[qIndex],opts=document.querySelectorAll('.quiz-option');opts.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');if(j===i&&i!==q.c)b.classList.add('wrong')});if(i===q.c)score++;answered++;logActivity('tests');let quizData=JSON.parse(localStorage.getItem('dl-progress-en')||'{"quizCorrect":0,"quizTotal":0}');quizData.quizTotal=(quizData.quizTotal||0)+1;if(i===q.c)quizData.quizCorrect=(quizData.quizCorrect||0)+1;saveLanguageProgress('en',quizData);document.getElementById('quiz-feedback').textContent=i===q.c?'Верно! Отлично 🎉':'Правильный ответ: '+q.a[q.c];document.getElementById('quiz-score').textContent=score+' верно';document.getElementById('quiz-next').style.display='block';updateProgress();} function nextQuestion(){qIndex++;renderQuiz()} function filterTopic(t){selectedTopic=t;let ids=words.map((w,i)=>w[3]===t?i:null).filter(x=>x!==null);if(ids.length){index=ids[0];openPage('cards');document.getElementById('topic-note').textContent='Открыты карточки по теме: '+t+'.';}} function resetProgress(){if(confirm('Точно сбросить изученные карточки и результаты на этом устройстве?')){known=[];score=0;answered=0;localStorage.removeItem('de-known');updateProgress();}} renderCard();renderQuiz();renderLanguages();updateProgress(); try{const tg=window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){} if('speechSynthesis' in window){window.speechSynthesis.getVoices();} window.addEventListener('load',()=>{renderCard();updateProgress();}); 
