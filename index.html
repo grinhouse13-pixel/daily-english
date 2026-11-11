@@ -158,6 +158,35 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 .buddy-disabled{opacity:.8}
 </style>
 
+
+<style>
+/* Daily Languages — unified lesson layout, using Food & Restaurants as the visual reference */
+.page[id^="lesson-"]{padding-bottom:28px}
+.page[id^="lesson-"]>.back{display:inline-flex;align-items:center;gap:6px;margin:4px 0 14px;padding:9px 0;font-size:14px}
+.page[id^="lesson-"]>.eyebrow{margin:4px 0 8px;font-size:11px;letter-spacing:1.25px}
+.page[id^="lesson-"]>h1{margin:7px 0 9px;font-size:clamp(25px,7vw,31px);line-height:1.12;letter-spacing:-.8px}
+.page[id^="lesson-"]>.sub{margin:0 0 18px;line-height:1.55;font-size:13px}
+.page[id^="lesson-"] .lesson-step{margin:12px 0;padding:16px;border-radius:18px;background:linear-gradient(145deg,#152b43,#101d30);border:1px solid rgba(83,194,230,.2);box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.page[id^="lesson-"] .lesson-step h4{font-size:14px;line-height:1.4;margin:0 0 10px;color:#65d8f1}
+.page[id^="lesson-"] .lesson-note{font-size:12px;line-height:1.6;color:#a9bbce}
+.page[id^="lesson-"] .dialogue-line{padding:10px 0;line-height:1.55;font-size:13px}
+.page[id^="lesson-"] .chunk{padding:12px 13px;margin:9px 0;border-radius:13px;background:rgba(41,199,238,.08);border:1px solid rgba(83,194,230,.12)}
+.page[id^="lesson-"] .chunk strong{font-size:14px;line-height:1.45}
+.page[id^="lesson-"] .chunk small{font-size:12px;line-height:1.5}
+.page[id^="lesson-"] .speak-example,.page[id^="lesson-"] .speak-btn{border-radius:13px;padding:12px 14px;font-size:13px}
+.page[id^="lesson-"] .lesson-action{width:100%;margin-top:12px;padding:13px 15px;border-radius:13px;font-size:13px;font-weight:800}
+.page[id^="lesson-"] .lesson-choice{padding:13px 14px;margin:8px 0;border-radius:13px;font-size:13px;line-height:1.45}
+.page[id^="lesson-"] .lesson-input{min-height:100px;font-size:14px;line-height:1.5}
+.page[id^="lesson-"] .recall-answer{color:#65d8f1;font-size:14px;font-weight:750;margin:8px 0 14px}
+.page[id^="lesson-"] .primary{border-radius:13px}
+.page[id^="lesson-"] .course-stats{margin:12px 0 16px}
+.page[id^="lesson-"] .course-stat{border-radius:15px}
+@media(max-width:380px){
+ .page[id^="lesson-"] .lesson-step{padding:13px}
+ .page[id^="lesson-"]>h1{font-size:25px}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
