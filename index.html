@@ -228,7 +228,7 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
  <div class="progress-card import-panel" style="margin:16px 0">
   <strong>📥 Импорт своих выражений</strong>
   <p class="sub" style="margin:7px 0 12px">Загрузи CSV или TSV-файл: английская фраза, перевод, пример и тема. Новые карточки сохранятся на этом устройстве.</p>
-  <input id="import-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" style="display:none" onchange="handleImportFile(event)">
+  <input id="import-file" type="file" accept="*/*" style="display:none" onchange="handleImportFile(event)">
   <button class="solid" type="button" style="width:100%;padding:13px;border-radius:13px" onclick="document.getElementById('import-file').click()">Выбрать файл CSV / TSV</button>
   <div id="import-preview" style="display:none;margin-top:12px"></div>
   <p class="lesson-note" style="margin:10px 0 0">Формат: English → Перевод → Example → Category. Первая строка может содержать названия столбцов.</p>
