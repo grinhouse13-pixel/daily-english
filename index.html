@@ -187,6 +187,13 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 }
 </style>
 
+
+.import-panel{border-color:rgba(75,208,240,.24)}
+#import-preview{font-size:13px;line-height:1.5;color:#c7d8e8}
+#import-preview .import-sample{padding:9px 10px;margin:7px 0;background:#0d1b2c;border:1px solid var(--line);border-radius:10px}
+#import-preview .import-actions{display:flex;gap:8px;margin-top:10px}
+#import-preview .import-actions button{flex:1;padding:11px;border-radius:11px;font-weight:750}
+
 </head>
 <body>
 <div class="app">
@@ -216,6 +223,15 @@ nav{background:rgba(8,18,31,.94);border-top:1px solid rgba(160,190,220,.16)}
 <section id="cards" class="page">
  <button class="back" onclick="openPage('home')">← Главная</button>
  <div class="eyebrow">FLASHCARDS · A1–A2</div><h1>Разговорные выражения</h1><p class="sub">Прочитай фразу, вспомни значение и переверни карточку.</p>
+
+ <div class="progress-card import-panel" style="margin:16px 0">
+  <strong>📥 Импорт своих выражений</strong>
+  <p class="sub" style="margin:7px 0 12px">Загрузи CSV или TSV-файл: английская фраза, перевод, пример и тема. Новые карточки сохранятся на этом устройстве.</p>
+  <input id="import-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" style="display:none" onchange="handleImportFile(event)">
+  <button class="solid" type="button" style="width:100%;padding:13px;border-radius:13px" onclick="document.getElementById('import-file').click()">Выбрать файл CSV / TSV</button>
+  <div id="import-preview" style="display:none;margin-top:12px"></div>
+  <p class="lesson-note" style="margin:10px 0 0">Формат: English → Перевод → Example → Category. Первая строка может содержать названия столбцов.</p>
+ </div>
  <div class="counter" id="card-counter">1 / 20</div>
  <div class="flash" id="flash"><span class="tag">EVERYDAY ENGLISH</span><div class="phrase" id="phrase">How's it going?</div><div class="translation" id="translation">Как дела?</div><button class="speak-btn" onclick="speakCurrent()">🔊 Слушать американское произношение</button><div class="example" id="example">Example: Hey, how's it going?</div><button class="speak-example" onclick="speakExample()">▶ Прослушать пример</button></div>
  <div class="counter" id="srs-hint">Выбери, насколько легко вспомнил выражение</div>
@@ -942,6 +958,10 @@ const words=[
 ["It's been a long day.", "День был долгим и тяжёлым.", "It's been a long day. I need some rest. — День был тяжёлым. Мне нужно отдохнуть.\nWow, it's been a long day. — Ух, какой долгий день.", "Повседневное общение"],
 ["I'll see what I can do.", "Посмотрю, что можно сделать.", "I'll see what I can do for you. — Посмотрю, чем могу тебе помочь.\nI can't promise anything, but I'll see what I can do. — Ничего не обещаю, но посмотрю, что можно сделать.", "Повседневное общение"],
 ];
+let importedWords = [];
+try { importedWords = JSON.parse(localStorage.getItem("de-imported-words") || "[]"); } catch (e) { importedWords = []; }
+if (Array.isArray(importedWords)) importedWords.forEach(w => { if (Array.isArray(w) && w.length >= 4 && !words.some(x => String(x[0]).trim().toLowerCase() === String(w[0]).trim().toLowerCase())) words.push([String(w[0]),String(w[1]||""),String(w[2]||""),String(w[3]||"Импортированные")]); });
+let pendingImportedWords = [];
 let index=0, known=JSON.parse(localStorage.getItem('de-known')||'[]'), score=0, answered=0, qIndex=0, selectedTopic='';
 let srs=JSON.parse(localStorage.getItem('de-srs')||'{}'), reviewQueue=[];
 const quizItems=[
@@ -1292,6 +1312,77 @@ function nextBuddyScenarioStep(){
   document.getElementById('buddy-scenario-next').style.display='none';
  }
 }
+
+function parseImportTable(text, delimiter){
+ const rows=[]; let row=[], cell='', quoted=false;
+ for(let i=0;i<text.length;i++){
+  const ch=text[i];
+  if(ch==='"'){
+   if(quoted && text[i+1]==='"'){cell+='"';i++;}
+   else quoted=!quoted;
+  }else if(ch===delimiter && !quoted){row.push(cell.trim());cell='';}
+  else if((ch==='\n'||ch==='\r')&&!quoted){
+   if(ch==='\r'&&text[i+1]==='\n')i++;
+   row.push(cell.trim());cell='';
+   if(row.some(v=>v!==''))rows.push(row);row=[];
+  }else cell+=ch;
+ }
+ row.push(cell.trim());if(row.some(v=>v!==''))rows.push(row);
+ return rows;
+}
+function handleImportFile(event){
+ const file=event.target.files&&event.target.files[0]; if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const raw=String(reader.result||'').replace(/^\uFEFF/,'');
+   const firstLine=raw.split(/\r?\n/,1)[0]||'';
+   const delimiter=(firstLine.match(/\t/g)||[]).length>(firstLine.match(/;/g)||[]).length&&(firstLine.match(/\t/g)||[]).length>(firstLine.match(/,/g)||[]).length?'\t':((firstLine.match(/;/g)||[]).length>(firstLine.match(/,/g)||[]).length?';':',');
+   const rows=parseImportTable(raw,delimiter);
+   if(!rows.length)throw new Error('Файл пустой.');
+   const norm=v=>String(v||'').trim().toLowerCase().replace(/[ _-]+/g,'');
+   const headers=rows[0].map(norm);
+   const findHeader=names=>headers.findIndex(h=>names.includes(h));
+   let ei=findHeader(['english','phrase','expression','front','chunk','английский','фраза']);
+   let ti=findHeader(['translation','russian','meaning','back','перевод','значение','русский']);
+   let xi=findHeader(['example','пример','sentence']);
+   let ci=findHeader(['category','topic','тема','категория']);
+   let hasHeader=ei>=0||ti>=0;
+   if(!hasHeader){ei=0;ti=1;xi=2;ci=3;}
+   if(ei<0||ti<0)throw new Error('Не найдены столбцы English и Translation.');
+   const data=rows.slice(hasHeader?1:0), seen=new Set(words.map(w=>String(w[0]).trim().toLowerCase()));
+   pendingImportedWords=[];let duplicates=0,invalid=0;
+   data.forEach(r=>{
+    const en=String(r[ei]||'').trim(),ru=String(r[ti]||'').trim();
+    if(!en||!ru){invalid++;return;}
+    const key=en.toLowerCase();if(seen.has(key)){duplicates++;return;}seen.add(key);
+    pendingImportedWords.push([en,ru,String(r[xi]||'').trim(),String(r[ci]||'Импортированные').trim()||'Импортированные']);
+   });
+   showImportPreview(file.name,duplicates,invalid);
+  }catch(err){const box=document.getElementById('import-preview');box.style.display='block';box.textContent='Не удалось прочитать файл: '+err.message;pendingImportedWords=[];}
+ };
+ reader.onerror=()=>{const box=document.getElementById('import-preview');box.style.display='block';box.textContent='Не удалось открыть файл.';};
+ reader.readAsText(file,'UTF-8');
+}
+function showImportPreview(fileName,duplicates,invalid){
+ const box=document.getElementById('import-preview');box.style.display='block';
+ if(!pendingImportedWords.length){box.innerHTML='<strong>Новых карточек не найдено.</strong><div>Повторы: '+duplicates+' · Пропущено пустых строк: '+invalid+'</div>';return;}
+ const samples=pendingImportedWords.slice(0,3).map(w=>'<div class="import-sample"><b>'+escapeImportHtml(w[0])+'</b><br>'+escapeImportHtml(w[1])+'</div>').join('');
+ box.innerHTML='<strong>Файл: '+escapeImportHtml(fileName)+'</strong><div>Будет добавлено: <b>'+pendingImportedWords.length+'</b><br>Повторы пропущены: '+duplicates+' · Пустые строки: '+invalid+'</div>'+samples+'<div class="import-actions"><button class="solid" type="button" onclick="confirmImportWords()">Добавить карточки</button><button class="outline" type="button" onclick="cancelImportWords()">Отмена</button></div>';
+}
+function escapeImportHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function confirmImportWords(){
+ if(!pendingImportedWords.length)return;
+ const saved=JSON.parse(localStorage.getItem('de-imported-words')||'[]');
+ const existing=new Set(words.map(w=>String(w[0]).trim().toLowerCase()));
+ const added=pendingImportedWords.filter(w=>!existing.has(w[0].trim().toLowerCase()));
+ try{localStorage.setItem('de-imported-words',JSON.stringify(saved.concat(added)));}
+ catch(e){alert('Не удалось сохранить карточки. Возможно, в памяти приложения недостаточно места.');return;}
+ added.forEach(w=>words.push(w));
+ pendingImportedWords=[];document.getElementById('import-preview').style.display='none';document.getElementById('import-file').value='';
+ renderCard();updateProgress();alert('Готово! Добавлено карточек: '+added.length+'. Они появятся в общем наборе.');
+}
+function cancelImportWords(){pendingImportedWords=[];document.getElementById('import-preview').style.display='none';document.getElementById('import-file').value='';}
 
 function renderCard(){let w=words[index];document.getElementById('phrase').textContent=w[0];document.getElementById('translation').textContent=w[1];document.getElementById('example').textContent='Example: '+w[2];document.getElementById('card-counter').textContent=(index+1)+' / '+words.length;document.querySelector('.tag').textContent=w[3].toUpperCase();let item=srs[index];document.getElementById('srs-hint').textContent=item&&item.due>Date.now()?'Следующее повторение: '+new Date(item.due).toLocaleDateString('ru-RU'):'Новое выражение или пора повторить';}
  
